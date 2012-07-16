@@ -40,7 +40,7 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 
 	private RSyntaxTextArea textArea;
 
-	private final String welcome = "LISP Interpreter\nPress CTRL + ENTER to submit a command\n>> ";
+	private final String welcome = "ThoFu Interpreter\nPress CTRL + ENTER to submit a command\n>> ";
 
 	REPL() {
 

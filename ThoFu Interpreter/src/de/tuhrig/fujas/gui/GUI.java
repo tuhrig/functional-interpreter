@@ -59,12 +59,8 @@ class GUI extends JFrame {
 	private final HistoryView history = new HistoryView();
 
 	private final Running running = new Running();
-	
-	private File file;
 
 	private final JFileChooser fc = new JFileChooser();
-
-	private boolean dirty = true;
 
 	private boolean grubby = true;
 
@@ -72,11 +68,9 @@ class GUI extends JFrame {
 
 		gui = this;
 
-		setFile(null);
-		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, this.editor, this.repl);
 		splitPane.setOneTouchExpandable(true);
-
+		
 		JPanel inner = new JPanel();
 		inner.setLayout(new BorderLayout(3, 3));
 		inner.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -138,11 +132,8 @@ class GUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				GUI.this.setInterpreter(new Interpreter());
-
+				
 				markFresh();
-				markClean();
-
-				setFile(null);
 			}
 		});
 
@@ -151,21 +142,9 @@ class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				if (file == null) {
-
-					int returnVal = fc.showSaveDialog(GUI.this);
-
-					if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-						setFile(fc.getSelectedFile());
-
-						saveAndMarkClean();
-					}
-				}
-				else {
-
-					saveAndMarkClean();
-				}
+				GUI.this.editor.save();
+				
+				saveAndMarkClean();
 			}
 		});
 
@@ -178,7 +157,7 @@ class GUI extends JFrame {
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-					setFile(fc.getSelectedFile());
+					GUI.this.editor.saveAs(fc.getSelectedFile());
 
 					saveAndMarkClean();
 				}
@@ -206,7 +185,12 @@ class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				GUI.this.editor.show(null);
+				int returnVal = fc.showSaveDialog(GUI.this);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+					GUI.this.load(fc.getSelectedFile());
+				}
 			}
 		});
 		
@@ -302,7 +286,6 @@ class GUI extends JFrame {
 			}
 		});
 		
-		this.markClean();
 		this.markFresh();
 		
 		this.setInterpreter(new Interpreter());
@@ -319,45 +302,43 @@ class GUI extends JFrame {
 		
 		repl.focus();
 		
+		this.setTitle("Thomas' Functional Interpreter - ThoFu!");
+		
 		logger.info("GUI started");
 	}
 
 	protected void load(File file) {
 
-		setFile(file);
-
 		GUI.this.setInterpreter(new Interpreter());
 
 		editor.show(file);
-
-		markClean();
 
 		markGrubby();
 	}
 
 	private void promptUnsavedWarningIfDirty() {
 
-		if (dirty) {
+		if (editor.isDirty()) {
 			
 			int confirmed = JOptionPane.showConfirmDialog(null, "Save file?", "Unsaved edits", JOptionPane.YES_NO_OPTION);
 	
 			if (confirmed == JOptionPane.YES_OPTION) {
 	
-				if (file == null) {
-	
-					int returnVal = fc.showSaveDialog(GUI.this);
-	
-					if (returnVal == JFileChooser.APPROVE_OPTION) {
-	
-						setFile(fc.getSelectedFile());
-	
-						saveAndMarkClean();
-					}
-				}
-				else {
+//				if (file == null) {
+//	
+//					int returnVal = fc.showSaveDialog(GUI.this);
+//	
+//					if (returnVal == JFileChooser.APPROVE_OPTION) {
+//	
+//						setFile(fc.getSelectedFile());
+//	
+//						saveAndMarkClean();
+//					}
+//				}
+//				else {
 	
 					saveAndMarkClean();
-				}
+//				}
 			}
 		}
 	}
@@ -376,40 +357,6 @@ class GUI extends JFrame {
 		interpreter.addEnvironmentListener(inspector);
 		interpreter.addEnvironmentListener(repl);
 		interpreter.addEnvironmentListener(editor);
-	}
-
-	private void setFile(File file) {
-
-		this.file = file;
-
-		if(file == null) {
-			
-			setTitle("no file");
-		}
-		else { 
-			
-			this.setTitle(file.getAbsolutePath());
-		}
-	}
-
-	void markDirty() {
-
-		if (!dirty) {
-
-			this.dirty = true;
-
-			this.setTitle(getTitle() + "*");
-		}
-	}
-
-	private void markClean() {
-
-		if (dirty) {
-
-			this.dirty = false;
-
-			this.setTitle(getTitle().replace("*", ""));
-		}
 	}
 
 	void markGrubby() {
@@ -436,9 +383,7 @@ class GUI extends JFrame {
 
 	private void saveAndMarkClean() {
 
-		editor.save();
-
-		markClean();
+		editor.save();	
 	}
 	
 	public void stop() {

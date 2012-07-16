@@ -1,16 +1,22 @@
 package de.tuhrig.fujas.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
@@ -47,18 +53,22 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	private final JTabbedPane tabbs;
 
+	private boolean dirty;
+
 	Editor() {
 
 		tabbs = new JTabbedPane();
 
 		this.setLayout(new BorderLayout(3, 3));
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		this.add(tabbs);
+		
+		setLogo();
 	}
-	
+
 	public void show(File file) {
 
+		setTabbs();
+		
 		RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
 
 		files.add(file);
@@ -69,8 +79,9 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			@Override
 			public void keyPressed(KeyEvent event) {
 
-				GUI.gui.markDirty();
 				GUI.gui.markGrubby();
+				
+				Editor.this.markDirty();
 			}
 		});
 		
@@ -103,7 +114,41 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		else
 			tabbs.addTab("new file", scrollPane);
 	}
+
+	protected void markDirty() {
+
+		if (!dirty) {
+
+			this.dirty = true;
+
+			int index = tabbs.getSelectedIndex();
+
+			tabbs.setTitleAt(index, tabbs.getTitleAt(index) + "*");
+		}
+	}
+
+	private void setTabbs() {
+
+		this.removeAll();
+		this.setBackground(null);
+		this.add(tabbs);
+	}
 	
+	private void setLogo() {
+
+		try {
+			
+			BufferedImage logo = ImageIO.read(new File("icons/logo.gif"));
+			JLabel label = new JLabel(new ImageIcon(logo));
+			this.add(label);
+			this.setBackground(Color.white);
+		}
+		catch (IOException e) {
+
+			// works
+		}
+	}
+
 	public void createNewFile() {
 		
 		show(null);
@@ -125,7 +170,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		tabbs.removeAll();
 		
-		show(null);
+//		show(null);
 	}
 
 	@Override
@@ -157,6 +202,55 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 			e.printStackTrace();
 		}
+		
+		markClean();
+	}
+
+	public void saveAll() {
+		
+		for(int i = 0; i < tabbs.getTabCount(); i++) {
+		
+			try {
+	
+				File file= files.get(i);
+				
+				RSyntaxTextArea area = areas.get(i);
+				
+				Files.write(file.toPath(), area.getText().getBytes(), StandardOpenOption.CREATE);
+			}
+			catch (Exception e) {
+	
+				logger.error(e.getMessage());
+	
+				e.printStackTrace();
+			}
+		}
+		
+		markAllClean();
+	}
+	
+	private void markClean() {
+
+		int index = tabbs.getSelectedIndex();
+		
+		tabbs.setTitleAt(index, tabbs.getTitleAt(index).replaceAll("*", ""));	
+	}
+	
+	private void markAllClean() {
+
+		for(int i = 0; i < tabbs.getTabCount(); i++) {
+	
+			tabbs.setTitleAt(i, tabbs.getTitleAt(i).replaceAll("*", ""));
+		}
+	}
+
+	public void saveAs(File selectedFile) {
+
+		int index = tabbs.getSelectedIndex();
+		
+		files.set(index, selectedFile);
+		
+		save();
 	}
 
 	public String getText() {
@@ -202,5 +296,10 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		RSyntaxTextArea area = areas.get(index);
 		
 		return area.getPopupMenu();
+	}
+
+	public boolean isDirty() {
+
+		return dirty;
 	}
 }
