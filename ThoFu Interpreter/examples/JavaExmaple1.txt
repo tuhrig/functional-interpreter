@@ -1,0 +1,30 @@
+; Imports
+(import "java.awt.event.*")
+(import "javax.swing.*")
+(import "java.lang.*")
+(import "java.awt.*")
+
+; Components
+(define win (JFrame. "JavaExample1"))
+(define button (JButton. "click me"))
+(define label (JLabel. "nothing"))
+(define layout (FlowLayout.))
+
+; Variables
+(define visible (Boolean. true))
+(define size (Integer. 300))
+
+; Listeners
+(define (listener name)
+	(define (actionPerformed e) (.setText label "hello"))
+	(if (eq? name 'actionPerformed) actionPerformed error))
+
+(define int (interface ActionListener.class listener))
+
+; Construction 
+(.setLayout win layout)
+(.setSize win size size)
+(.add win button)
+(.add win label)
+(.addActionListener button int)
+(.setVisible win visible))
