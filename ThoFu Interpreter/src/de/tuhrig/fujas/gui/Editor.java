@@ -7,11 +7,13 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
 import org.apache.log4j.Logger;
@@ -39,34 +41,72 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	private IInterpreter interpreter;
 
-	private final RSyntaxTextArea textArea;
+	private List<RSyntaxTextArea> areas = new ArrayList<>();
+	
+	private List<File> files = new ArrayList<>();
+
+	private final JTabbedPane tabbs;
 
 	Editor() {
 
-		textArea = SwingFactory.createSyntaxTextArea("editor", "");
+		tabbs = new JTabbedPane();
 
-		textArea.addKeyListener(new KeyAdapter() {
+		this.setLayout(new BorderLayout(3, 3));
+		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		this.add(tabbs);
+	}
+	
+	public void show(File file) {
+
+		RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
+
+		files.add(file);
+		areas.add(area);
+		
+		area.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyPressed(KeyEvent event) {
 
 				GUI.gui.markDirty();
-
 				GUI.gui.markGrubby();
 			}
 		});
 		
 		AutoCompletion autoCompletion = new AutoCompletion(provider);
-		autoCompletion.install(textArea);
+		autoCompletion.install(area);
 
-		RTextScrollPane scrollPane = new RTextScrollPane(textArea);
+		RTextScrollPane scrollPane = new RTextScrollPane(area);
 
 		scrollPane.setPreferredSize(new Dimension(1, 300));
+		
+		if(file != null && file.exists()) {
+			
+			try {
 
-		this.setLayout(new BorderLayout(3, 3));
-		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+				String content = new Parser().read(file);
+				
+				area.setText(content);
+			}
+			catch (Exception e) {
 
-		this.add(scrollPane);
+				logger.error(e.getMessage());
+
+				e.printStackTrace();
+			}
+		}
+		
+		if(file != null)
+			tabbs.addTab(file.getName(), scrollPane);
+		
+		else
+			tabbs.addTab("new file", scrollPane);
+	}
+	
+	public void createNewFile() {
+		
+		show(null);
 	}
 
 	public void setInterpreter(IInterpreter interpreter) {
@@ -79,7 +119,13 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	@Override
 	public void reset(Environment environment) {
 
-		textArea.setText("");
+		areas = new ArrayList<>();
+		
+		files = new ArrayList<>();
+		
+		tabbs.removeAll();
+		
+		show(null);
 	}
 
 	@Override
@@ -93,27 +139,17 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		}
 	}
 
-	public void save(File file) {
+	public void save() {
 
 		try {
 
-			Files.write(file.toPath(), textArea.getText().getBytes(), StandardOpenOption.CREATE);
-		}
-		catch (Exception e) {
-
-			logger.error(e.getMessage());
-
-			e.printStackTrace();
-		}
-	}
-
-	public void load(File file) {
-
-		try {
-
-			String content = new Parser().read(file);
+			int index = tabbs.getSelectedIndex();
 			
-			textArea.setText(content);
+			File file= files.get(index);
+			
+			RSyntaxTextArea area = areas.get(index);
+			
+			Files.write(file.toPath(), area.getText().getBytes(), StandardOpenOption.CREATE);
 		}
 		catch (Exception e) {
 
@@ -125,29 +161,46 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	public String getText() {
 
-		return textArea.getText();
+		int index = tabbs.getSelectedIndex();
+		
+		RSyntaxTextArea area = areas.get(index);
+		
+		return area.getText();
 	}
 
 	public void setText(String buffer) {
 
-		textArea.setText(buffer);
+		int index = tabbs.getSelectedIndex();
+		
+		RSyntaxTextArea area = areas.get(index);
+
+		area.setText(buffer);
 	}
 
 	void execute() {
-
-		String commands = textArea.getText();
-
-		Parser parser = new Parser();
 		
-		commands = parser.format(commands);
+		for(int i = 0; i < tabbs.getTabCount(); i++ ) {
 
-		List<LObject> objects = parser.parseAll(commands);
+			RSyntaxTextArea area = areas.get(i);
+			
+			String commands = area.getText();
 	
-		Executer.instance.eval(objects, interpreter);
+			Parser parser = new Parser();
+			
+			commands = parser.format(commands);
+	
+			List<LObject> objects = parser.parseAll(commands);
+		
+			Executer.instance.eval(objects, interpreter);
+		}
 	}
 
 	public JPopupMenu getPopupMenu() {
 
-		return textArea.getPopupMenu();
+		int index = tabbs.getSelectedIndex();
+		
+		RSyntaxTextArea area = areas.get(index);
+		
+		return area.getPopupMenu();
 	}
 }

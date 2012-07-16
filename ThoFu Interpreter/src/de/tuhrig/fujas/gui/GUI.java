@@ -115,6 +115,7 @@ class GUI extends JFrame {
 		JMenuItem open = SwingFactory.createItem("Open", "icons/New Document.png");
 		JMenuItem help = SwingFactory.createItem("Help", "icons/Help Blue Button.png");	
 		JMenuItem about = SwingFactory.createItem("About", "icons/iChat Alt.png");
+		JMenuItem newFile = SwingFactory.createItem("New", "icons/Document.png");
 		
 		start.addActionListener(new ActionListener() {
 
@@ -200,6 +201,15 @@ class GUI extends JFrame {
 			}
 		});
 		
+		newFile.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				GUI.this.editor.show(null);
+			}
+		});
+		
 		help.addActionListener(new ActionListener() {
 
 			@Override
@@ -237,6 +247,7 @@ class GUI extends JFrame {
 		});
 
 		JMenu file = SwingFactory.createMenu("File", "icons/Write Document.png");
+		file.add(newFile);
 		file.add(open);
 		file.add(save);
 		file.add(saveAs);
@@ -317,7 +328,7 @@ class GUI extends JFrame {
 
 		GUI.this.setInterpreter(new Interpreter());
 
-		editor.load(file);
+		editor.show(file);
 
 		markClean();
 
@@ -425,7 +436,7 @@ class GUI extends JFrame {
 
 	private void saveAndMarkClean() {
 
-		editor.save(file);
+		editor.save();
 
 		markClean();
 	}
