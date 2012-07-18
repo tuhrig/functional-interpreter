@@ -65,8 +65,8 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		setLogo();
 	}
 
-	public void show(File file) {
-
+	public void open(File file) {
+		
 		setTabbs();
 		
 		RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
@@ -92,7 +92,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 		scrollPane.setPreferredSize(new Dimension(1, 300));
 		
-		if(file != null && file.exists()) {
+		if(file.exists()) {
 			
 			try {
 
@@ -103,16 +103,10 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			catch (Exception e) {
 
 				logger.error(e.getMessage());
-
-				e.printStackTrace();
 			}
 		}
-		
-		if(file != null)
-			tabbs.addTab(file.getName(), scrollPane);
-		
-		else
-			tabbs.addTab("new file", scrollPane);
+
+		tabbs.addTab(file.getName(), scrollPane);
 	}
 
 	protected void markDirty() {
@@ -149,11 +143,6 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		}
 	}
 
-	public void createNewFile() {
-		
-		show(null);
-	}
-
 	public void setInterpreter(IInterpreter interpreter) {
 
 		this.interpreter = interpreter;
@@ -169,8 +158,6 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		files = new ArrayList<>();
 		
 		tabbs.removeAll();
-		
-//		show(null);
 	}
 
 	@Override
@@ -199,8 +186,6 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		catch (Exception e) {
 
 			logger.error(e.getMessage());
-
-			e.printStackTrace();
 		}
 		
 		markClean();
@@ -221,12 +206,39 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			catch (Exception e) {
 	
 				logger.error(e.getMessage());
-	
-				e.printStackTrace();
 			}
 		}
 		
 		markAllClean();
+	}
+	
+	public void saveAs(File selectedFile) {
+
+		int index = tabbs.getSelectedIndex();
+		
+		files.set(index, selectedFile);
+		
+		save();
+	}
+	
+	public void close() {
+		
+		int index = tabbs.getSelectedIndex();
+		
+		tabbs.remove(index);
+		
+		if(tabbs.getComponentCount() == 0)
+			setLogo();
+	}
+	
+	public void closeAll() {
+
+		tabbs.removeAll();
+		
+		this.files = new ArrayList<>();
+		this.areas = new ArrayList<>();
+		
+		setLogo();
 	}
 	
 	private void markClean() {
@@ -242,15 +254,6 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	
 			tabbs.setTitleAt(i, tabbs.getTitleAt(i).replaceAll("*", ""));
 		}
-	}
-
-	public void saveAs(File selectedFile) {
-
-		int index = tabbs.getSelectedIndex();
-		
-		files.set(index, selectedFile);
-		
-		save();
 	}
 
 	public String getText() {
@@ -290,12 +293,17 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	}
 
 	public JPopupMenu getPopupMenu() {
-
+	
 		int index = tabbs.getSelectedIndex();
 		
-		RSyntaxTextArea area = areas.get(index);
+		if(index >= 0) {
+			
+			RSyntaxTextArea area = areas.get(index);
 		
-		return area.getPopupMenu();
+			return area.getPopupMenu();
+		}
+		
+		return null;
 	}
 
 	public boolean isDirty() {

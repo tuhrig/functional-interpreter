@@ -60,7 +60,7 @@ class GUI extends JFrame {
 
 	private final Running running = new Running();
 
-	private final JFileChooser fc = new JFileChooser();
+	final JFileChooser fc = new JFileChooser();
 
 	private boolean grubby = true;
 
@@ -100,12 +100,18 @@ class GUI extends JFrame {
 
 		msp.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-		JMenuItem close = SwingFactory.createItem("Close", "icons/Remove.png");
+		JMenuItem exit = SwingFactory.createItem("Exit", "icons/Remove.png");
 		JMenuItem start = SwingFactory.createItem("Start", "icons/Play.png");
 		JMenuItem stop = SwingFactory.createItem("Stop", "icons/Stop.png");	
 		JMenuItem reset = SwingFactory.createItem("Reset", "icons/Play All.png");	
+		
 		JMenuItem save = SwingFactory.createItem("Save", "icons/User.png");	
-		JMenuItem saveAs = SwingFactory.createItem("Save as...", "icons/Users.png");	
+		JMenuItem saveAll = SwingFactory.createItem("Save All", "icons/Users.png");	
+		JMenuItem saveAs = SwingFactory.createItem("Save as...", "icons/Add.png");	
+		
+		JMenuItem close = SwingFactory.createItem("Close", "icons/Pause.png");	
+		JMenuItem closeAll = SwingFactory.createItem("Close All", "icons/Pause All.png");		
+		
 		JMenuItem open = SwingFactory.createItem("Open", "icons/New Document.png");
 		JMenuItem help = SwingFactory.createItem("Help", "icons/Help Blue Button.png");	
 		JMenuItem about = SwingFactory.createItem("About", "icons/iChat Alt.png");
@@ -126,6 +132,24 @@ class GUI extends JFrame {
 			}
 		});
 
+		close.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				GUI.this.editor.close();
+			}
+		});
+		
+		closeAll.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+				GUI.this.editor.closeAll();
+			}
+		});
+		
 		reset.addActionListener(new ActionListener() {
 
 			@Override
@@ -175,7 +199,7 @@ class GUI extends JFrame {
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-					GUI.this.load(fc.getSelectedFile());
+					open(fc.getSelectedFile());
 				}
 			}
 		});
@@ -189,7 +213,7 @@ class GUI extends JFrame {
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-					GUI.this.load(fc.getSelectedFile());
+					open(fc.getSelectedFile());
 				}
 			}
 		});
@@ -219,7 +243,7 @@ class GUI extends JFrame {
 			}
 		});
 		
-		close.addActionListener(new ActionListener() {
+		exit.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -233,10 +257,15 @@ class GUI extends JFrame {
 		JMenu file = SwingFactory.createMenu("File", "icons/Write Document.png");
 		file.add(newFile);
 		file.add(open);
+		file.add(new JSeparator());
 		file.add(save);
+		file.add(saveAll);
 		file.add(saveAs);
 		file.add(new JSeparator());
 		file.add(close);
+		file.add(closeAll);
+		file.add(new JSeparator());
+		file.add(exit);
 		
 		final JMenu edit = SwingFactory.createMenu("Edit", "icons/Menu.png");
 
@@ -245,11 +274,15 @@ class GUI extends JFrame {
 			@Override
 			public void menuSelected(MenuEvent arg0) {
 			
-				JMenu editorMenu = SwingFactory.createMenu("Editor", "icons/editor.png", editor.getPopupMenu());
-				JMenu replMenu = SwingFactory.createMenu("Console", "icons/console.png", repl.getPopupMenu());
-				
 				edit.removeAll();
-				edit.add(editorMenu);
+				
+				if(editor.getPopupMenu() != null) {
+				
+					JMenu editorMenu = SwingFactory.createMenu("Editor", "icons/editor.png", editor.getPopupMenu());
+					edit.add(editorMenu);
+				}
+				
+				JMenu replMenu = SwingFactory.createMenu("Console", "icons/console.png", repl.getPopupMenu());
 				edit.add(replMenu);
 			}
 			
@@ -307,11 +340,9 @@ class GUI extends JFrame {
 		logger.info("GUI started");
 	}
 
-	protected void load(File file) {
+	protected void open(File file) {
 
-		GUI.this.setInterpreter(new Interpreter());
-
-		editor.show(file);
+		editor.open(file);
 
 		markGrubby();
 	}

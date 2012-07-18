@@ -2,13 +2,18 @@ package de.tuhrig.fujas.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingWorker;
@@ -90,9 +95,11 @@ class FileBrowser extends JPanel {
 		tree.addMouseListener(new MouseAdapter() {
 
 			@Override
-			public void mouseClicked(MouseEvent me) {
+			public void mouseClicked(final MouseEvent me) {
 
-				if (me.getClickCount() == 2) {
+				setCurrentDirectory(me);
+				
+				if(me.getClickCount() == 2) {
 
 					TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
 
@@ -100,13 +107,52 @@ class FileBrowser extends JPanel {
 
 					if (file.exists() && file.isFile()) {
 
-						GUI.gui.load(file);
+						GUI.gui.open(file);
 					}
+				}
+				
+				if(me.isMetaDown()) {
+		
+					JPopupMenu menu = new JPopupMenu();
+					        
+					JMenuItem newFile = SwingFactory.createItem("New", "icons/Document.png");
+					menu.add(newFile);
+			        menu.show(me.getComponent(), me.getX(), me.getY());
+			        
+					newFile.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+
+							int returnVal = GUI.gui.fc.showSaveDialog(GUI.gui);
+
+							if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+								GUI.gui.open(GUI.gui.fc.getSelectedFile());
+							}
+						}
+					});
 				}
 			}
 		});
 
 		this.add(new JScrollPane(tree));
+	}
+
+	public void setCurrentDirectory(MouseEvent me) {
+	
+		TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
+
+		File file = new File(tp.getLastPathComponent().toString());
+		
+		if(file.isDirectory()) {
+			
+			GUI.gui.fc.setCurrentDirectory(file);
+		}
+		else {
+			
+			GUI.gui.fc.setCurrentDirectory(file.getParentFile());
+		}
 	}
 
 	/**
