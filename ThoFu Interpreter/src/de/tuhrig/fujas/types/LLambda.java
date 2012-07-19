@@ -36,18 +36,6 @@ public class LLambda extends LOperation {
 		// we make a new and empty inner environment
 		Environment inner = new Environment(environment);
 
-		for (int i = 0; i < parametersSize; i++) {
-
-			LSymbol key = LSymbol.get(parameters.get(i));
-
-			LObject object = ((LList) tokens).get(i);
-
-			if(!(object instanceof LOperation))
-				object = object.eval(inner, null);
-
-			inner.put(key, object);
-		}	
-
 		for (Entry<LSymbol, LObject> current : closure.entrySet()) {
 
 			if(!parameters.contains(current.getKey()) && !inner.contains(current.getKey())) {
@@ -60,6 +48,18 @@ public class LLambda extends LOperation {
 				inner.put(current.getKey(), current.getValue());
 			}
 		}
+
+		for (int i = 0; i < parametersSize; i++) {
+
+			LSymbol key = LSymbol.get(parameters.get(i));
+
+			LObject object = ((LList) tokens).get(i);
+
+			if(!(object instanceof LOperation))
+				object = object.eval(inner, null);
+
+			inner.put(key, object);
+		}	
 
 		LObject result = null;
 

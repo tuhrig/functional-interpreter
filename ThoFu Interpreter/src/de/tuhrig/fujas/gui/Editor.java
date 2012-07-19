@@ -2,6 +2,7 @@ package de.tuhrig.fujas.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -47,10 +48,8 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	private IInterpreter interpreter;
 
-	private List<RSyntaxTextArea> areas = new ArrayList<>();
+	private List<Tabb> areas = new ArrayList<>();
 	
-	private List<File> files = new ArrayList<>();
-
 	private final JTabbedPane tabbs;
 
 	private boolean dirty;
@@ -71,8 +70,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
 
-		files.add(file);
-		areas.add(area);
+		areas.add(new Tabb(file, area));
 		
 		area.addKeyListener(new KeyAdapter() {
 
@@ -154,9 +152,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	public void reset(Environment environment) {
 
 		areas = new ArrayList<>();
-		
-		files = new ArrayList<>();
-		
+
 		tabbs.removeAll();
 	}
 
@@ -175,11 +171,11 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 		try {
 
-			int index = tabbs.getSelectedIndex();
+			Component tmp = getCurrentTab();
+
+			File file= getTabbFor(tmp).file;
 			
-			File file= files.get(index);
-			
-			RSyntaxTextArea area = areas.get(index);
+			RSyntaxTextArea area = getTabbFor(tmp).area;
 			
 			Files.write(file.toPath(), area.getText().getBytes(), StandardOpenOption.CREATE);
 		}
@@ -197,9 +193,9 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 			try {
 	
-				File file= files.get(i);
+				File file= areas.get(i).file;
 				
-				RSyntaxTextArea area = areas.get(i);
+				RSyntaxTextArea area = areas.get(i).area;
 				
 				Files.write(file.toPath(), area.getText().getBytes(), StandardOpenOption.CREATE);
 			}
@@ -214,28 +210,40 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	
 	public void saveAs(File selectedFile) {
 
-		int index = tabbs.getSelectedIndex();
+		Component tmp = getCurrentTab();
 		
-		files.set(index, selectedFile);
+		getTabbFor(tmp).file = selectedFile;
 		
 		save();
 	}
-	
+
 	public void close() {
 		
-		int index = tabbs.getSelectedIndex();
+		Component tmp = getCurrentTab();
 		
-		tabbs.remove(index);
+		tabbs.remove(tmp);
+		areas.remove(tmp);
 		
 		if(tabbs.getComponentCount() == 0)
 			setLogo();
 	}
 	
+	private Component getCurrentTab() {
+
+		int index = tabbs.getSelectedIndex();
+		
+		return tabbs.getTabComponentAt(index);
+	}
+	
+	private Tabb getTabbFor(Component component) {
+		
+		return areas.get(areas.indexOf(component));
+	}
+	
 	public void closeAll() {
 
 		tabbs.removeAll();
-		
-		this.files = new ArrayList<>();
+
 		this.areas = new ArrayList<>();
 		
 		setLogo();
@@ -244,7 +252,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	private void markClean() {
 
 		int index = tabbs.getSelectedIndex();
-		
+
 		tabbs.setTitleAt(index, tabbs.getTitleAt(index).replaceAll("*", ""));	
 	}
 	
@@ -258,18 +266,18 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	public String getText() {
 
-		int index = tabbs.getSelectedIndex();
+		Component tmp = getCurrentTab();
 		
-		RSyntaxTextArea area = areas.get(index);
+		RSyntaxTextArea area = getTabbFor(tmp).area;
 		
 		return area.getText();
 	}
 
 	public void setText(String buffer) {
 
-		int index = tabbs.getSelectedIndex();
+		Component tmp = getCurrentTab();
 		
-		RSyntaxTextArea area = areas.get(index);
+		RSyntaxTextArea area = getTabbFor(tmp).area;
 
 		area.setText(buffer);
 	}
@@ -278,14 +286,14 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		for(int i = 0; i < tabbs.getTabCount(); i++ ) {
 
-			RSyntaxTextArea area = areas.get(i);
+			RSyntaxTextArea area = areas.get(i).area;
 			
 			String commands = area.getText();
 	
 			Parser parser = new Parser();
 			
 			commands = parser.format(commands);
-	
+
 			List<LObject> objects = parser.parseAll(commands);
 		
 			Executer.instance.eval(objects, interpreter);
@@ -294,11 +302,11 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	public JPopupMenu getPopupMenu() {
 	
-		int index = tabbs.getSelectedIndex();
+		Component tmp = getCurrentTab();
 		
-		if(index >= 0) {
+		if(tmp != null) {
 			
-			RSyntaxTextArea area = areas.get(index);
+			RSyntaxTextArea area = getTabbFor(tmp).area;
 		
 			return area.getPopupMenu();
 		}
@@ -309,5 +317,19 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	public boolean isDirty() {
 
 		return dirty;
+	}
+	
+	static class Tabb {
+		
+		File file;
+		
+		RSyntaxTextArea area;
+		
+		public Tabb(File file, RSyntaxTextArea area) {
+
+			this.file = file;
+			
+			this.area = area;
+		}
 	}
 }
