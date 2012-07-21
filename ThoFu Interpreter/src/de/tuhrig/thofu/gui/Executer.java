@@ -9,8 +9,6 @@ import java.util.concurrent.Future;
 
 import javax.swing.SwingUtilities;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import de.tuhrig.thofu.interfaces.IInterpreter;
 import de.tuhrig.thofu.types.LObject;
 
@@ -18,62 +16,17 @@ public class Executer {
 
 	public final static Executer instance = new Executer();
 	
-	private String value;
+	private String value = "initial";
 	
 	private Executer() {
 		
 		// singleton
 	}
-	
-	public void execute(final IInterpreter interpreter, final String command, final RSyntaxTextArea textArea) {
-	
-		GUI.gui.start();
 
-		Thread worker = new Thread() {
-            
-            public void run() {
-
-            	Callable<String> callable = new Callable<String>() {
-            		
-					@Override
-					public String call() {
-
-						return 	interpreter.execute(command);
-					}
-				};
-				
-				ExecutorService executor = Executors.newCachedThreadPool();
-				
-				Future<String> result = executor.submit(callable);
-
-				try {
-					
-					value = result.get();
-				}
-				catch (InterruptedException | ExecutionException e) {
-					
-					e.printStackTrace();
-				}
-                
-                SwingUtilities.invokeLater(new Runnable() {
-                	
-                    public void run() {
-
-						textArea.append(value + "\n>> ");
-						
-						GUI.gui.stop();
-                    }
-                });
-            }
-        };
-        
-        worker.start();
-	}
-
-	public void eval(final List<LObject> objects, final IInterpreter interpreter) {
+	public String eval(final List<LObject> objects, final IInterpreter interpreter) {
 
 		GUI.gui.start();
-
+		
 		Thread worker = new Thread() {
             
             public void run() {
@@ -100,7 +53,7 @@ public class Executer {
 
 				try {
 					
-					result.get();
+					value = result.get().toString();
 				}
 				catch (InterruptedException | ExecutionException e) {
 					
@@ -119,5 +72,16 @@ public class Executer {
         };
         
         worker.start();
+        
+        try {
+        	
+			worker.join();
+		}
+		catch (InterruptedException e) {
+			
+			// works
+		}
+        
+		return value;
 	}
 }

@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.Element;
 
@@ -21,6 +22,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Parser;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 import de.tuhrig.thofu.interfaces.InterpreterListener;
@@ -45,6 +47,8 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 
 	REPL() {
 
+		setPreferredSize(new Dimension(100, 100));
+		
 		// create the RSyntaxArea as an editor for the REPL
 		textArea = SwingFactory.createSyntaxTextArea("repl", welcome); 
 		
@@ -184,8 +188,24 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 							logger.info("Input: " + input);
 
 							history.add(0, input);
+		
+							Parser parser = new Parser();
+							
+							input = parser.format(input);
 
-							Executer.instance.execute(REPL.this.interpreter, input, textArea);
+							List<LObject> objects = parser.parseAll(input);
+						
+							final String value = Executer.instance.eval(objects, interpreter);
+
+							SwingUtilities.invokeLater(new Runnable() {
+
+								public void run() {
+
+									textArea.append(value + "\n>> ");
+
+									GUI.gui.stop();
+								}
+							});
 						}
 						catch (Exception e) {
 
