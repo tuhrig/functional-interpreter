@@ -6,16 +6,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -128,17 +125,9 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	
 	private void setLogo() {
 
-		try {
-			
-			BufferedImage logo = ImageIO.read(new File("icons/logo.gif"));
-			JLabel label = new JLabel(new ImageIcon(logo));
-			this.add(label);
-			this.setBackground(Color.white);
-		}
-		catch (IOException e) {
-
-			// works
-		}
+		JLabel label = new JLabel(new ImageIcon(SwingFactory.create("icons/logo.gif")));
+		this.add(label);
+		this.setBackground(Color.white);
 	}
 
 	public void setInterpreter(IInterpreter interpreter) {

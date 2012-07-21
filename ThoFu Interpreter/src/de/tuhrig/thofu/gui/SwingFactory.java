@@ -2,6 +2,7 @@ package de.tuhrig.thofu.gui;
 
 import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -99,11 +100,19 @@ class SwingFactory {
 		item.setIconTextGap(10);
 	}
 	
+
+	public static Image create(String icon) {
+
+		URL url = new SwingFactory().getClass().getResource(icon);
+
+		ImageIcon imageIcon = new ImageIcon(url);
+		
+		return imageIcon.getImage();
+	}
+	
 	public static ImageIcon create(String icon, int h, int w) {
-		
-		ImageIcon imageIcon = new ImageIcon(icon);
-		
-		Image img = imageIcon.getImage();
+
+		Image img = create(icon);
 		
 		Image resizedImage = img.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
 		

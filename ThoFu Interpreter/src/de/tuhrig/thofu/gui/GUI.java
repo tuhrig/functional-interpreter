@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -230,7 +231,16 @@ class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				new HTMLViewer(new File("README.md")).scrollToTop();
+				try {
+					
+					File readme = new File(getClass().getResource("README.md").toURI());
+					
+					new HTMLViewer(readme).scrollToTop();
+				}
+				catch (URISyntaxException e) {
+
+					// works
+				}
 			}
 		});
 		

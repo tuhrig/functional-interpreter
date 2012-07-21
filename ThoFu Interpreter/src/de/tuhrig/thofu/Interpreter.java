@@ -2,6 +2,7 @@ package de.tuhrig.thofu;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -80,6 +81,44 @@ public class Interpreter implements IInterpreter, IJava {
 				catch (IOException e) {
 
 					throw new LException("[file not found] - file " + path + " can't be resolved");
+				}
+			}
+		});
+		
+		// (resource name)
+		root.put(LSymbol.get("resource"), new LOperation("resource") {
+
+			@Override
+			public LObject eval(Environment environment, LObject tokens) {
+
+				LObject path = ((LList) tokens).get(0);
+
+				try {
+		
+					final File file = new File(getClass().getResource(path.toString().replaceAll("\"", "")).toURI());
+	
+					String content = parser.read(file);
+					
+					String commands = parser.format(content);
+
+					List<LObject> objects = parser.parseAll(commands);
+					
+					LObject result = LNull.NULL;
+					
+					for(LObject object: objects) {
+
+						result = execute(object, environment);
+					}
+					
+					return result;
+				}
+				catch (IOException e) {
+
+					throw new LException("[file not found] - file " + path + " can't be resolved");
+				}
+				catch (URISyntaxException e) {
+				
+					throw new LException("[resource not found] - resource " + path + " can't be resolved");
 				}
 			}
 		});
@@ -602,7 +641,7 @@ public class Interpreter implements IInterpreter, IJava {
 		 */
 		logger.info("adding lambdas");
 
-		execute("(load \"init.txt\")");
+		execute("(resource \"init.txt\")");
 
 		/**
 		 * NULL
