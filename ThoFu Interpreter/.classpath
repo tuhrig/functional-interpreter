@@ -24,11 +24,11 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/markdownj-1.0.2b4-0.3.0.jar"/>
 	<classpathentry kind="lib" path="libs/javassist.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="libs/fest/fest-swing-1.2.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://fest.easytesting.org/swing/apidocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
