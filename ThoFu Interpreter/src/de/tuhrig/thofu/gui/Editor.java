@@ -10,6 +10,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -68,8 +69,6 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
 
-		areas.add(new Tabb(file, area));
-		
 		area.addKeyListener(new KeyAdapter() {
 
 			@Override
@@ -87,6 +86,8 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		RTextScrollPane scrollPane = new RTextScrollPane(area);
 
 		scrollPane.setPreferredSize(new Dimension(1, 300));
+
+		areas.add(new Tabb(file, scrollPane));
 		
 		if(file.exists()) {
 			
@@ -163,14 +164,18 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 			Component tmp = getCurrentTab();
 
-			File file= getTabbFor(tmp).file;
+			File file = getTabbFor(tmp).file;
 			
-			RSyntaxTextArea area = getTabbFor(tmp).area;
+			System.out.println(file);
 			
-			Files.write(file.toPath(), area.getText().getBytes(), StandardOpenOption.CREATE);
+			String content = getTabbFor(tmp).getText();
+			
+			Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 		}
 		catch (Exception e) {
 
+			e.printStackTrace();
+			
 			logger.error(e.getMessage());
 		}
 		
@@ -185,9 +190,9 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	
 				File file= areas.get(i).file;
 				
-				RSyntaxTextArea area = areas.get(i).area;
+				String content = areas.get(i).getText();
 				
-				Files.write(file.toPath(), area.getText().getBytes(), StandardOpenOption.CREATE);
+				Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
 			}
 			catch (Exception e) {
 	
@@ -212,6 +217,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		Component tmp = getCurrentTab();
 		
 		tabbs.remove(tmp);
+		
 		areas.remove(tmp);
 		
 		if(tabbs.getComponentCount() == 0)
@@ -220,17 +226,16 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	
 	private Component getCurrentTab() {
 
-		int index = tabbs.getSelectedIndex();
-		
-		if(index  == -1)
-			return null;
-		
-		return tabbs.getTabComponentAt(index);
+		return tabbs.getSelectedComponent();
 	}
 	
 	private Tabb getTabbFor(Component component) {
+
+		System.out.println(Arrays.toString(areas.toArray()));
+		System.out.println(component);
+
 		
-		return areas.get(areas.indexOf(component));
+		return areas.get(areas.indexOf(new Tabb(component)));
 	}
 	
 	public void closeAll() {
@@ -246,42 +251,36 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 		int index = tabbs.getSelectedIndex();
 
-		tabbs.setTitleAt(index, tabbs.getTitleAt(index).replaceAll("*", ""));	
+		tabbs.setTitleAt(index, tabbs.getTitleAt(index).replace("*", ""));	
 	}
 	
 	private void markAllClean() {
 
 		for(int i = 0; i < tabbs.getTabCount(); i++) {
 	
-			tabbs.setTitleAt(i, tabbs.getTitleAt(i).replaceAll("*", ""));
+			tabbs.setTitleAt(i, tabbs.getTitleAt(i).replace("*", ""));
 		}
 	}
 
 	public String getText() {
 
 		Component tmp = getCurrentTab();
-		
-		RSyntaxTextArea area = getTabbFor(tmp).area;
-		
-		return area.getText();
+
+		return getTabbFor(tmp).getText();
 	}
 
 	public void setText(String buffer) {
 
 		Component tmp = getCurrentTab();
 		
-		RSyntaxTextArea area = getTabbFor(tmp).area;
-
-		area.setText(buffer);
+		getTabbFor(tmp).setText(buffer);
 	}
 
 	void execute() {
 		
 		for(int i = 0; i < tabbs.getTabCount(); i++ ) {
 
-			RSyntaxTextArea area = areas.get(i).area;
-			
-			String commands = area.getText();
+			String commands = areas.get(i).getText();
 	
 			Parser parser = new Parser();
 			
@@ -298,10 +297,8 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		Component tmp = getCurrentTab();
 		
 		if(tmp != null) {
-			
-			RSyntaxTextArea area = getTabbFor(tmp).area;
-		
-			return area.getPopupMenu();
+
+			return getTabbFor(tmp).getPopupMenu();
 		}
 		
 		return null;
@@ -316,13 +313,40 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		File file;
 		
-		RSyntaxTextArea area;
+		RTextScrollPane area;
 		
-		public Tabb(File file, RSyntaxTextArea area) {
+		public Tabb(File file, RTextScrollPane area) {
 
 			this.file = file;
 			
 			this.area = area;
+		}
+
+		public Tabb(Component component) {
+
+			this.area = (RTextScrollPane) component;
+		}
+
+		public JPopupMenu getPopupMenu() {
+
+			return ((RSyntaxTextArea) area.getComponent(0)).getPopupMenu();
+		}
+
+		public void setText(String buffer) {
+
+			((RSyntaxTextArea) area.getComponent(0)).setText(buffer);
+		}
+
+		public String getText() {
+
+			return ((RSyntaxTextArea) area.getComponent(0)).getText();
+		}
+		
+		public boolean equals(Object object) {
+		
+			System.out.println("fgifgj");
+			
+			return area.equals(((Tabb) object).area);
 		}
 	}
 }
