@@ -28,13 +28,13 @@ public class LLambda extends LOperation {
 
 	@Override
 	public LObject eval(Environment environment, LObject tokens) {
-		
+
 		// error checking
 		if (parametersSize != ((LList) tokens).size())
 			throw new LException("[wrong number of arguments] - expected " + parameters.size() + ", but were " + ((LList) tokens).size() + " [args = " + ((LList) tokens) + "]");
 
 		// we make a new and empty inner environment
-		Environment inner = new Environment(environment);
+		Environment inner = new Environment(environment, name);
 
 		for (Entry<LSymbol, LObject> current : closure.entrySet()) {
 

@@ -462,7 +462,7 @@ public class Interpreter implements IInterpreter, IJava {
 				LObject second = ((LList) tokens).get(1);
 
 				second = second.eval(environment, tokens);
-				
+
 				environment.set(LSymbol.get(name), second);
 	
 				return second;
@@ -673,7 +673,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 			logger.warn(e.getMessage());
 
-			e.printStackTrace();
+//			e.printStackTrace();
 
 			return e.getMessage();
 		}
@@ -681,7 +681,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 			logger.error("[interpreter exception] - " + e.getMessage());
 
-			e.printStackTrace();
+//			e.printStackTrace();
 
 			return "[interpreter exception] - " + e.getMessage();
 		}

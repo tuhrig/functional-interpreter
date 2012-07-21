@@ -4,7 +4,7 @@ import de.tuhrig.thofu.Environment;
 
 public class LString extends LObject { // LLeaf {
 
-	private final String value;
+	public String value;
 
 	public LString(Object token) {
 

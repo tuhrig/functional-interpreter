@@ -6,7 +6,7 @@ import de.tuhrig.thofu.Environment;
 
 public class LNumber extends LObject { // LLeaf {
 
-	private final BigDecimal value;
+	public BigDecimal value;
 
 	LNumber(BigDecimal value) {
 

@@ -14,7 +14,10 @@ import de.tuhrig.thofu.java.LJObject;
 import de.tuhrig.thofu.java.LJStaticField;
 import de.tuhrig.thofu.java.LJStaticMember;
 import de.tuhrig.thofu.types.LException;
+import de.tuhrig.thofu.types.LNumber;
 import de.tuhrig.thofu.types.LObject;
+import de.tuhrig.thofu.types.LQuoted;
+import de.tuhrig.thofu.types.LString;
 import de.tuhrig.thofu.types.LSymbol;
 
 /**
@@ -24,11 +27,13 @@ public class Environment {
 
 	private final Environment parent;
 
-	private final Map<LSymbol, LObject> objects = new HashMap<LSymbol, LObject>();
+	private final Map<LSymbol, LObject> objects = new HashMap<>();
 
 	private static int count = 0;
 
 	private final int serial;
+
+	private String lambda = null;
 
 	public Environment(Environment environment) {
 
@@ -37,6 +42,13 @@ public class Environment {
 		serial = count;
 
 		this.parent = environment;
+	}
+
+	public Environment(Environment environment, String name) {
+
+		this(environment);
+		
+		this.lambda  = name;
 	}
 
 	public boolean contains(LSymbol key) {
@@ -120,6 +132,9 @@ public class Environment {
 
 		String formated = "";
 
+		if(lambda != null)
+			formated = "Holded by " + lambda + "\n";
+		
 		String place = "";
 		
 		for(int i = 0; i < envs.size(); i++) {
@@ -140,7 +155,14 @@ public class Environment {
 
 		if (objects.containsKey(key)) {
 
-			objects.put(key, value);
+			LObject tmp = objects.get(key);
+			
+			if(tmp instanceof LNumber)
+				((LNumber) tmp).value = ((LNumber) value).value;
+			else if(tmp instanceof LString)
+				((LString) tmp).value = ((LString) value).value;
+			else if(tmp instanceof LQuoted)
+				((LQuoted) tmp).value = ((LQuoted) value).value;
 		}
 
 		else if (parent != null) {
@@ -148,16 +170,9 @@ public class Environment {
 			parent.set(key, value);
 		}
 	}
-
-//	public Environment copy() {
-//
-//		Environment copy = new Environment(parent);
-//
-//		for (Entry<LSymbol, LObject> e : objects.entrySet()) {
-//
-//			copy.put(e.getKey(), e.getValue());
-//		}
-//
-//		return copy;
-//	}
+	
+	public static class Container {
+		
+		LObject object;
+	}
 }

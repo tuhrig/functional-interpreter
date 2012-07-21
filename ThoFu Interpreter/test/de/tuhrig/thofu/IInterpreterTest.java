@@ -5,7 +5,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.tuhrig.thofu.Interpreter;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 
 public class IInterpreterTest {
@@ -843,7 +842,7 @@ public class IInterpreterTest {
 	}
 
 	@Test
-	public void defineComplexObject() {
+	public void defineComplexObject1() {
 
 		String c1 = 
 				  "(define (make-point x y) " 
@@ -871,4 +870,51 @@ public class IInterpreterTest {
 		Assert.assertEquals("<Lambda: area>", interpreter.execute(c3));
 		Assert.assertEquals("100", interpreter.execute(c4));
 	}
+	
+	@Test
+	public void defineComplexObject2() {
+
+		String object = 
+				"(define (make-point x y) " +
+						 " (define (get-x) " +
+						 "   x) " +
+						 " (define (get-y) " +
+						 "   y) " +
+						 " (define (set-x! newX) " +
+						 "   (set! x newX)) " +
+						 " (define (set-y! newY) " +
+						 "   (set! y newY)) " +
+						 " (define (area) " +
+						 "   (* x y)) " +
+						 " (define (error) " +
+						 "   (print \"mist\")) " +  
+						 " (define (dispatch op) " +
+						 "   (if (eq? op 'get-x) " +
+						 "       get-x " +
+						 "   (if (eq? op 'get-y) " +
+						 "       get-y " +
+						 "   (if (eq? op 'set-x!) " +
+						 "       set-x! " +
+						 "   (if (eq? op 'set-y!) " +
+						 "       set-y! " +
+						 "   (if (eq? op 'area) " +
+						 "       area " +
+						 "       error)))))) " +
+						 " dispatch)";
+
+		String c1 = "(define point (make-point 10 5))";
+		String c2 = "((point 'get-y))";
+		String c3 = "((point 'set-y!) 20)";
+		String c4 = "((point 'get-y))";
+		String c5 = "((point 'area))";
+
+		Assert.assertEquals("<Lambda: make-point>", interpreter.execute(object));
+		Assert.assertEquals("<Lambda: point>", interpreter.execute(c1));
+		Assert.assertEquals("5", interpreter.execute(c2));
+		Assert.assertEquals("20", interpreter.execute(c3));
+		Assert.assertEquals("20", interpreter.execute(c4));
+		Assert.assertEquals("200", interpreter.execute(c5));
+	}
+	
+	
 }

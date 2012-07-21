@@ -4,7 +4,7 @@ import de.tuhrig.thofu.Environment;
 
 public class LQuoted extends LObject { // LLeaf {
 
-	private final LObject value;
+	public LObject value;
 
 	public LQuoted(LObject value) {
 
