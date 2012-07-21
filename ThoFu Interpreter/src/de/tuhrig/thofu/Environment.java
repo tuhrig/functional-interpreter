@@ -14,10 +14,7 @@ import de.tuhrig.thofu.java.LJObject;
 import de.tuhrig.thofu.java.LJStaticField;
 import de.tuhrig.thofu.java.LJStaticMember;
 import de.tuhrig.thofu.types.LException;
-import de.tuhrig.thofu.types.LNumber;
 import de.tuhrig.thofu.types.LObject;
-import de.tuhrig.thofu.types.LQuoted;
-import de.tuhrig.thofu.types.LString;
 import de.tuhrig.thofu.types.LSymbol;
 
 /**
@@ -27,7 +24,7 @@ public class Environment {
 
 	private final Environment parent;
 
-	private final Map<LSymbol, LObject> objects = new HashMap<>();
+	private final Map<LSymbol, Container> objects = new HashMap<>();
 
 	private static int count = 0;
 
@@ -65,7 +62,7 @@ public class Environment {
 	public LObject get(LSymbol key) {
 
 		if (objects.containsKey(key))
-			return objects.get(key);
+			return objects.get(key).object;
 
 		else if (parent != null)
 			return parent.get(key);
@@ -109,7 +106,13 @@ public class Environment {
 
 	public void put(LSymbol symbole, LObject object) {
 
-		objects.put(symbole, object);
+		objects.put(symbole, new Container(object));
+	}
+	
+
+	public void put(LSymbol symbole, Container container) {
+
+		objects.put(symbole, container);
 	}
 
 	@Override
@@ -146,7 +149,7 @@ public class Environment {
 		return formated;
 	}
 
-	public Set<Entry<LSymbol, LObject>> entrySet() {
+	public Set<Entry<LSymbol, Container>> entrySet() {
 
 		return objects.entrySet();
 	}
@@ -155,14 +158,9 @@ public class Environment {
 
 		if (objects.containsKey(key)) {
 
-			LObject tmp = objects.get(key);
+			Container tmp = objects.get(key);
 			
-			if(tmp instanceof LNumber)
-				((LNumber) tmp).value = ((LNumber) value).value;
-			else if(tmp instanceof LString)
-				((LString) tmp).value = ((LString) value).value;
-			else if(tmp instanceof LQuoted)
-				((LQuoted) tmp).value = ((LQuoted) value).value;
+			tmp.object = value;
 		}
 
 		else if (parent != null) {
@@ -173,6 +171,11 @@ public class Environment {
 	
 	public static class Container {
 		
-		LObject object;
+		public LObject object;
+		
+		public Container(LObject object) {
+
+			this.object = object;
+		}
 	}
 }

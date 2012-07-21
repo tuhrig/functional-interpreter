@@ -22,6 +22,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Environment.Container;
 import de.tuhrig.thofu.Parser;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
@@ -252,7 +253,7 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 
 		this.provider.clear();
 
-		for (Entry<LSymbol, LObject> entry : environment.entrySet()) {
+		for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
 			provider.addCompletion(new BasicCompletion(provider, entry.getKey().toString()));
 		}

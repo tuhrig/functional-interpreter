@@ -3,6 +3,7 @@ package de.tuhrig.thofu.types;
 import java.util.Map.Entry;
 
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Environment.Container;
 
 public class LLambda extends LOperation {
 
@@ -36,7 +37,7 @@ public class LLambda extends LOperation {
 		// we make a new and empty inner environment
 		Environment inner = new Environment(environment, name);
 
-		for (Entry<LSymbol, LObject> current : closure.entrySet()) {
+		for (Entry<LSymbol, Container> current : closure.entrySet()) {
 
 			if(!parameters.contains(current.getKey()) && !inner.contains(current.getKey())) {
 	

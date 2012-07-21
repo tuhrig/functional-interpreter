@@ -20,8 +20,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Environment.Container;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
-import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LOperation;
 import de.tuhrig.thofu.types.LSymbol;
 
@@ -73,11 +73,11 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					List<DefaultMutableTreeNode> objects = new ArrayList<DefaultMutableTreeNode>();
 
-					for (Entry<LSymbol, LObject> entry : environment.entrySet()) {
+					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue() instanceof LOperation) == false) {
+						if ((entry.getValue().object instanceof LOperation) == false) {
 
-							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue()));
+							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().object));
 						}
 					}
 
@@ -88,11 +88,11 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					List<DefaultMutableTreeNode> objects = new ArrayList<DefaultMutableTreeNode>();
 
-					for (Entry<LSymbol, LObject> entry : environment.entrySet()) {
+					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue() instanceof LOperation) == true) {
+						if ((entry.getValue().object instanceof LOperation) == true) {
 
-							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue()));
+							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().object));
 						}
 					}
 
@@ -112,9 +112,9 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					int count = 0;
 
-					for (Entry<LSymbol, LObject> entry : environment.entrySet()) {
+					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue() instanceof LOperation) == false) {
+						if ((entry.getValue().object instanceof LOperation) == false) {
 
 							count++;
 						}
@@ -127,9 +127,9 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					int count = 0;
 
-					for (Entry<LSymbol, LObject> entry : environment.entrySet()) {
+					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue() instanceof LOperation) == true) {
+						if ((entry.getValue().object instanceof LOperation) == true) {
 
 							count++;
 						}
