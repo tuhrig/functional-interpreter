@@ -200,9 +200,7 @@ class GUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
-				promptUnsavedWarningIfDirty();
-
+				
 				int returnVal = fc.showOpenDialog(GUI.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {

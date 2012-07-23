@@ -31,6 +31,7 @@ class SwingFactory {
 		RSyntaxTextArea area = new RSyntaxTextArea();
 
 		area.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LISP);
+		
 		area.setText(text);
 		area.setName(name);
 		area.setToolTipText(name);

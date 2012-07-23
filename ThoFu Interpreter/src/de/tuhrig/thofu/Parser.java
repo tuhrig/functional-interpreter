@@ -199,7 +199,7 @@ public class Parser {
 		
 		int count = 0;
 
-		char[] chars = commands.toCharArray();
+		char[] chars = commands.trim().toCharArray();
 
 		StringBuffer buffer = new StringBuffer();
 
@@ -222,7 +222,7 @@ public class Parser {
 
 				String command = buffer.toString().trim();
 
-				if (!command.equals("")) {
+				if (!command.trim().equals("")) {
 
 					LList tmp = parse(command);
 					

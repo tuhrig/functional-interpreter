@@ -2,15 +2,13 @@ package de.tuhrig.thofu.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -47,15 +45,9 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	private IInterpreter interpreter;
 
-	private List<Tabb> areas = new ArrayList<>();
-	
-	private final JTabbedPane tabbs;
-
-	private boolean dirty;
+	private final static JTabbedPane tabbs = new JTabbedPane();
 
 	Editor() {
-
-		tabbs = new JTabbedPane();
 
 		this.setLayout(new BorderLayout(3, 3));
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -69,26 +61,11 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
 
-		area.addKeyListener(new KeyAdapter() {
-
-			@Override
-			public void keyPressed(KeyEvent event) {
-
-				GUI.gui.markGrubby();
-				
-				Editor.this.markDirty();
-			}
-		});
-		
 		AutoCompletion autoCompletion = new AutoCompletion(provider);
 		autoCompletion.install(area);
 
-		RTextScrollPane scrollPane = new RTextScrollPane(area);
+		RTextScrollPane scrollPane = new FileTabb(area, file);
 
-		scrollPane.setPreferredSize(new Dimension(1, 300));
-
-		areas.add(new Tabb(file, scrollPane));
-		
 		if(file.exists()) {
 			
 			try {
@@ -103,33 +80,21 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			}
 		}
 
-		tabbs.addTab(file.getName(), scrollPane);
-	}
-
-	protected void markDirty() {
-
-		if (!dirty) {
-
-			this.dirty = true;
-
-			int index = tabbs.getSelectedIndex();
-
-			tabbs.setTitleAt(index, tabbs.getTitleAt(index) + "*");
-		}
+		tabbs.add(scrollPane);
 	}
 
 	private void setTabbs() {
 
-		this.removeAll();
-		this.setBackground(null);
-		this.add(tabbs);
+		removeAll();
+		setBackground(null);
+		add(tabbs);
 	}
 	
 	private void setLogo() {
 
 		JLabel label = new JLabel(new ImageIcon(SwingFactory.create("icons/logo.gif")));
-		this.add(label);
-		this.setBackground(Color.white);
+		add(label);
+		setBackground(Color.white);
 	}
 
 	public void setInterpreter(IInterpreter interpreter) {
@@ -141,8 +106,6 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	@Override
 	public void reset(Environment environment) {
-
-		areas = new ArrayList<>();
 
 		tabbs.removeAll();
 	}
@@ -159,128 +122,49 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	}
 
 	public void save() {
-
-		try {
-
-			Component tmp = getCurrentTab();
-
-			File file = getTabbFor(tmp).file;
-			
-			System.out.println(file);
-			
-			String content = getTabbFor(tmp).getText();
-			
-			Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
-		}
-		catch (Exception e) {
-
-			e.printStackTrace();
-			
-			logger.error(e.getMessage());
-		}
 		
-		markClean();
+		FileTabb tabb = (FileTabb) tabbs.getSelectedComponent();
+
+		tabb.save();
 	}
 
 	public void saveAll() {
 		
 		for(int i = 0; i < tabbs.getTabCount(); i++) {
-		
-			try {
 	
-				File file= areas.get(i).file;
-				
-				String content = areas.get(i).getText();
-				
-				Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
-			}
-			catch (Exception e) {
-	
-				logger.error(e.getMessage());
-			}
+			FileTabb tabb = (FileTabb) tabbs.getComponent(i);
+			
+			tabb.save();
 		}
-		
-		markAllClean();
 	}
 	
-	public void saveAs(File selectedFile) {
+	public void saveAs(File file) {
 
-		Component tmp = getCurrentTab();
+		FileTabb tabb = (FileTabb) tabbs.getSelectedComponent();
 		
-		getTabbFor(tmp).file = selectedFile;
-		
-		save();
+		tabb.saveAs(file);
 	}
 
 	public void close() {
-		
-		Component tmp = getCurrentTab();
-		
-		tabbs.remove(tmp);
-		
-		areas.remove(tmp);
+
+		tabbs.remove(tabbs.getSelectedComponent());
 		
 		if(tabbs.getComponentCount() == 0)
 			setLogo();
-	}
-	
-	private Component getCurrentTab() {
-
-		return tabbs.getSelectedComponent();
-	}
-	
-	private Tabb getTabbFor(Component component) {
-
-		System.out.println(Arrays.toString(areas.toArray()));
-		System.out.println(component);
-
-		
-		return areas.get(areas.indexOf(new Tabb(component)));
 	}
 	
 	public void closeAll() {
 
 		tabbs.removeAll();
 
-		this.areas = new ArrayList<>();
-		
 		setLogo();
 	}
 	
-	private void markClean() {
-
-		int index = tabbs.getSelectedIndex();
-
-		tabbs.setTitleAt(index, tabbs.getTitleAt(index).replace("*", ""));	
-	}
-	
-	private void markAllClean() {
-
-		for(int i = 0; i < tabbs.getTabCount(); i++) {
-	
-			tabbs.setTitleAt(i, tabbs.getTitleAt(i).replace("*", ""));
-		}
-	}
-
-	public String getText() {
-
-		Component tmp = getCurrentTab();
-
-		return getTabbFor(tmp).getText();
-	}
-
-	public void setText(String buffer) {
-
-		Component tmp = getCurrentTab();
-		
-		getTabbFor(tmp).setText(buffer);
-	}
-
 	void execute() {
 		
 		for(int i = 0; i < tabbs.getTabCount(); i++ ) {
 
-			String commands = areas.get(i).getText();
+			String commands = ((FileTabb) tabbs.getComponent(i)).getText();
 	
 			Parser parser = new Parser();
 			
@@ -293,12 +177,12 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	}
 
 	public JPopupMenu getPopupMenu() {
-	
-		Component tmp = getCurrentTab();
-		
-		if(tmp != null) {
 
-			return getTabbFor(tmp).getPopupMenu();
+		if(tabbs.getComponentCount() > 0) {
+
+			FileTabb tabb = (FileTabb) tabbs.getSelectedComponent();
+			
+			return tabb.getPopupMenu();
 		}
 		
 		return null;
@@ -306,47 +190,123 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	public boolean isDirty() {
 
-		return dirty;
+		for(int i = 0; i < tabbs.getComponentCount(); i++) {
+			
+			FileTabb tabb = (FileTabb) tabbs.getComponent(i);
+
+			if(tabb.isDirty())
+				return true;
+		}
+
+		return false;
 	}
 	
-	static class Tabb {
-		
-		File file;
-		
-		RTextScrollPane area;
-		
-		public Tabb(File file, RTextScrollPane area) {
+	static class FileTabb extends RTextScrollPane {
 
-			this.file = file;
-			
+		private static final long serialVersionUID = 1L;
+		
+		private File file;
+		
+		private boolean dirty = false;
+
+		private RSyntaxTextArea area;
+
+		public FileTabb(RSyntaxTextArea area, File file) {
+
+			super(area);
+
 			this.area = area;
-		}
+			
+			setName("no title");
+			setFile(file);
+			setPreferredSize(new Dimension(1, 300));
+			
+			area.addKeyListener(new KeyAdapter() {
 
-		public Tabb(Component component) {
+				@Override
+				public void keyPressed(KeyEvent event) {
 
-			this.area = (RTextScrollPane) component;
-		}
-
-		public JPopupMenu getPopupMenu() {
-
-			return ((RSyntaxTextArea) area.getComponent(0)).getPopupMenu();
-		}
-
-		public void setText(String buffer) {
-
-			((RSyntaxTextArea) area.getComponent(0)).setText(buffer);
+					GUI.gui.markGrubby();
+					FileTabb.this.markDirty();
+				}
+			});
 		}
 
 		public String getText() {
 
-			return ((RSyntaxTextArea) area.getComponent(0)).getText();
+			return area.getText();
+		}
+
+		public File getFile() {
+
+			return file;
+		}
+
+		public void setFile(File file) {
+
+			setName(file.getName());
+		
+			this.file = file;
 		}
 		
-		public boolean equals(Object object) {
-		
-			System.out.println("fgifgj");
+		public void markDirty() {
+
+			dirty = true;
 			
-			return area.equals(((Tabb) object).area);
+			setName(file.getName() + "*");
+		}
+		
+		public void markClean() {
+			
+			dirty = false;
+			
+			setName(file.getName());
+		}
+		
+		public boolean isDirty() {
+			
+			return dirty;
+		}
+		
+		public void save() {
+			
+			String content = getText();
+			File file = getFile();
+			
+			try {
+				
+				Files.write(file.toPath(), content.getBytes(), StandardOpenOption.CREATE);
+			}
+			catch (IOException e) {
+		
+				e.printStackTrace();
+			}
+			
+			markClean();
+		}
+		
+		public void saveAs(File file) {
+			
+			setFile(file);
+			
+			save();
+			
+			markClean();
+		}
+		
+		public void setName(String name) {
+			
+			super.setName(name);
+		
+			int index = tabbs.indexOfComponent(this);
+			
+			if(index != -1)
+				tabbs.setTitleAt(index, name);
+		}
+		
+		public JPopupMenu getPopupMenu() {
+			
+			return area.getPopupMenu();
 		}
 	}
 }
