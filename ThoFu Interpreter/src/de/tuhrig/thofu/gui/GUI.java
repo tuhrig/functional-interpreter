@@ -74,7 +74,7 @@ class GUI extends JFrame {
 		JSplitPane editorArea = new JSplitPane(JSplitPane.VERTICAL_SPLIT, this.editor, this.repl);
 		editorArea.setOneTouchExpandable(true);
 		editorArea.setName("Editor area");
-	 
+
 		// main area
 		JPanel inner = new JPanel();
 		inner.setLayout(new BorderLayout(3, 3));

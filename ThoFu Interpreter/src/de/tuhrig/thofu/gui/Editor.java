@@ -51,6 +51,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 		this.setLayout(new BorderLayout(3, 3));
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
+		this.setPreferredSize(new Dimension(100, 700));
 		
 		setLogo();
 	}

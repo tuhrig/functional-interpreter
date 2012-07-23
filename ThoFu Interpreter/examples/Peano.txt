@@ -1,0 +1,142 @@
+; based on a script by Benjamin Thaut
+; refactored by Raphael Brand
+
+(define (pair? x) (eq? (type? x) 'Cons))
+(define not !)
+(define or ||)
+
+;Natural numbers
+(define _0 null)
+(define (SUCC x) (cons null x))
+(define (PRED x) (rest x))
+(define _1 (SUCC _0))
+(define _2 (SUCC _1))
+(define _3 (SUCC _2))
+(define _4 (SUCC _3))
+(define _5 (SUCC _4))
+(define _6 (SUCC _5))
+(define _7 (SUCC _6))
+(define _8 (SUCC _7))
+(define _9 (SUCC _8))
+(define _10 (SUCC _9))
+
+(define (EQ_NAT? a b)
+  (if (eq? a _0)
+      (eq? b _0)
+      ;else
+      (if (eq? b _0)
+          false
+          ;else
+          (EQ_NAT? (PRED a) (PRED b))
+       )
+   )
+)
+
+(define (LT_NAT? a b)
+  (if (eq? a _0)
+      (not (eq? b _0))
+      ;else
+      (if (eq? b _0)
+          false
+          ;else
+          (LT_NAT? (PRED a) (PRED b))
+      )
+  )
+)
+
+(define (GT_NAT? a b) (LT_NAT? b a))
+
+(define (LE_NAT? a b) (not (GT_NAT? a b)))
+
+(define (GE_NAT? a b) (LE_NAT? b a))
+
+(define (ADD_NAT a b)
+  (if (eq? b _0)
+      a
+      ;else
+      (ADD_NAT (SUCC a) (PRED b))
+  )
+)
+
+(define (SUB_NAT a b)
+  (if (eq? b _0)
+      a
+      ;else
+      (SUB_NAT (PRED a) (PRED b))
+  )
+)
+
+(define (MUL_NAT a b)
+  (if (or (eq? a _0) (eq? b _0))
+      _0
+      ;else
+      (if (EQ_NAT? b _1)
+          a
+          ;else
+          (ADD_NAT (MUL_NAT a (PRED b)) a)
+      )
+  )
+)
+
+(define (DIV_NAT a b)
+  (if (eq? b _0)
+      (print "division by zero")
+      (if (LT_NAT? a b)
+          _0
+          ;else
+          (SUCC (DIV_NAT (SUB_NAT a b) b))
+      )
+  )
+)
+
+(define (MOD_NAT a b)
+  (if (eq? b _0)
+      (print "modulo by zero")
+      (if (LT_NAT? a b)
+          a
+          ;else
+          (MOD_NAT (SUB_NAT a b) b)
+      )
+  )
+)
+
+(define (PRINT_NAT a)
+  (if (EQ_NAT? a _0)
+      (print 0)
+  (if (EQ_NAT? a _1)
+      (print 1)
+  (if (EQ_NAT? a _2)
+      (print 2)
+  (if (EQ_NAT? a _3)
+      (print 3)
+  (if (EQ_NAT? a _4)
+      (print 4)
+  (if (EQ_NAT? a _5)
+      (print 5)
+  (if (EQ_NAT? a _6)
+      (print 6)
+  (if (EQ_NAT? a _7)
+      (print 7)
+  (if (EQ_NAT? a _8)
+      (print 8)
+  (if (EQ_NAT? a _9)
+      (print 9)   
+      ;else
+      (begin
+        (PRINT_NAT (DIV_NAT a _10))
+        (PRINT_NAT (MOD_NAT a _10))
+      )
+  ))))))))))
+)
+
+(define (POW_NAT a b)
+  (if (eq? b _0)
+      _1
+      ;else
+      (MUL_NAT (POW_NAT a (PRED b)) a)
+  )
+)
+
+; TRY IT!
+; (PRINT_NAT (DIV_NAT _10 _2)) --> 5
+; (PRINT_NAT (ADD_NAT _5 _3))  --> 8
