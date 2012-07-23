@@ -114,9 +114,9 @@ class GUI extends JFrame {
 		
 		// menu
 		JMenuItem exit = SwingFactory.createItem("Exit", "icons/Remove.png");
-		JMenuItem start = SwingFactory.createItem("Start", "icons/Play.png");
+		JMenuItem start = SwingFactory.createItem("Start Script", "icons/Play.png");
 		JMenuItem stop = SwingFactory.createItem("Stop", "icons/Stop.png");	
-		JMenuItem reset = SwingFactory.createItem("Reset", "icons/Play All.png");	
+		JMenuItem reset = SwingFactory.createItem("Reset Interpreter", "icons/Play All.png");	
 		
 		JMenuItem save = SwingFactory.createItem("Save", "icons/User.png");	
 		JMenuItem saveAll = SwingFactory.createItem("Save All", "icons/Users.png");	
@@ -169,7 +169,10 @@ class GUI extends JFrame {
 
 				setInterpreter(new Interpreter());
 				
-				markFresh();
+				if(editor.openFiles())
+					markGrubby();
+				else
+					markFresh();
 			}
 		});
 
@@ -357,7 +360,6 @@ class GUI extends JFrame {
 		editor.setInterpreter(interpreter);
 		repl.setInterpreter(interpreter);
 
-		editor.reset(interpreter.getEnvironment());
 		repl.reset(interpreter.getEnvironment());
 		inspector.reset(interpreter.getEnvironment());
 		
@@ -373,7 +375,7 @@ class GUI extends JFrame {
 
 			grubby = true;
 
-			status.setMessage("Definitions have changed! Restart the interpreter!");
+			status.setMessage("Definitions have changed! Start Script!");
 			status.setColor(Color.RED);
 		}
 	}

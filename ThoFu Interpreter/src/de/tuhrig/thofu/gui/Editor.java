@@ -26,8 +26,8 @@ import org.fife.ui.autocomplete.DefaultCompletionProvider;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
+import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
-import de.tuhrig.thofu.Environment.Container;
 import de.tuhrig.thofu.Parser;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
@@ -103,12 +103,6 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		this.interpreter = interpreter;
 
 		update(interpreter.getEnvironment());
-	}
-
-	@Override
-	public void reset(Environment environment) {
-
-		tabbs.removeAll();
 	}
 
 	@Override
@@ -231,6 +225,10 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 					FileTabb.this.markDirty();
 				}
 			});
+			
+			// if it's a new file, we mark it dirty, because it's not saved
+			if(!file.exists())
+				markDirty();
 		}
 
 		public String getText() {
@@ -309,5 +307,10 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			
 			return area.getPopupMenu();
 		}
+	}
+
+	public boolean openFiles() {
+
+		return tabbs.getComponentCount() > 0;
 	}
 }

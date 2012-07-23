@@ -100,14 +100,17 @@ class FileBrowser extends JPanel {
 				setCurrentDirectory(me);
 				
 				if(me.getClickCount() == 2) {
-
+	
 					TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
 
-					File file = new File(tp.getLastPathComponent().toString());
-
-					if (file.exists() && file.isFile()) {
-
-						GUI.gui.open(file);
+					if(tp != null) {
+						
+						File file = new File(tp.getLastPathComponent().toString());
+	
+						if (file.exists() && file.isFile()) {
+	
+							GUI.gui.open(file);
+						}
 					}
 				}
 				
@@ -143,15 +146,18 @@ class FileBrowser extends JPanel {
 	
 		TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
 
-		File file = new File(tp.getLastPathComponent().toString());
+		if(tp != null) {
 		
-		if(file.isDirectory()) {
+			File file = new File(tp.getLastPathComponent().toString());
 			
-			GUI.gui.setCurrentDirectory(file);
-		}
-		else {
-			
-			GUI.gui.setCurrentDirectory(file.getParentFile());
+			if(file.isDirectory()) {
+				
+				GUI.gui.setCurrentDirectory(file);
+			}
+			else {
+				
+				GUI.gui.setCurrentDirectory(file.getParentFile());
+			}
 		}
 	}
 

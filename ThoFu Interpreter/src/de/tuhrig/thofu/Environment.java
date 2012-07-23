@@ -62,7 +62,7 @@ public class Environment {
 	public LObject get(LSymbol key) {
 
 		if (objects.containsKey(key))
-			return objects.get(key).object;
+			return objects.get(key).getObject();
 
 		else if (parent != null)
 			return parent.get(key);
@@ -160,22 +160,12 @@ public class Environment {
 
 			Container tmp = objects.get(key);
 			
-			tmp.object = value;
+			tmp.setObject(value);
 		}
 
 		else if (parent != null) {
 			
 			parent.set(key, value);
-		}
-	}
-	
-	public static class Container {
-		
-		public LObject object;
-		
-		public Container(LObject object) {
-
-			this.object = object;
 		}
 	}
 }

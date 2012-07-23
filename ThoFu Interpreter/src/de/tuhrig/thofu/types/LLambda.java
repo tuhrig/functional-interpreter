@@ -2,8 +2,8 @@ package de.tuhrig.thofu.types;
 
 import java.util.Map.Entry;
 
+import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
-import de.tuhrig.thofu.Environment.Container;
 
 public class LLambda extends LOperation {
 

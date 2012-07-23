@@ -5,13 +5,11 @@ The whole project as well as aditional information can be found on my personal w
 
 Implemented in **Java 7**
 
-**Last edit:** 8:29  Samstag, Mai 19, 2012
-
 ----------
 
 # What's ThoFu Interpreter?
 
-It's Thomas functional interpreter ;) (in the following just ThoFu). So you can't eat it, sorry. But you can programm in a LISP like syntax and also access Java class as you will see.  
+It's **Thomas functional interpreter** (in the following just ThoFu ;). So you can't eat it, I'm sorry. But you can programm in a LISP like syntax and also access Java class as you will see.  
 It consists of two different parts: (1) a common LISP interpreter and (2) an API to access and use all Java classes on the class-path.
 
 # Built-in Functions & Constants
@@ -175,21 +173,23 @@ The project is organized as a common **Java Eclipse projekt**. It has the follow
 	|-- src (Java source code)
 		|-- de.tuhrig (contains basic classes)
 			|-- gui (contains the GUI)
+				|-- icons (iocns for the UI)
+				|-- README.md (this file)
 			|-- interfaces	(contains a set of interfaces)
 			|-- java (contains the API to Java)
 			|-- types (contains basic LISP types)
+		|-- inti.txt (LISP file loaded on the startup of the interpreter)
 	|-- test (JUnit tests)
 	|-- perf (performance tests)
-	|-- docs (variouse documents)
 	|-- examples (runnable example scripts)
-	|-- icons (iocns for the UI)
 	|-- libs (third-party JARs)
  	|-- uml (UML diagrams)
 		|-- Types.png
 		|-- GUI.png
 		|-- Interpreter.png
-	|-- inti.txt (LISP file loaded on the startup of the interpreter)
-	|-- README.md (this file)
+	|-- license.txt
+	|-- ReadMe.txt
+	
 
 # Examples
 

@@ -19,8 +19,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
-import de.tuhrig.thofu.Environment.Container;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.types.LOperation;
 import de.tuhrig.thofu.types.LSymbol;
@@ -75,9 +75,9 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue().object instanceof LOperation) == false) {
+						if ((entry.getValue().getObject() instanceof LOperation) == false) {
 
-							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().object));
+							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().getObject()));
 						}
 					}
 
@@ -90,9 +90,9 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue().object instanceof LOperation) == true) {
+						if ((entry.getValue().getObject() instanceof LOperation) == true) {
 
-							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().object));
+							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().getObject()));
 						}
 					}
 
@@ -114,7 +114,7 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue().object instanceof LOperation) == false) {
+						if ((entry.getValue().getObject() instanceof LOperation) == false) {
 
 							count++;
 						}
@@ -129,7 +129,7 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue().object instanceof LOperation) == true) {
+						if ((entry.getValue().getObject() instanceof LOperation) == true) {
 
 							count++;
 						}

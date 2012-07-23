@@ -21,8 +21,8 @@ import org.fife.ui.autocomplete.DefaultCompletionProvider;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
+import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
-import de.tuhrig.thofu.Environment.Container;
 import de.tuhrig.thofu.Parser;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
