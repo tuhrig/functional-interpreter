@@ -60,4 +60,10 @@ public class LBoolean extends LObject { // LLeaf {
 		
 		return Boolean.valueOf(false);
 	}
+
+	@Override
+	public int argrumentSize(LObject object) {
+
+		return 1;
+	}
 }

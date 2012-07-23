@@ -41,4 +41,10 @@ public class LNull extends LObject {
 
 		return System.identityHashCode(this);
 	}
+
+	@Override
+	public int argrumentSize(LObject object) {
+
+		return 1;
+	}
 }

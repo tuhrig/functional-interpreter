@@ -108,4 +108,10 @@ public class LLambda extends LOperation {
 
 		return "<Lambda: " + name + ">";
 	}
+
+	@Override
+	public int argrumentSize(LObject object) {
+
+		return parametersSize;
+	}
 }

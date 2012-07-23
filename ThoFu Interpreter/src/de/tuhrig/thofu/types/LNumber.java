@@ -67,4 +67,10 @@ public class LNumber extends LObject { // LLeaf {
 
 		return value.compareTo(n.value);
 	}
+
+	@Override
+	public int argrumentSize(LObject object) {
+
+		return 1;
+	}
 }

@@ -229,4 +229,12 @@ public class LList extends LObject implements List<LObject> { // LNode {
 
 		return this.list.toArray(a);
 	}
+
+	@Override
+	public int argrumentSize(LObject object) {
+
+		LList list = (LList) object;
+		
+		return list.size() + 1;
+	}
 }

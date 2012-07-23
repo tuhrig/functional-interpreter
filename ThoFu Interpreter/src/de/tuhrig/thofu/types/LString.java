@@ -40,4 +40,10 @@ public class LString extends LObject { // LLeaf {
 
 		return value.hashCode();
 	}
+
+	@Override
+	public int argrumentSize(LObject object) {
+
+		return 1;
+	}
 }

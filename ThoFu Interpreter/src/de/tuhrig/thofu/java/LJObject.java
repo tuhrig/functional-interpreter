@@ -46,4 +46,10 @@ public class LJObject extends LJava {
 		
 		return this;
 	}
+	
+	@Override
+	public int argrumentSize(LObject tokens) {
+
+		return -1;
+	}
 }

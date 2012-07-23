@@ -52,4 +52,10 @@ public class LSymbol extends LObject {
 
 		return environment.get(this);
 	}
+
+	@Override
+	public int argrumentSize(LObject object) {
+
+		return 1;
+	}
 }

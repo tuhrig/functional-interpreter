@@ -28,6 +28,8 @@ public class Debugger extends JPanel {
 	
 	private static JTable view = new JTable();
 	
+	private static int step = 0;
+	
 	public Debugger() {
 
 		setLayout(new BorderLayout());
@@ -35,7 +37,10 @@ public class Debugger extends JPanel {
 		view.addColumn(new TableColumn());
 		
 		model = new DefaultTableModel();
+		model.addColumn("Operation");
 		model.addColumn("Object");
+		model.addColumn("Type");
+		model.addColumn("Tokens");
 		
 		view.setModel(model);
 		
@@ -48,10 +53,19 @@ public class Debugger extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			
-				if(active.isSelected())
+				if(active.isSelected()) {
+					
 					Interpreter.setDebugg(true);
-				else
+					active.setText("Reset");
+					
+					while(model.getRowCount() > 0)
+						model.removeRow(0);
+				}
+				else {
+					
 					Interpreter.setDebugg(false);
+					active.setText("Activate Step-by-Step Debugger");
+				}
 			}
 		});
 		
@@ -71,12 +85,16 @@ public class Debugger extends JPanel {
 
 	public static void call(final LObject obj, Environment environment, LObject tokens) {
 
-		model.addRow(new Object[]{obj});
+		step++;
+		
+		model.addRow(new Object[]{step, obj, obj.getClass().getSimpleName(), tokens});
 	}
 
-	public static void result(LObject result) {
+	public static void result(LObject result, int arguments) {
 
-		model.removeRow(model.getRowCount() - 1);
-		model.addRow(new Object[]{result});
+		for(int i = 0; i < arguments; i++)
+			model.removeRow(model.getRowCount() - 1);
+		
+		model.addRow(new Object[]{step, result, result.getClass().getSimpleName(), ""});
 	}
 }

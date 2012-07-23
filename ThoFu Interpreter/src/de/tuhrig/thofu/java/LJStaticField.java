@@ -35,4 +35,10 @@ public class LJStaticField extends LJava {
 		
 		return this;
 	}
+	
+	@Override
+	public int argrumentSize(LObject tokens) {
+
+		return -1;
+	}
 }

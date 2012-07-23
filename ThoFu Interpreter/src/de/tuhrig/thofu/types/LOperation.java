@@ -33,4 +33,11 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 		
 		return name.hashCode();
 	}
+	
+	public int argrumentSize(LObject object) {
+		
+		LList list = (LList) object;
+		
+		return list.size();
+	}
 }

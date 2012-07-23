@@ -25,12 +25,14 @@ public abstract class LObject { // implements TreeNode {
 		LObject result = evaluate(environment, tokens);
 		
 		if(Interpreter.isDebugg()) {
-			
-			Debugger.result(result);
+
+			Debugger.result(result, argrumentSize(tokens));
 		}
 		
 		return result;
 	}
+
+	public abstract int argrumentSize(LObject tokens);
 
 	public abstract LObject evaluate(Environment environment, LObject tokens);
 
