@@ -24,7 +24,7 @@ public class LJObject extends LJava {
 	}
 
 	@Override
-	public LObject eval(Environment environment, LObject tokens) {
+	public LObject evaluate(Environment environment, LObject tokens) {
 
 		if(result == null) {
 			

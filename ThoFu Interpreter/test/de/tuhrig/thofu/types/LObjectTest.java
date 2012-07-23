@@ -8,7 +8,7 @@ public abstract class LObjectTest {
 	public abstract void toStringMethod();
 	
 	@Test
-	public abstract void evalMethod();
+	public abstract void evaluateMethod();
 	
 	@Test
 	public abstract void equalsMethod();

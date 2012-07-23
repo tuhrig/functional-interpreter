@@ -137,7 +137,7 @@ public class LTupelTest extends LObjectTest {
 		tokens.add(new LNumber("1"));
 		tokens.add(new LNumber("2"));
 
-		LTupel tupel = (LTupel) cons.eval(environment, tokens);
+		LTupel tupel = (LTupel) cons.run(environment, tokens);
 
 		Assert.assertEquals("'(1 . 2)", tupel.toString());
 		Assert.assertEquals(new LNumber("1"), tupel.getFirst());
@@ -151,7 +151,7 @@ public class LTupelTest extends LObjectTest {
 		tokens.add(new LNumber("1"));
 		tokens.add(LNull.NULL);
 
-		LTupel tupel = (LTupel) cons.eval(environment, tokens);
+		LTupel tupel = (LTupel) cons.run(environment, tokens);
 
 		Assert.assertEquals("'(1)", tupel.toString());
 		Assert.assertEquals(new LNumber("1"), tupel.getFirst());
@@ -165,7 +165,7 @@ public class LTupelTest extends LObjectTest {
 		tokens.add(LNull.NULL);
 		tokens.add(LNull.NULL);
 
-		LTupel tupel = (LTupel) cons.eval(environment, tokens);
+		LTupel tupel = (LTupel) cons.run(environment, tokens);
 
 		Assert.assertEquals(LNull.NULL, tupel.getFirst());
 		Assert.assertEquals(LNull.NULL, tupel.getRest());
@@ -178,7 +178,7 @@ public class LTupelTest extends LObjectTest {
 		tokens.add(new LNumber("1"));
 		tokens.add(new LTupel(new LNumber("2"), new LNumber("3")));
 
-		LTupel tupel = (LTupel) cons.eval(environment, tokens);
+		LTupel tupel = (LTupel) cons.run(environment, tokens);
 
 		Assert.assertEquals("'(1 2 . 3)", tupel.toString());
 
@@ -193,25 +193,25 @@ public class LTupelTest extends LObjectTest {
 
 		LObject o;
 
-		o = cons.eval(environment, new Parser().parse("(1 2)"));
+		o = cons.run(environment, new Parser().parse("(1 2)"));
 		Assert.assertEquals("'(1 . 2)", o.toString());
 		Assert.assertTrue(o instanceof LTupel);
 		Assert.assertTrue(((LTupel) o).getFirst() instanceof LNumber);
 		Assert.assertTrue(((LTupel) o).getRest() instanceof LNumber);
 
-		o = cons.eval(environment, new Parser().parse("(1 null)"));
+		o = cons.run(environment, new Parser().parse("(1 null)"));
 		Assert.assertEquals("'(1)", o.toString());
 		Assert.assertTrue(o instanceof LTupel);
 		Assert.assertTrue(((LTupel) o).getFirst() instanceof LNumber);
 		Assert.assertTrue(((LTupel) o).getRest() instanceof LNull);
 
-		o = cons.eval(environment, new Parser().parse("(null 1)"));
+		o = cons.run(environment, new Parser().parse("(null 1)"));
 		Assert.assertEquals("'(() . 1)", o.toString());
 		Assert.assertTrue(o instanceof LTupel);
 		Assert.assertTrue(((LTupel) o).getFirst() instanceof LNull);
 		Assert.assertTrue(((LTupel) o).getRest() instanceof LNumber);
 
-		o = cons.eval(environment, new Parser().parse("((cons 1 2) 3)"));
+		o = cons.run(environment, new Parser().parse("((cons 1 2) 3)"));
 		Assert.assertEquals("'((1 . 2) . 3)", o.toString());
 		Assert.assertTrue(o instanceof LTupel);
 		Assert.assertTrue(((LTupel) o).getFirst() instanceof LTupel);
@@ -226,11 +226,11 @@ public class LTupelTest extends LObjectTest {
 	}
 
 	@Override
-	public void evalMethod() {
+	public void evaluateMethod() {
 
 		tupel = new LTupel(new LNumber("1"), new LNumber("2"));
 
-		LObject o = tupel.eval(null, null);
+		LObject o = tupel.run(null, null);
 
 		Assert.assertTrue(o instanceof LTupel);
 	}

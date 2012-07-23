@@ -18,25 +18,25 @@ public class LList extends LObject implements List<LObject> { // LNode {
 	}
 
 	@Override
-	public LObject eval(Environment environment, LObject tokens) {
+	public LObject evaluate(Environment environment, LObject tokens) {
 
 		LObject first = this.getFirst();
 
 		if (first instanceof List) {
 			
-			LObject object = first.eval(environment, this.getRest());
+			LObject object = first.run(environment, this.getRest());
 
-			return object.eval(environment, this.getRest());
+			return object.run(environment, this.getRest());
 		}
 
-		// e.g. eval a LSymbol and get the operation behind it
+		// e.g. evaluate a LSymbol and get the operation behind it
 		if(first instanceof LSymbol) {
 
-			first = first.eval(environment, null);
+			first = first.run(environment, null);
 		}
 
-		// e.g. eval this operation now
-		return first.eval(environment, this.getRest());
+		// e.g. evaluate this operation now
+		return first.run(environment, this.getRest());
 	}
 
 	@Override

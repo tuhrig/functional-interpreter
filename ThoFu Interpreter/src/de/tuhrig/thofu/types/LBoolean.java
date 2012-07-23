@@ -22,7 +22,7 @@ public class LBoolean extends LObject { // LLeaf {
 	}
 
 	@Override
-	public LObject eval(Environment environment, LObject tokens) {
+	public LObject evaluate(Environment environment, LObject tokens) {
 
 		return this;
 	}

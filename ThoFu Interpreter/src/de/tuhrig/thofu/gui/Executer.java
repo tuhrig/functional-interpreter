@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import de.tuhrig.thofu.interfaces.IInterpreter;
@@ -15,22 +16,24 @@ import de.tuhrig.thofu.types.LObject;
 public class Executer {
 
 	public final static Executer instance = new Executer();
-	
-	private String value = "initial";
-	
+
 	private Executer() {
 		
 		// singleton
 	}
 
-	public String eval(final List<LObject> objects, final IInterpreter interpreter) {
+	public void evaluate(final JTextArea area, final List<LObject> objects, final IInterpreter interpreter) {
 
 		GUI.gui.start();
 		
 		Thread worker = new Thread() {
-            
-            public void run() {
+			
+            private String value = "";
 
+			public void run() {
+
+				GUI.gui.enableControls(false);
+				
             	Callable<LObject> callable = new Callable<LObject>() {
             		
 					@Override
@@ -40,7 +43,7 @@ public class Executer {
 						
 						for(LObject object: objects) {
 							
-							result = object.eval(interpreter.getEnvironment(), object);
+							result = interpreter.execute(object);
 						}
 						
 						return result;
@@ -53,7 +56,7 @@ public class Executer {
 
 				try {
 					
-					value = result.get().toString();
+					value  = result.get().toString();
 				}
 				catch (InterruptedException | ExecutionException e) {
 					
@@ -64,24 +67,19 @@ public class Executer {
                 	
                     public void run() {
 
+                    	if(area != null) {
+                    		
+                    		area.append(value + "\n>> ");
+                    	}
+                    	
+                    	GUI.gui.enableControls(true);
+                    	
 						GUI.gui.stop();
-						GUI.gui.markFresh();
                     }
                 });
             }
         };
         
         worker.start();
-        
-        try {
-        	
-			worker.join();
-		}
-		catch (InterruptedException e) {
-			
-			// works
-		}
-        
-		return value;
 	}
 }

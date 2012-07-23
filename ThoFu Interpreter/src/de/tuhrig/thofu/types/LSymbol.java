@@ -48,7 +48,7 @@ public class LSymbol extends LObject {
 		return value.hashCode();
 	}
 
-	public LObject eval(Environment environment, LObject tokens) {
+	public LObject evaluate(Environment environment, LObject tokens) {
 
 		return environment.get(this);
 	}

@@ -83,7 +83,7 @@ public abstract class LJava extends LObject {
 			}
 			else if(o instanceof LJava) {
 
-				o = ((LJava) o).eval(environment, tokens);
+				o = ((LJava) o).run(environment, tokens);
 				
 				types[i] = (((LJava) o).getJClass());
 			}
@@ -125,7 +125,7 @@ public abstract class LJava extends LObject {
 			}
 			else if(o instanceof LJava) {
 				
-				o = ((LJava) o).eval(environment, tokens);
+				o = ((LJava) o).run(environment, tokens);
 				
 				args[i] = (((LJava) o).getJObject());
 			}
@@ -259,14 +259,14 @@ public abstract class LJava extends LObject {
 				LList list = new LList();
 				list.add(qut);
 
-				LObject result = lambda.eval(environment, list);
+				LObject result = lambda.run(environment, list);
 
 				list = new LList();
 
 				for (Object o : args)
 					list.add(new LJObject(o));
 
-				return result.eval(environment, list);
+				return result.run(environment, list);
 			}
 		};
 	}

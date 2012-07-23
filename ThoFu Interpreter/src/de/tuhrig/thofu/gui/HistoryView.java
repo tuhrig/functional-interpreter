@@ -1,7 +1,6 @@
 package de.tuhrig.thofu.gui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -16,6 +15,7 @@ import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import de.tuhrig.thofu.gui.History.Identifier;
@@ -26,25 +26,25 @@ import de.tuhrig.thofu.types.LObject;
 public class HistoryView extends JPanel implements HistoryListener {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private final Set<TreePath> expanded = new HashSet<TreePath>();
 
 	private final History history = History.instance;
 
-	private final JTree tree;
-	
+	private JTree tree;
+
+	private TreeModel model;
+
+	private DefaultMutableTreeNode root;
+
 	public HistoryView() {
 		
 		this.setLayout(new BorderLayout(3, 3));
 		this.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
-		JPanel panel = new JPanel();
 
-		panel.setLayout(new GridLayout(history.size(), 1));
-		
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Commands");
-		
-		DefaultTreeModel model = new DefaultTreeModel(root) {
+		root = new DefaultMutableTreeNode("Commands");
+
+		this.model = new DefaultTreeModel(root) {
 
 			private static final long serialVersionUID = 1L;
 			
@@ -59,7 +59,7 @@ public class HistoryView extends JPanel implements HistoryListener {
 				if(o.equals(root)) {
 					
 					Entry<Identifier, LList> entry = history.get(index);
-					
+	
 					Identifier identifier = entry.getKey();
 					long elapsed = identifier.getElapsedTime();
 
@@ -143,7 +143,10 @@ public class HistoryView extends JPanel implements HistoryListener {
 		};
 		
 		tree = new JTree(model);
-
+		
+		tree.expandRow(0);
+		tree.setVisibleRowCount(15);
+		
 		tree.addTreeExpansionListener(new TreeExpansionListener() {
 
 			@Override
@@ -159,7 +162,7 @@ public class HistoryView extends JPanel implements HistoryListener {
 			}
 		});
 
-		add(new JScrollPane(tree), BorderLayout.CENTER);
+		add(new JScrollPane(tree));
 	}
 
 	@Override

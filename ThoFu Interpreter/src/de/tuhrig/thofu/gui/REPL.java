@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.Element;
 
@@ -196,17 +195,17 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 
 							List<LObject> objects = parser.parseAll(input);
 						
-							final String value = Executer.instance.eval(objects, interpreter);
+							Executer.instance.evaluate(textArea, objects, interpreter);
 
-							SwingUtilities.invokeLater(new Runnable() {
-
-								public void run() {
-
-									textArea.append(value + "\n>> ");
-
-									GUI.gui.stop();
-								}
-							});
+//							SwingUtilities.invokeLater(new Runnable() {
+//
+//								public void run() {
+//
+//									textArea.append(value + "\n>> ");
+//
+//									GUI.gui.stop();
+//								}
+//							});
 						}
 						catch (Exception e) {
 

@@ -88,7 +88,7 @@ public class LTupel extends LList {
 	}
 
 	@Override
-	public LObject eval(Environment environment, LObject tokens) {
+	public LObject evaluate(Environment environment, LObject tokens) {
 
 		return this;
 	}

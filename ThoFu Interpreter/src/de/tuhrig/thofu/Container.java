@@ -20,4 +20,9 @@ public class Container {
 
 		this.object = object;
 	}
+	
+	public String toString() {
+		
+		return object.toString();
+	}
 }

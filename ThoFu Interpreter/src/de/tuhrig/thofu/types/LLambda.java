@@ -28,7 +28,7 @@ public class LLambda extends LOperation {
 	}
 
 	@Override
-	public LObject eval(Environment environment, LObject tokens) {
+	public LObject evaluate(Environment environment, LObject tokens) {
 
 		// error checking
 		if (parametersSize != ((LList) tokens).size())
@@ -57,7 +57,7 @@ public class LLambda extends LOperation {
 			LObject object = ((LList) tokens).get(i);
 
 			if(!(object instanceof LOperation))
-				object = object.eval(inner, null);
+				object = object.run(inner, null);
 
 			inner.put(key, object);
 		}	
@@ -66,7 +66,7 @@ public class LLambda extends LOperation {
 
 		for(LObject definition : definitions) {
 
-			result = definition.eval(inner, tokens);
+			result = definition.run(inner, tokens);
 		}
 
 		if(result instanceof LLambda) {

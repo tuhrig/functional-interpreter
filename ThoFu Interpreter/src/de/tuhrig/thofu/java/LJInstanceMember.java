@@ -22,7 +22,7 @@ public class LJInstanceMember extends LJava {
 	}
 	
 	@Override
-	public LObject eval(Environment environment, LObject tokens) {
+	public LObject evaluate(Environment environment, LObject tokens) {
 
 		if(object == null) {
 			
@@ -30,7 +30,7 @@ public class LJInstanceMember extends LJava {
 				
 				LList tmp = (LList) tokens;
 
-				object = (LJObject) tmp.get(0).eval(environment, tokens);
+				object = (LJObject) tmp.get(0).run(environment, tokens);
 
 				Class<?>[] types = LJava.getTypes(tmp.getRest(), environment);
 

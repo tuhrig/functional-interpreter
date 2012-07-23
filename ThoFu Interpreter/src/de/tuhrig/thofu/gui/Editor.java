@@ -167,7 +167,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 			List<LObject> objects = parser.parseAll(commands);
 		
-			Executer.instance.eval(objects, interpreter);
+			Executer.instance.evaluate(null, objects, interpreter);
 		}
 	}
 

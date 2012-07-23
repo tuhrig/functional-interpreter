@@ -52,13 +52,19 @@ class GUI extends JFrame {
 
 	private final Status status = new Status();
 
-	private final HistoryView history = new HistoryView();
-
 	private final Running running = new Running();
-
+	
+	private final HistoryView history = new HistoryView();
+	
+	private final Debugger debugger = new Debugger();
+	
 	private final JFileChooser fc = new JFileChooser();
 
 	private boolean grubby = true;
+
+	private JMenuItem start;
+
+	private JMenuItem reset;
 
 	public GUI() {
 		
@@ -67,7 +73,6 @@ class GUI extends JFrame {
 
 		// Create the components of the GUI
 		final FileBrowser browser = new FileBrowser();
-		final HistoryView history = new HistoryView();
 		final Log log = new Log();
 		
 		// editor area (middle)
@@ -83,9 +88,11 @@ class GUI extends JFrame {
 
 		// tools (right)
 		JTabbedPane tools = new JTabbedPane();
-		tools.addTab("History", SwingFactory.create("icons/tree.png", 24, 24), history);
+		tools.addTab("Debugger", SwingFactory.create("icons/Appointment Urgent.png", 24, 24), debugger);
 		tools.addTab("Inspector", SwingFactory.create("icons/inspect.png", 24, 24), inspector);
-	    
+		tools.addTab("History", SwingFactory.create("icons/tree.png", 24, 24), history);
+		
+		
 		// multi split pane
 		JXMultiSplitPane msp = new JXMultiSplitPane();
 
@@ -114,9 +121,9 @@ class GUI extends JFrame {
 		
 		// menu
 		JMenuItem exit = SwingFactory.createItem("Exit", "icons/Remove.png");
-		JMenuItem start = SwingFactory.createItem("Start Script", "icons/Play.png");
+		start = SwingFactory.createItem("Start Script", "icons/Play.png");
 		JMenuItem stop = SwingFactory.createItem("Stop", "icons/Stop.png");	
-		JMenuItem reset = SwingFactory.createItem("Reset Interpreter", "icons/Play All.png");	
+		reset = SwingFactory.createItem("Reset Interpreter", "icons/Play All.png");	
 		
 		JMenuItem save = SwingFactory.createItem("Save", "icons/User.png");	
 		JMenuItem saveAll = SwingFactory.createItem("Save All", "icons/Users.png");	
@@ -332,6 +339,8 @@ class GUI extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setTitle("Thomas' Functional Interpreter - ThoFu!");
 
+		this.setSize(new Dimension(800, 800));
+		
 		logger.info("GUI started");
 	}
 
@@ -362,7 +371,7 @@ class GUI extends JFrame {
 
 		repl.reset(interpreter.getEnvironment());
 		inspector.reset(interpreter.getEnvironment());
-		
+
 		interpreter.addHistoryListener(history);
 		interpreter.addEnvironmentListener(inspector);
 		interpreter.addEnvironmentListener(repl);
@@ -433,5 +442,12 @@ class GUI extends JFrame {
 		new GUI().setVisible(true);
 		
 		gui.repl.focus();
+	}
+
+	public void enableControls(boolean b) {
+
+		repl.setEnabled(b);
+		start.setEnabled(b);
+		reset.setEnabled(b);
 	}
 }

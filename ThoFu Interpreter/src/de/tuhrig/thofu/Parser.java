@@ -274,7 +274,7 @@ public class Parser {
 		if(tokens instanceof LSymbol) {
 			
 			if(environment.contains((LSymbol) tokens))
-				return tokens.eval(environment, null);
+				return tokens.run(environment, null);
 		}
 		else if(tokens instanceof LList && !(tokens instanceof LTupel)) {
 			

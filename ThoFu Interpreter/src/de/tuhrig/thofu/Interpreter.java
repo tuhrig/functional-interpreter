@@ -44,6 +44,10 @@ public class Interpreter implements IInterpreter, IJava {
 
 	private String print = "";
 
+	private static boolean debugg;
+
+	private static boolean next;
+
 	public Interpreter() {
 
 		/**
@@ -55,7 +59,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("load"), new LOperation("load") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject path = ((LList) tokens).get(0);
 
@@ -89,7 +93,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("resource"), new LOperation("resource") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject path = ((LList) tokens).get(0);
 
@@ -127,9 +131,9 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("pair?"), new LOperation("pair?") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
-				tokens = tokens.eval(environment, tokens);
+				tokens = tokens.run(environment, tokens);
 
 				return LBoolean.get(tokens instanceof LTupel);
 			}
@@ -139,7 +143,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("begin"), new LOperation("begin") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject result = LNull.NULL;
 
@@ -147,7 +151,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 				for (LObject object: list) {
 				
-					result = object.eval(environment, tokens);
+					result = object.run(environment, tokens);
 				}
 
 				return result;
@@ -158,7 +162,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("let"), new LOperation("let") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LList parameters = (LList) ((LList) tokens).getFirst();
 				LObject body = ((LList) tokens).getRest();
@@ -171,12 +175,12 @@ public class Interpreter implements IInterpreter, IJava {
 
 					LSymbol symbol = LSymbol.get(parameter.get(0));
 					
-					LObject object = parameter.get(1).eval(innerEnvironment, tokens);
+					LObject object = parameter.get(1).run(innerEnvironment, tokens);
 
 					innerEnvironment.put(symbol, object);
 				}
 
-				return body.eval(innerEnvironment, tokens);
+				return body.run(innerEnvironment, tokens);
 			}
 		});
 
@@ -184,13 +188,13 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("||"), new LOperation("||") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject first = ((LList) tokens).getFirst();
 				LObject second = ((LList) tokens).getRest();
 
-				first = first.eval(environment, tokens);
-				second = second.eval(environment, tokens);
+				first = first.run(environment, tokens);
+				second = second.run(environment, tokens);
 
 				return LBoolean.get(first.equals(LBoolean.TRUE) || second.equals(LBoolean.TRUE));
 			}
@@ -200,13 +204,13 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("&&"), new LOperation("&&") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject first = ((LList) tokens).getFirst();
 				LObject second = ((LList) tokens).getRest();
 
-				first = first.eval(environment, tokens);
-				second = second.eval(environment, tokens);
+				first = first.run(environment, tokens);
+				second = second.run(environment, tokens);
 
 				return LBoolean.get(first.equals(LBoolean.TRUE) && second.equals(LBoolean.TRUE));
 			}
@@ -216,7 +220,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("+"), new LOperation("+") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LNumber n = null;
 
@@ -224,11 +228,11 @@ public class Interpreter implements IInterpreter, IJava {
 
 					if (n == null) {
 
-						n = (LNumber) token.eval(environment, token);
+						n = (LNumber) token.run(environment, token);
 					}
 					else {
 
-						n = n.add((LNumber) token.eval(environment, token));
+						n = n.add((LNumber) token.run(environment, token));
 					}
 				}
 
@@ -240,7 +244,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("-"), new LOperation("-") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LNumber n = null;
 
@@ -248,11 +252,11 @@ public class Interpreter implements IInterpreter, IJava {
 
 					if (n == null) {
 
-						n = (LNumber) token.eval(environment, token);
+						n = (LNumber) token.run(environment, token);
 					}
 					else {
 
-						n = n.subtract((LNumber) token.eval(environment, token));
+						n = n.subtract((LNumber) token.run(environment, token));
 					}
 				}
 
@@ -264,7 +268,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("*"), new LOperation("*") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LNumber n = null;
 
@@ -272,11 +276,11 @@ public class Interpreter implements IInterpreter, IJava {
 
 					if (n == null) {
 
-						n = (LNumber) token.eval(environment, token);
+						n = (LNumber) token.run(environment, token);
 					}
 					else {
 
-						n = n.multiply((LNumber) token.eval(environment, token));
+						n = n.multiply((LNumber) token.run(environment, token));
 					}
 				}
 
@@ -288,7 +292,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("/"), new LOperation("/") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LNumber n = null;
 
@@ -296,11 +300,11 @@ public class Interpreter implements IInterpreter, IJava {
 
 					if (n == null) {
 
-						n = (LNumber) token.eval(environment, token);
+						n = (LNumber) token.run(environment, token);
 					}
 					else {
 
-						n = n.divide((LNumber) token.eval(environment, token));
+						n = n.divide((LNumber) token.run(environment, token));
 					}
 				}
 
@@ -312,13 +316,13 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get(">"), new LOperation(">") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject first = ((LList) tokens).getFirst();
 				LObject second = ((LList) tokens).getRest();
 
-				LNumber f = (LNumber) first.eval(environment, tokens);
-				LNumber s = (LNumber) second.eval(environment, tokens);
+				LNumber f = (LNumber) first.run(environment, tokens);
+				LNumber s = (LNumber) second.run(environment, tokens);
 
 				boolean result = (1 == f.compareTo(s));
 
@@ -330,13 +334,13 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("<"), new LOperation("<") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject first = ((LList) tokens).getFirst();
 				LObject second = ((LList) tokens).getRest();
 
-				LNumber f = (LNumber) first.eval(environment, tokens);
-				LNumber s = (LNumber) second.eval(environment, tokens);
+				LNumber f = (LNumber) first.run(environment, tokens);
+				LNumber s = (LNumber) second.run(environment, tokens);
 
 				boolean result = (-1 == f.compareTo(s));
 
@@ -348,16 +352,16 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("eq?"), new LOperation("eq?") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject first = ((LList) tokens).get(0);
 				LObject second = ((LList) tokens).get(1);
 
 				if(first instanceof LList || first instanceof LSymbol)
-					first = first.eval(environment, tokens);
+					first = first.run(environment, tokens);
 
 				if(second instanceof LList || second instanceof LSymbol)
-					second = second.eval(environment, tokens);
+					second = second.run(environment, tokens);
 
 				boolean result = first.equals(second);
 
@@ -369,7 +373,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("define"), new LOperation("define") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject name = ((LList) tokens).get(0);
 
@@ -419,16 +423,16 @@ public class Interpreter implements IInterpreter, IJava {
 						lambdaList.add(body.get(i));
 					}
 
-					expression = lambdaList.eval(environment, lambdaList);
+					expression = lambdaList.run(environment, lambdaList);
 				}
 				else {
 
 					LObject second = ((LList) tokens).get(1);
 
 					if(second instanceof LOperation)
-						expression = second; //.eval(environment, tokens);
+						expression = second; //.run(environment, tokens);
 					else
-						expression = second.eval(environment, tokens);
+						expression = second.run(environment, tokens);
 				}
 
 				// if we have a lambda (not an other variable) we can name it
@@ -447,7 +451,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("set!"), new LOperation("set!") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject name = ((LList) tokens).get(0);
 
@@ -461,7 +465,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 				LObject second = ((LList) tokens).get(1);
 
-				second = second.eval(environment, tokens);
+				second = second.run(environment, tokens);
 
 				environment.set(LSymbol.get(name), second);
 	
@@ -473,12 +477,12 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("print"), new LOperation("print") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject object = ((LList) tokens).get(0);
 
 				if(!(object instanceof LOperation))
-					object = object.eval(environment, tokens);
+					object = object.run(environment, tokens);
 
 				print(object);
 
@@ -490,7 +494,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("lambda"), new LOperation("lambda") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LList parameters = (LList) ((LList) tokens).getFirst();
 
@@ -504,22 +508,22 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("if"), new LOperation("if") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject condition = ((LList) tokens).get(0);
 
-				LObject result = condition.eval(environment, tokens);
+				LObject result = condition.run(environment, tokens);
 
 				if (result.equals(LBoolean.TRUE)) {
 
 					LObject ifExpression = ((LList) tokens).get(1);
-					return ifExpression.eval(environment, tokens);
+					return ifExpression.run(environment, tokens);
 				}
 
 				else {
 
 					LObject elseExpression = ((LList) tokens).get(2);
-					return elseExpression.eval(environment, tokens);
+					return elseExpression.run(environment, tokens);
 				}
 			}
 		});
@@ -528,15 +532,15 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("cons"), new LOperation("cons") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LObject value1 = ((LList) tokens).get(0);
 				LObject value2 = ((LList) tokens).get(1);
 
 				LTupel tupel = new LTupel();
 
-				tupel.setFirst(value1.eval(environment, tokens));
-				tupel.setLast(value2.eval(environment, tokens));
+				tupel.setFirst(value1.run(environment, tokens));
+				tupel.setLast(value2.run(environment, tokens));
 
 				return tupel;
 			}
@@ -546,12 +550,12 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("first"), new LOperation("first") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				if (tokens instanceof List)
-					tokens = tokens.eval(environment, ((LList) tokens).getRest());
+					tokens = tokens.run(environment, ((LList) tokens).getRest());
 
-				tokens = tokens.eval(environment, tokens);
+				tokens = tokens.run(environment, tokens);
 
 				return ((LTupel) tokens).getFirst();
 			}
@@ -561,12 +565,12 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("rest"), new LOperation("rest") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				if (tokens instanceof List)
-					tokens = tokens.eval(environment, ((LList) tokens).getRest());
+					tokens = tokens.run(environment, ((LList) tokens).getRest());
 
-				tokens = tokens.eval(environment, tokens);
+				tokens = tokens.run(environment, tokens);
 
 				return ((LTupel) tokens).getRest();
 			}
@@ -580,7 +584,7 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("import"), new LOperation("import") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LList list = (LList) tokens;
 
@@ -606,14 +610,14 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("interface"), new LOperation("interface") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 				
 				LList list = (LList) tokens;
 							
-				LObject c = list.get(0).eval(environment, tokens);
-				LLambda lambda = (LLambda) list.get(1).eval(environment, tokens);
+				LObject c = list.get(0).run(environment, tokens);
+				LLambda lambda = (LLambda) list.get(1).run(environment, tokens);
 				
-				LJClass cl = (LJClass) c.eval(environment, tokens);
+				LJClass cl = (LJClass) c.run(environment, tokens);
 
 				return LJava.createInterface((Class<?>) cl.getJObject(), lambda, environment);
 			}
@@ -623,14 +627,14 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("class"), new LOperation("class") {
 
 			@Override
-			public LObject eval(Environment environment, LObject tokens) {
+			public LObject evaluate(Environment environment, LObject tokens) {
 				
 				LList list = (LList) tokens;
 							
-				LObject c = list.get(0).eval(environment, tokens);
-				LLambda lambda = (LLambda) list.get(1).eval(environment, tokens);
+				LObject c = list.get(0).run(environment, tokens);
+				LLambda lambda = (LLambda) list.get(1).run(environment, tokens);
 				
-				LJClass cl = (LJClass) c.eval(environment, tokens);
+				LJClass cl = (LJClass) c.run(environment, tokens);
 
 				return LJava.createClass((Class<?>) cl.getJObject(), lambda, environment);
 			}
@@ -660,8 +664,12 @@ public class Interpreter implements IInterpreter, IJava {
 
 			LList tokens = parser.parse(expression);
 			
-			LObject result = execute(tokens, root);
+//			Stack.createNew();
+			
+			LObject result = execute(tokens);
 
+//			Stack.close();
+			
 			if (print.length() == 0) {
 
 				return result.toString();
@@ -686,20 +694,26 @@ public class Interpreter implements IInterpreter, IJava {
 			return "[interpreter exception] - " + e.getMessage();
 		}
 	}
+	
+	@Override
+	public LObject execute(LObject tokens) {
 
-	private LObject execute(LObject tokens, Environment environment) {
+		return execute(tokens, root);
+	}
+
+	public LObject execute(LObject tokens, Environment environment) {
 		
 //		tokens = parser.replace(tokens, environment);
 
 		Date before = new Date();
 
-		LObject result = tokens.eval(environment, ((LList) tokens).getRest());
+		LObject result = tokens.run(environment, ((LList) tokens).getRest());
 		
 		Date after = new Date();
-		
+
 		if(tokens instanceof LList)
 			archive((LList) tokens, before, after);
-		
+
 		return 	result;	
 	}
 
@@ -736,5 +750,31 @@ public class Interpreter implements IInterpreter, IJava {
 	private void print(LObject object) {
 
 		print += object;
+	}
+
+	public static void setDebugg(boolean b) {
+
+		debugg = b;
+	}
+
+	public static boolean isDebugg() {
+
+		return debugg;
+	}
+
+	public static boolean next() {
+
+		if(next) {
+			
+			next = false;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static void setNext(boolean b) {
+
+		next = b;
 	}
 }

@@ -18,12 +18,12 @@ public class LStringTest extends LObjectTest {
 	}
 	
 	@Test
-	public void evalMethod() {
+	public void evaluateMethod() {
 		
 		LString string = new LString("aaa");
 		
-		Assert.assertEquals(new LString("aaa"), string.eval(null, null));
-		Assert.assertEquals("\"aaa\"", string.eval(null, null).toString());
+		Assert.assertEquals(new LString("aaa"), string.run(null, null));
+		Assert.assertEquals("\"aaa\"", string.run(null, null).toString());
 	}
 	
 	@Test

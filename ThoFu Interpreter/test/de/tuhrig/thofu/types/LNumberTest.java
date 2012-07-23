@@ -23,11 +23,11 @@ public class LNumberTest extends LObjectTest {
 	}
 
 	@Override
-	public void evalMethod() {
+	public void evaluateMethod() {
 
 		LNumber number = new LNumber("1");
 		
-		LObject o = number.eval(null, null);
+		LObject o = number.run(null, null);
 		
 		Assert.assertEquals("1", o.toString());
 		Assert.assertEquals(number, o);

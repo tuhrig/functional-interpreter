@@ -30,13 +30,13 @@ public class LBooleanTest extends LObjectTest {
 	}
 
 	@Override
-	public void evalMethod() {
+	public void evaluateMethod() {
 		
-		Assert.assertEquals("false", LBoolean.FALSE.eval(null, null).toString());
-		Assert.assertEquals(true, LBoolean.FALSE.eval(null, null) == LBoolean.FALSE);
+		Assert.assertEquals("false", LBoolean.FALSE.run(null, null).toString());
+		Assert.assertEquals(true, LBoolean.FALSE.run(null, null) == LBoolean.FALSE);
 		
-		Assert.assertEquals("true", LBoolean.TRUE.eval(null, null).toString());
-		Assert.assertEquals(true, LBoolean.TRUE.eval(null, null) == LBoolean.TRUE);
+		Assert.assertEquals("true", LBoolean.TRUE.run(null, null).toString());
+		Assert.assertEquals(true, LBoolean.TRUE.run(null, null) == LBoolean.TRUE);
 	}
 
 	@Override
