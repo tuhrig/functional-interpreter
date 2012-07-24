@@ -38,6 +38,6 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 		
 		LList list = (LList) object;
 		
-		return list.size();
+		return list.size() + 1;
 	}
 }

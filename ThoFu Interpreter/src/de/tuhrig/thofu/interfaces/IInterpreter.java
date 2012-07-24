@@ -13,5 +13,5 @@ public interface IInterpreter {
 
 	public void addEnvironmentListener(EnvironmentListener listener);
 
-	void addHistoryListener(HistoryListener history);
+	public void addHistoryListener(HistoryListener history);
 }

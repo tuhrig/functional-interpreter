@@ -56,7 +56,7 @@ class GUI extends JFrame {
 	
 	private final HistoryView history = new HistoryView();
 	
-	private final Debugger debugger = new Debugger();
+	private final Debugger debugger = Debugger.getInstance();
 	
 	private final JFileChooser fc = new JFileChooser();
 

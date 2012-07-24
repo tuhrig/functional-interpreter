@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,33 +21,47 @@ public class Debugger extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private JToggleButton active;
+	private static final Debugger instance = new Debugger();
+	
+	private final JToggleButton active = new JToggleButton("Activate Step-by-Step Debugger");
 
-	private JButton next;
+	private final JButton next = new JButton("Next");
 
-	private static DefaultTableModel model;
+	private final DefaultTableModel model = new DefaultTableModel();
 	
-	private static JTable view = new JTable();
+	private final JTable table = new JTable();
 	
-	private static int step = 0;
+	private int step = 0;
 	
-	public Debugger() {
+	// singleton
+	private Debugger() {
 
 		setLayout(new BorderLayout());
 
-		view.addColumn(new TableColumn());
-		
-		model = new DefaultTableModel();
-		model.addColumn("Operation");
+		model.addColumn("#");
 		model.addColumn("Object");
 		model.addColumn("Type");
 		model.addColumn("Tokens");
+		model.addColumn("Environment");
 		
-		view.setModel(model);
+		table.setModel(model);
+		table.setName("Stack Table");
+		table.setToolTipText("Shows the current stack if debbger is activated");
 		
-		active = new JToggleButton("Activate Step-by-Step Debugger");
+		TableColumn operation = table.getColumnModel().getColumn(0);
+		operation.setPreferredWidth(30);
 		
-		next = new JButton("Next");
+		TableColumn object = table.getColumnModel().getColumn(1);
+		object.setPreferredWidth(100);
+		
+		TableColumn environment = table.getColumnModel().getColumn(4);
+		environment.setPreferredWidth(100);
+
+		next.setIcon(new ImageIcon(SwingFactory.create("icons/Play Blue Button.png")));
+		active.setIcon(new ImageIcon(SwingFactory.create("icons/Grey Ball.png")));
+		active.setSelectedIcon(new ImageIcon(SwingFactory.create("icons/Green Ball.png")));
+		
+		next.setEnabled(false);
 		
 		active.addActionListener(new ActionListener() {
 			
@@ -60,11 +75,17 @@ public class Debugger extends JPanel {
 					
 					while(model.getRowCount() > 0)
 						model.removeRow(0);
+					
+					Interpreter.setNext(false);
+					
+					next.setEnabled(true);
 				}
 				else {
 					
 					Interpreter.setDebugg(false);
 					active.setText("Activate Step-by-Step Debugger");
+					
+					next.setEnabled(false);
 				}
 			}
 		});
@@ -80,21 +101,29 @@ public class Debugger extends JPanel {
 		
 		add(active, BorderLayout.NORTH);
 		add(next, BorderLayout.SOUTH);
-		add(new JScrollPane(view), BorderLayout.CENTER);
+		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
-	public static void call(final LObject obj, Environment environment, LObject tokens) {
+	public void pushCall(final LObject obj, Environment environment, LObject tokens, int arguments) {
 
 		step++;
-		
-		model.addRow(new Object[]{step, obj, obj.getClass().getSimpleName(), tokens});
-	}
-
-	public static void result(LObject result, int arguments) {
 
 		for(int i = 0; i < arguments; i++)
 			model.removeRow(model.getRowCount() - 1);
-		
-		model.addRow(new Object[]{step, result, result.getClass().getSimpleName(), ""});
+	
+		model.addRow(new Object[]{step, obj, obj.getClass().getSimpleName(), tokens, environment});
+	}
+
+	public void pushResult(LObject obj, Environment environment, LObject tokens, int arguments) {
+
+		for(int i = 0; i < arguments; i++)
+			model.removeRow(model.getRowCount() - 1);
+
+		model.addRow(new Object[]{step, obj, obj.getClass().getSimpleName(), tokens, environment});
+	}
+
+	public static Debugger getInstance() {
+
+		return instance;
 	}
 }
