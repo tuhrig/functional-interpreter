@@ -115,7 +115,7 @@ class SwingFactory {
 
 		Image img = create(icon);
 		
-		Image resizedImage = img.getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+		Image resizedImage = img.getScaledInstance(h, w, Image.SCALE_SMOOTH);
 		
 		return new ImageIcon(resizedImage);
 	}

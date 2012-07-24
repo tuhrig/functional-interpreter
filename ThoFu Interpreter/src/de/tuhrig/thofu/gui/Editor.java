@@ -3,6 +3,9 @@ package de.tuhrig.thofu.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -46,6 +50,8 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	private IInterpreter interpreter;
 
 	private final static JTabbedPane tabbs = new JTabbedPane();
+	
+	private int i = 0;
 
 	Editor() {
 
@@ -65,7 +71,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		AutoCompletion autoCompletion = new AutoCompletion(provider);
 		autoCompletion.install(area);
 
-		RTextScrollPane scrollPane = new FileTabb(area, file);
+		FileTabb tab = new FileTabb(area, file);
 
 		if(file.exists()) {
 			
@@ -80,8 +86,51 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 				logger.error(e.getMessage());
 			}
 		}
+		
+		tabbs.addTab("" + i++, tab);
 
-		tabbs.add(scrollPane);
+		JLabel label = new JLabel(tab.getName());
+		label.setSize(30, 5);
+
+		JButton tmp1 = new JButton();
+		tmp1.setSize(1, 1);
+		tmp1.setIcon(SwingFactory.create("icons/delete2.png", 16, 16));
+		tmp1.setPressedIcon(SwingFactory.create("icons/delete1.png", 16, 16));
+		tmp1.setBorderPainted(false); 
+		tmp1.setContentAreaFilled(false); 
+		tmp1.setFocusPainted(false); 
+		tmp1.setOpaque(false);
+		
+		JButton tmp2 = new JButton();
+		tmp2.setSize(1, 1);
+		tmp2.setIcon(SwingFactory.create("icons/Write Document.png", 16, 16));
+		tmp2.setBorderPainted(false); 
+		tmp2.setContentAreaFilled(false); 
+		tmp2.setFocusPainted(false); 
+		tmp2.setOpaque(false);
+		
+		tmp1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+			
+				close();
+			}
+		});
+
+		FlowLayout layout = new FlowLayout();
+		layout.setVgap(0);
+		layout.setHgap(0);
+		
+		JPanel title = new JPanel();
+		title.setLayout(layout);
+		title.setSize(30, 5);
+		title.setOpaque(false);
+		title.add(tmp2);
+		title.add(label);
+		title.add(tmp1);
+
+		tabbs.setTabComponentAt(tabbs.indexOfTab("" + (i-1)), title);
 	}
 
 	private void setTabbs() {
@@ -118,7 +167,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	public void save() {
 		
-		FileTabb tabb = (FileTabb) tabbs.getSelectedComponent();
+		FileTabb tabb = (FileTabb) tabbs.getTabComponentAt(tabbs.getSelectedIndex());
 
 		tabb.save();
 	}
@@ -127,7 +176,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		for(int i = 0; i < tabbs.getTabCount(); i++) {
 	
-			FileTabb tabb = (FileTabb) tabbs.getComponent(i);
+			FileTabb tabb = (FileTabb) tabbs.getComponentAt(i);
 			
 			tabb.save();
 		}
@@ -135,16 +184,20 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	
 	public void saveAs(File file) {
 
-		FileTabb tabb = (FileTabb) tabbs.getSelectedComponent();
+		FileTabb tabb = (FileTabb) tabbs.getTabComponentAt(tabbs.getSelectedIndex());
 		
 		tabb.saveAs(file);
+		
+		close();
+		
+		open(file);
 	}
 
 	public void close() {
 
-		tabbs.remove(tabbs.getSelectedComponent());
+		tabbs.remove(tabbs.getSelectedIndex());
 		
-		if(tabbs.getComponentCount() == 0)
+		if(tabbs.getTabCount() == 0)
 			setLogo();
 	}
 	
@@ -159,7 +212,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		for(int i = 0; i < tabbs.getTabCount(); i++ ) {
 
-			String commands = ((FileTabb) tabbs.getComponent(i)).getText();
+			String commands = ((FileTabb) tabbs.getComponentAt(i)).getText();
 	
 			Parser parser = new Parser();
 			
@@ -173,7 +226,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	public JPopupMenu getPopupMenu() {
 
-		if(tabbs.getComponentCount() > 0) {
+		if(tabbs.getTabCount() > 0) {
 
 			FileTabb tabb = (FileTabb) tabbs.getSelectedComponent();
 			
@@ -185,12 +238,15 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	public boolean isDirty() {
 
-		for(int i = 0; i < tabbs.getComponentCount(); i++) {
-			
-			FileTabb tabb = (FileTabb) tabbs.getComponent(i);
+		for(int i = 0; i < tabbs.getTabCount(); i++) {
 
-			if(tabb.isDirty())
-				return true;
+			if(tabbs.getComponentAt(i) instanceof FileTabb) {
+			
+		    	FileTabb tabb = (FileTabb) tabbs.getComponentAt(i);
+	
+				if(tabb.isDirty())
+					return true;
+			}
 		}
 
 		return false;
