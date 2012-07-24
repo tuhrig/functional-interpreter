@@ -26,6 +26,8 @@ public class Debugger extends JPanel {
 	private final JToggleButton active = new JToggleButton("Activate Step-by-Step Debugger");
 
 	private final JButton next = new JButton("Next");
+	
+	private final JToggleButton resume = new JToggleButton("Resume");
 
 	private final DefaultTableModel model = new DefaultTableModel();
 	
@@ -58,10 +60,14 @@ public class Debugger extends JPanel {
 		environment.setPreferredWidth(100);
 
 		next.setIcon(new ImageIcon(SwingFactory.create("icons/Play Blue Button.png")));
+		
+		resume.setIcon(new ImageIcon(SwingFactory.create("icons/Play Green Button.png")));
+		
 		active.setIcon(new ImageIcon(SwingFactory.create("icons/Grey Ball.png")));
 		active.setSelectedIcon(new ImageIcon(SwingFactory.create("icons/Green Ball.png")));
 		
 		next.setEnabled(false);
+		resume.setEnabled(false);
 		
 		active.addActionListener(new ActionListener() {
 			
@@ -79,6 +85,7 @@ public class Debugger extends JPanel {
 					Interpreter.setNext(false);
 					
 					next.setEnabled(true);
+					resume.setEnabled(true);
 				}
 				else {
 					
@@ -86,6 +93,7 @@ public class Debugger extends JPanel {
 					active.setText("Activate Step-by-Step Debugger");
 					
 					next.setEnabled(false);
+					resume.setEnabled(false);
 				}
 			}
 		});
@@ -99,8 +107,21 @@ public class Debugger extends JPanel {
 			}
 		});
 		
+		resume.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				Interpreter.setResume();
+			}
+		});
+		
+		JPanel buttons = new JPanel();
+		buttons.add(next);
+		buttons.add(resume);
+		
 		add(active, BorderLayout.NORTH);
-		add(next, BorderLayout.SOUTH);
+		add(buttons, BorderLayout.SOUTH);
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 

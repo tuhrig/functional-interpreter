@@ -48,6 +48,8 @@ public class Interpreter implements IInterpreter, IJava {
 
 	private static boolean next;
 
+	private static boolean resume;
+
 	public Interpreter() {
 
 		/**
@@ -127,7 +129,7 @@ public class Interpreter implements IInterpreter, IJava {
 			}
 		});
 		
-		// (beginne (expression1) (expression2) ...)
+		// (pair? '(pair))
 		root.put(LSymbol.get("pair?"), new LOperation("pair?") {
 
 			@Override
@@ -663,13 +665,9 @@ public class Interpreter implements IInterpreter, IJava {
 			parser.validate(expression);
 
 			LList tokens = parser.parse(expression);
-			
-//			Stack.createNew();
-			
+
 			LObject result = execute(tokens);
 
-//			Stack.close();
-			
 			if (print.length() == 0) {
 
 				return result.toString();
@@ -776,5 +774,18 @@ public class Interpreter implements IInterpreter, IJava {
 	public static void setNext(boolean b) {
 
 		next = b;
+	}
+
+	public static boolean resume() {
+
+		return resume;
+	}
+	
+	public static void setResume() {
+
+		if(resume)
+			resume = false;
+		else
+			resume = true;
 	}
 }

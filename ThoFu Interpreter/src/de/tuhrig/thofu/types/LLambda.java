@@ -112,6 +112,8 @@ public class LLambda extends LOperation {
 	@Override
 	public int argrumentSize(LObject object) {
 
-		return parametersSize;
+		LList list = (LList) object;
+		
+		return list.size() + 1;
 	}
 }

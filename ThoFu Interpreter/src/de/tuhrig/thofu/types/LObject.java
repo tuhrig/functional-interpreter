@@ -25,7 +25,7 @@ public abstract class LObject { // implements TreeNode {
 				Debugger.getInstance().pushCall(this, environment, tokens, 0);
 			}
 			
-			while(Interpreter.next() == false) {
+			while(Interpreter.resume() == false && Interpreter.next() == false) {
 			
 				try {
 					
