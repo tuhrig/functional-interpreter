@@ -699,7 +699,7 @@ public class Interpreter implements IInterpreter, IJava {
 		return execute(tokens, root);
 	}
 
-	public LObject execute(LObject tokens, Environment environment) {
+	private LObject execute(LObject tokens, Environment environment) {
 		
 //		tokens = parser.replace(tokens, environment);
 
