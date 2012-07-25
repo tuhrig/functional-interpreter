@@ -62,21 +62,23 @@ public class Executer {
 					
 					e.printStackTrace();
 				}
-                
-                SwingUtilities.invokeLater(new Runnable() {
+                finally {
                 	
-                    public void run() {
-
-                    	if(area != null) {
-                    		
-                    		area.append(value + "\n>> ");
-                    	}
-                    	
-                    	GUI.gui.enableControls(true);
-                    	
-						GUI.gui.stop();
-                    }
-                });
+	                SwingUtilities.invokeLater(new Runnable() {
+	                	
+	                    public void run() {
+	
+	                    	if(area != null) {
+	                    		
+	                    		area.append(value + "\n>> ");
+	                    	}
+	                    	
+	                    	GUI.gui.enableControls(true);
+	                    	
+							GUI.gui.stop();
+	                    }
+	                });
+                }
             }
         };
         
