@@ -22,6 +22,7 @@ import javax.swing.tree.TreePath;
 import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
+import de.tuhrig.thofu.types.LLambda;
 import de.tuhrig.thofu.types.LOperation;
 import de.tuhrig.thofu.types.LSymbol;
 
@@ -38,6 +39,8 @@ class Inspector extends JPanel implements EnvironmentListener {
 	private DefaultMutableTreeNode variables = new DefaultMutableTreeNode("Variables");
 
 	private DefaultMutableTreeNode operations = new DefaultMutableTreeNode("Operations");
+	
+	private DefaultMutableTreeNode lambdas = new DefaultMutableTreeNode("Lambdas");
 
 	private Set<TreePath> expanded = new HashSet<TreePath>();
 
@@ -50,6 +53,7 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 		root.add(variables);
 		root.add(operations);
+		root.add(lambdas);
 
 		this.model = new DefaultTreeModel(root) {
 
@@ -68,6 +72,9 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 				if (arg0.equals(root) && arg1 == 1)
 					return operations;
+				
+				if (arg0.equals(root) && arg1 == 2)
+					return lambdas;
 
 				if (arg0.equals(variables)) {
 
@@ -90,7 +97,23 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue().getObject() instanceof LOperation) == true) {
+						if ((entry.getValue().getObject() instanceof LOperation) == true &&
+							(entry.getValue().getObject() instanceof LLambda) == false) {
+
+							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().getObject()));
+						}
+					}
+
+					return objects.get(arg1);
+				}
+				
+				if (arg0.equals(lambdas)) {
+
+					List<DefaultMutableTreeNode> objects = new ArrayList<DefaultMutableTreeNode>();
+
+					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
+
+						if ((entry.getValue().getObject() instanceof LLambda) == true) {
 
 							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().getObject()));
 						}
@@ -106,7 +129,7 @@ class Inspector extends JPanel implements EnvironmentListener {
 			public int getChildCount(Object arg0) {
 
 				if (arg0.equals(root))
-					return 2;
+					return 3;
 
 				if (arg0.equals(variables)) {
 
@@ -129,7 +152,23 @@ class Inspector extends JPanel implements EnvironmentListener {
 
 					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
-						if ((entry.getValue().getObject() instanceof LOperation) == true) {
+						if ((entry.getValue().getObject() instanceof LOperation) == true &&
+							(entry.getValue().getObject() instanceof LLambda) == false	) {
+
+							count++;
+						}
+					}
+
+					return count;
+				}
+				
+				if (arg0.equals(lambdas)) {
+
+					int count = 0;
+
+					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
+
+						if ((entry.getValue().getObject() instanceof LLambda) == true) {
 
 							count++;
 						}
@@ -144,7 +183,11 @@ class Inspector extends JPanel implements EnvironmentListener {
 			@Override
 			public boolean isLeaf(Object arg0) {
 
-				return arg0.equals(root) == false && arg0.equals(variables) == false && arg0.equals(operations) == false;
+				return 
+						arg0.equals(root) == false && 
+						arg0.equals(variables) == false && 
+						arg0.equals(operations) == false && 
+						arg0.equals(lambdas) == false ;
 			}
 		};
 
