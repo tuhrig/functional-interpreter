@@ -338,8 +338,8 @@ class GUI extends JFrame {
 		this.setExtendedState(Frame.MAXIMIZED_BOTH); 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setTitle("Thomas' Functional Interpreter - ThoFu!");
-
-		this.setSize(new Dimension(800, 800));
+		this.setLocationRelativeTo(null);
+		this.setSize(new Dimension(1000, 800));
 		
 		logger.info("GUI started");
 	}

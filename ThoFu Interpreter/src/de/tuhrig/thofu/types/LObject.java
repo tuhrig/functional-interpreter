@@ -11,20 +11,14 @@ public abstract class LObject { // implements TreeNode {
 		if(Interpreter.isDebugg()) {
 			
 			if(this instanceof LOperation) {
-				
-//				System.out.println(this + " call add " + 1);
-//				System.out.println(this + " call remove " + 1 + "\n");
-				
+	
 				Debugger.getInstance().pushCall(this, environment, tokens, 1);
 			}
 			else {
-				
-//				System.out.println(this + " call add " + 1);
-//				System.out.println(this + " call remove " + 0 + "\n");
-				
+
 				Debugger.getInstance().pushCall(this, environment, tokens, 0);
 			}
-			
+
 			while(Interpreter.resume() == false && Interpreter.next() == false) {
 			
 				try {
@@ -39,10 +33,16 @@ public abstract class LObject { // implements TreeNode {
 		
 		if(Interpreter.isDebugg()) {
 
-//			System.out.println(this + " result add " + 1);
-//			System.out.println(this + " result remove " + argrumentSize(tokens) + "\n");
-			
 			Debugger.getInstance().pushResult(result, environment, tokens, argrumentSize(tokens));
+		
+			while(Interpreter.resume() == false && Interpreter.next() == false) {
+				
+				try {
+					
+					Thread.sleep(100);
+				}
+				catch (InterruptedException e) { }
+			}
 		}
 		
 		return result;

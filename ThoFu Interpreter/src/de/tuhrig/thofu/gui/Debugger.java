@@ -3,19 +3,25 @@ package de.tuhrig.thofu.gui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Interpreter;
+import de.tuhrig.thofu.types.LLambda;
 import de.tuhrig.thofu.types.LObject;
+import de.tuhrig.thofu.types.LOperation;
 
 public class Debugger extends JPanel {
 
@@ -31,7 +37,7 @@ public class Debugger extends JPanel {
 
 	private final DefaultTableModel model = new DefaultTableModel();
 	
-	private final JTable table = new JTable();
+	private JTable table;
 	
 	private int step = 0;
 	
@@ -40,23 +46,37 @@ public class Debugger extends JPanel {
 
 		setLayout(new BorderLayout());
 
+		model.addColumn("");
 		model.addColumn("#");
 		model.addColumn("Object");
 		model.addColumn("Type");
 		model.addColumn("Tokens");
 		model.addColumn("Environment");
+
 		
-		table.setModel(model);
+		table = new JTable(model){
+
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int row, int column) {
+				
+				return false;
+			}
+		};
+  
 		table.setName("Stack Table");
 		table.setToolTipText("Shows the current stack if debbger is activated");
 		
-		TableColumn operation = table.getColumnModel().getColumn(0);
+		TableColumn type = table.getColumnModel().getColumn(0);
+		type.setPreferredWidth(30);
+		
+		TableColumn operation = table.getColumnModel().getColumn(1);
 		operation.setPreferredWidth(30);
 		
-		TableColumn object = table.getColumnModel().getColumn(1);
+		TableColumn object = table.getColumnModel().getColumn(2);
 		object.setPreferredWidth(100);
 		
-		TableColumn environment = table.getColumnModel().getColumn(4);
+		TableColumn environment = table.getColumnModel().getColumn(5);
 		environment.setPreferredWidth(100);
 
 		next.setIcon(new ImageIcon(SwingFactory.create("icons/Play Blue Button.png")));
@@ -116,6 +136,74 @@ public class Debugger extends JPanel {
 			}
 		});
 		
+		table.addMouseListener(new MouseAdapter() {
+
+			public void mouseClicked(MouseEvent e) {
+
+				if (e.getClickCount() == 2) {
+
+					JTable target = (JTable) e.getSource();
+					
+					int row = target.getSelectedRow();
+					
+					String obj0 = (String) model.getValueAt(row,0);
+					int obj1 = (Integer) model.getValueAt(row,1);
+					LObject obj2 = (LObject) model.getValueAt(row, 2);
+					LObject obj4 = (LObject) model.getValueAt(row, 4);
+					Environment obj5 = (Environment) model.getValueAt(row, 5);
+	
+					JTextArea area = new JTextArea();
+					area.setEditable(false);
+					
+					if(obj0.equals(">"))
+						obj0 = "Push";
+					else
+						obj0 = "Return";
+					
+					// set general information
+					area.setText( 
+							"Action:\t" + obj0 + "\n\n" +
+					
+							"Genral:\n\n" + 
+							"toString():\t" + obj2 + "\n" + 
+							"Step:\t" + obj1 + "\n" + 
+						    "Class:\t" + obj2.getClass() + "\n" +
+						    "Tokens:\t" + obj4 + "\n" +
+							"Environment:\t" +obj5 + "\n"
+							);
+					
+					// set specific information
+					if(obj2 instanceof LLambda) {
+						
+						LLambda tmp = (LLambda) obj2;
+						
+						area.append(
+								"Specific:\n\n" + 
+								"Name:\t" + tmp.getName() + "\n" +
+								"Parameters:\t" + tmp.getParameters() + "\n" +
+								"Definitions:\t" + tmp.getDefinitions() + "\n" +
+								"Closure:\t" + tmp.getClosure() + "\n"
+								);
+					}
+					else if(obj2 instanceof LOperation) {
+						
+						LOperation tmp = (LOperation) obj2;
+						
+						area.append(
+								"Specific:\n\n" + 
+								"Name:\t" + tmp.getName()
+								);
+					}
+					
+					JFrame frame = new JFrame(obj2.toString());
+					frame.getContentPane().add(new JScrollPane(area));
+					frame.setSize(800, 400);
+					frame.setLocationRelativeTo(null);
+					frame.setVisible(true);
+				}
+			}
+		});
+		
 		JPanel buttons = new JPanel();
 		buttons.add(next);
 		buttons.add(resume);
@@ -125,22 +213,22 @@ public class Debugger extends JPanel {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
-	public void pushCall(final LObject obj, Environment environment, LObject tokens, int arguments) {
+	public void pushCall(final LObject self, Environment environment, LObject tokens, int arguments) {
 
 		step++;
 
 		for(int i = 0; i < arguments; i++)
 			model.removeRow(model.getRowCount() - 1);
 	
-		model.addRow(new Object[]{step, obj, obj.getClass().getSimpleName(), tokens, environment});
+		model.addRow(new Object[]{">", step, self, self.getClass(), tokens, environment});
 	}
 
-	public void pushResult(LObject obj, Environment environment, LObject tokens, int arguments) {
+	public void pushResult(LObject result, Environment environment, LObject tokens, int arguments) {
 
 		for(int i = 0; i < arguments; i++)
 			model.removeRow(model.getRowCount() - 1);
 
-		model.addRow(new Object[]{step, obj, obj.getClass().getSimpleName(), tokens, environment});
+		model.addRow(new Object[]{"<", step, result, result.getClass(), tokens, environment});
 	}
 
 	public static Debugger getInstance() {

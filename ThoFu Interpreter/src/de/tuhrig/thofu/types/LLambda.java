@@ -116,4 +116,19 @@ public class LLambda extends LOperation {
 		
 		return list.size() + 1;
 	}
+	
+	public LList getParameters() {
+		
+		return parameters;
+	}
+
+	public LList getDefinitions() {
+	
+		return definitions;
+	}
+	
+	public Environment getClosure() {
+	
+		return closure;
+	}
 }
