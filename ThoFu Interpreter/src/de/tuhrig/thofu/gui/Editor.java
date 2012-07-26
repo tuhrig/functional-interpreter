@@ -334,7 +334,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			}
 			catch (IOException e) {
 		
-				e.printStackTrace();
+				logger.warn("error on saving", e);
 			}
 			
 			markClean();

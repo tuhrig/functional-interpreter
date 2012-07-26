@@ -10,11 +10,15 @@ import java.util.concurrent.Future;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
+
 import de.tuhrig.thofu.interfaces.IInterpreter;
 import de.tuhrig.thofu.types.LObject;
 
 public class Executer {
 
+	private static Logger logger = Logger.getLogger(Executer.class);
+	
 	public final static Executer instance = new Executer();
 
 	private Executer() {
@@ -34,12 +38,12 @@ public class Executer {
 
 				GUI.gui.enableControls(false);
 				
-            	Callable<LObject> callable = new Callable<LObject>() {
+            	Callable<String> callable = new Callable<String>() {
             		
 					@Override
-					public LObject call() {
+					public String call() {
 						
-						LObject result = null;
+						String result = null;
 						
 						for(LObject object: objects) {
 							
@@ -52,15 +56,15 @@ public class Executer {
 				
 				ExecutorService executor = Executors.newCachedThreadPool();
 				
-				Future<LObject> result = executor.submit(callable);
+				Future<String> result = executor.submit(callable);
 
 				try {
 					
-					value  = result.get().toString();
+					value  = result.get();
 				}
 				catch (InterruptedException | ExecutionException e) {
 					
-					e.printStackTrace();
+					logger.warn("error", e);
 				}
                 finally {
                 	

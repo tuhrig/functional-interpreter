@@ -666,7 +666,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 			LList tokens = parser.parse(expression);
 
-			LObject result = execute(tokens);
+			LObject result = execute(tokens, root);
 
 			if (print.length() == 0) {
 
@@ -677,26 +677,46 @@ public class Interpreter implements IInterpreter, IJava {
 		}
 		catch (LException e) {
 
-			logger.warn(e.getMessage());
-
-//			e.printStackTrace();
+			logger.warn(e.getMessage(), e);
 
 			return e.getMessage();
 		}
 		catch (Exception e) {
 
-			logger.error("[interpreter exception] - " + e.getMessage());
-
-//			e.printStackTrace();
+			logger.error("[interpreter exception] - " + e.getMessage(), e);
 
 			return "[interpreter exception] - " + e.getMessage();
 		}
 	}
 	
 	@Override
-	public LObject execute(LObject tokens) {
+	public String execute(LObject tokens) {
 
-		return execute(tokens, root);
+		print = "";
+
+		try {
+
+			LObject result = execute(tokens, root);
+
+			if (print.length() == 0) {
+
+				return result.toString();
+			}
+
+			return print;
+		}
+		catch (LException e) {
+
+			logger.warn(e.getMessage(), e);
+
+			return e.getMessage();
+		}
+		catch (Exception e) {
+
+			logger.error("[interpreter exception] - " + e.getMessage(), e);
+
+			return "[interpreter exception] - " + e.getMessage();
+		}
 	}
 
 	private LObject execute(LObject tokens, Environment environment) {

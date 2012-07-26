@@ -42,8 +42,6 @@ public class LJInstanceMember extends LJava {
 					result = "void";
 			}
 			catch (Exception e) {
-
-				e.printStackTrace();
 				
 				throw new LException("[" + e.getClass() + "] - " + e.getMessage());
 			}

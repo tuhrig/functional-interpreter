@@ -196,21 +196,12 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 							List<LObject> objects = parser.parseAll(input);
 						
 							Executer.instance.evaluate(textArea, objects, interpreter);
-
-//							SwingUtilities.invokeLater(new Runnable() {
-//
-//								public void run() {
-//
-//									textArea.append(value + "\n>> ");
-//
-//									GUI.gui.stop();
-//								}
-//							});
 						}
 						catch (Exception e) {
 
 							textArea.setText(textArea.getText() + "Error" + "\n>> ");
-							e.printStackTrace();
+							
+							logger.warn("[interpreter exception] - " + e.getMessage(), e);
 						}
 					}
 					catch (ArrayIndexOutOfBoundsException e) {

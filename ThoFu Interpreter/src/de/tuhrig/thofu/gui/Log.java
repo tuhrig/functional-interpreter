@@ -9,8 +9,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.EnhancedPatternLayout;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -18,7 +18,7 @@ class Log extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final PatternLayout layout = new PatternLayout("%d{ISO8601} %-5p [%t] %c: %m%n");
+	private static final EnhancedPatternLayout layout = new EnhancedPatternLayout("%d{ISO8601} %-5p [%t] %c: %m%n %throwable{n}");
 
 	public Log() {
 

@@ -7,11 +7,13 @@ public interface IInterpreter {
 
 	public String execute(String expression);
 	
-	public LObject execute(LObject object);
+	public String execute(LObject object);
 
 	public Environment getEnvironment();
 
 	public void addEnvironmentListener(EnvironmentListener listener);
 
 	public void addHistoryListener(HistoryListener history);
+
+
 }
