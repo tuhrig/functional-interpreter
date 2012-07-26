@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project ThoFu Interpreter">
+	
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+	
+	<property name="src" value="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/src"/>
+	<property name="output" value="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/out"/>
+
+    <target name="create_run_jar" >
+        	
+    	<delete file="C:/Users/Thomas/Desktop/ThoFu Interpreter.jar" />
+
+    	<javac destdir="bin">
+    		
+    		<src path="${src}"/>
+    		
+    		<classpath refid="java"/>
+    			
+    	</javac>
+
+    	<jar destfile="C:/Users/Thomas/Desktop/ThoFu Interpreter.jar" filesetmanifest="mergewithoutmain">
+            
+        	<manifest>
+                <attribute name="Main-Class" value="de.tuhrig.thofu.gui.GUI"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+        	
+            <fileset dir="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/bin"/>
+
+            <zipfileset excludes="META-INF/*.SF" src="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/libs/log4j-1.2.16.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/libs/rsyntaxtextarea.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/libs/autocomplete-1.4.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/libs/swingx-all-1.6.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/libs/fest/jcip-annotations-1.0.jar"/>    		
+            <zipfileset excludes="META-INF/*.SF" src="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/libs/commons-lang3-3.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/libs/markdownj-1.0.2b4-0.3.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Dokumente und Einstellungen/Thomas/git/ThoFu/ThoFu Interpreter/libs/javassist.jar"/>
+  
+        </jar>
+    
+    </target>
+	
+</project>

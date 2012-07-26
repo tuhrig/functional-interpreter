@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
@@ -431,17 +432,24 @@ class GUI extends JFrame {
 		fc.setCurrentDirectory(file);
 	}
 	
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, InterruptedException {
 
 		UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		
 //		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 		Locale.setDefault(Locale.ENGLISH);
-		
-		new GUI().setVisible(true);
-		
-		gui.repl.focus();
+
+		new GUI();
+
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+
+				gui.setVisible(true);
+				gui.repl.focus();
+			}
+		});
 	}
 
 	public void enableControls(boolean b) {
