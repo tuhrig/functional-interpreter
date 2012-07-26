@@ -18,20 +18,43 @@ import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LSymbol;
 
 /**
+ * The implementation of the environment. The environment holds all
+ * operations, lambdas and variables in a single list. The list contains
+ * a key and a corresponding value. 
+ * 
+ * An environment can have a parent environment.  
+ * 
  * @author Thomas Uhrig (tuhrig.de)
  */
 public class Environment {
 
 	private final Environment parent;
 
+	/**
+	 * Mapping of variables to objects
+	 */
 	private final Map<LSymbol, Container> objects = new HashMap<>();
 
+	/**
+	 * Counts all created environments
+	 */
 	private static int count = 0;
 
+	/**
+	 * serial
+	 */
 	private final int serial;
 
+	/**
+	 * The lambda that holds the environment
+	 */
 	private String lambda = null;
 
+	/**
+	 * Creates a new environment with a parent.
+	 * 
+	 * @param environment to use as parent
+	 */
 	public Environment(Environment environment) {
 
 		count++;
@@ -41,13 +64,28 @@ public class Environment {
 		this.parent = environment;
 	}
 
-	public Environment(Environment environment, String name) {
+	/**
+	 * Creates a new environment with a parent and a surrounding lambda
+	 * (so the created environment is probably an inner environment).
+	 * 
+	 * @param environment to use as parent
+	 * @param lambda holding the environment
+	 */
+	public Environment(Environment environment, String lambda) {
 
 		this(environment);
 		
-		this.lambda  = name;
+		this.lambda  = lambda;
 	}
 
+	/**
+	 * This method will look-up the given key. It will first look
+	 * in its own list. If it doesn't contain the key, the environemnt
+	 * will ask it parent (and so on).
+	 * 
+	 * @param key to look-up
+	 * @return true if the environment or its parent contain the key
+	 */
 	public boolean contains(LSymbol key) {
 
 		if (objects.containsKey(key))
@@ -59,6 +97,14 @@ public class Environment {
 		return false;
 	}
 
+	/**
+	 * This method will look-up the given key. It will first look
+	 * in its own list. If it doesn't contain the key, the environemnt
+	 * will ask it parent (and so on).
+	 * 
+	 * @param key to look-up
+	 * @return the corresponding value to the key
+	 */
 	public LObject get(LSymbol key) {
 
 		if (objects.containsKey(key))
@@ -96,6 +142,7 @@ public class Environment {
 				return new LJStaticMember(key);
 			}
 
+			// not implemented:
 			// "$" in the middle inner class java.awt.geom.Point2D$Double.class
 			// "$" at the beginning packageless class $ParseDemo.class
 			// "#" at the end allow private access (.name$# (Symbol.# "abc"))
@@ -104,15 +151,23 @@ public class Environment {
 		throw new LException("[symbol not found] - symbol " + key + " can't be resolved");
 	}
 
-	public void put(LSymbol symbole, LObject object) {
+	/**
+	 * @param key for the value
+	 * @param value for the key
+	 */
+	public void put(LSymbol key, LObject value) {
 
-		objects.put(symbole, new Container(object));
+		objects.put(key, new Container(value));
 	}
 	
 
-	public void put(LSymbol symbole, Container container) {
+	/**
+	 * @param key for the value
+	 * @param value for the key
+	 */
+	public void put(LSymbol key, Container value) {
 
-		objects.put(symbole, container);
+		objects.put(key, value);
 	}
 
 	@Override
@@ -149,11 +204,22 @@ public class Environment {
 		return formated;
 	}
 
+	/**
+	 * @return an entrySet for the current key-value-pairs
+	 */
 	public Set<Entry<LSymbol, Container>> entrySet() {
 
 		return objects.entrySet();
 	}
 
+	/**
+	 * This method will replace the current value of the given key
+	 * with the new given value. If the key doesn't exist, the 
+	 * method will do nothing. 
+	 * 
+	 * @param key to set a new value for
+	 * @param value to replace the old value with
+	 */
 	public void set(LSymbol key, LObject value) {
 
 		if (objects.containsKey(key)) {

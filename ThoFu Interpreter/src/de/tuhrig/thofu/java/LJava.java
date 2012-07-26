@@ -18,6 +18,12 @@ import de.tuhrig.thofu.types.LQuoted;
 import de.tuhrig.thofu.types.LString;
 import de.tuhrig.thofu.types.LSymbol;
 
+/**
+ * Represents an abstract Java object. It's the super class of 
+ * all Java objects. It provides also some utility methods.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public abstract class LJava extends LObject {
 
 	protected Object result;
@@ -26,11 +32,17 @@ public abstract class LJava extends LObject {
 	
 	private final static List<String> importedPackages = new ArrayList<>();
 	
+	/**
+	 * @return wrapped object
+	 */
 	public Object getJObject() {
 
 		return result;
 	}
 
+	/**
+	 * @return Java class of the wrapped object
+	 */
 	public Class<? extends Object> getJClass() {
 
 		return result.getClass();
@@ -54,6 +66,11 @@ public abstract class LJava extends LObject {
 		return result.equals(o);
 	}
 	
+	/**
+	 * @param tokens
+	 * @param environment
+	 * @return
+	 */
 	public static Class<?>[] getTypes(LObject tokens, Environment environment) {
 		
 		LList list = (LList) tokens;
@@ -179,16 +196,28 @@ public abstract class LJava extends LObject {
 		}
 	}
 	
+	/**
+	 * @param className to import
+	 */
 	public static void importClass(String className) {
 		
 		importedClasses.add(className);
 	}
 	
+	/**
+	 * @param packageName to import
+	 */
 	public static void importPackage(String packageName) {
 	
 		importedPackages.add(packageName);
 	}
 	
+	/**
+	 * @param c
+	 * @param lambda
+	 * @param environment
+	 * @return new Java object wrapper
+	 */
 	public static LJObject createInterface(final Class<?> c, final LLambda lambda, final Environment environment) {
 
 		try {
@@ -213,6 +242,12 @@ public abstract class LJava extends LObject {
 		}
 	}
 
+	/**
+	 * @param c
+	 * @param lambda
+	 * @param environment
+	 * @return new Java class
+	 */
 	public static LObject createClass(final Class<?> c, final LLambda lambda, final Environment environment) {
 
 		try {

@@ -24,7 +24,7 @@ import de.tuhrig.thofu.types.LSymbol;
 import de.tuhrig.thofu.types.LTupel;
 
 /**
- * A Parser instance can be used to parse a LISP command into
+ * A Parser instance can be used to parse a command into
  * a list of tokens. A parser can also remove comments, read a
  * file or execute a list of several commands.
  * 
@@ -42,6 +42,11 @@ public class Parser {
 
 	private int i;
 
+	/**
+	 * @param file to read
+	 * @return content of the file
+	 * @throws IOException if the file can't be read
+	 */
 	public String read(File file) throws IOException {
 		
 		List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
@@ -54,6 +59,10 @@ public class Parser {
 		return builder.toString();
 	}
 
+	/**
+	 * @param expression to parse (e.g. (+ 1 2 3))
+	 * @return a list of parsed objects
+	 */
 	public LList parse(String expression) {
 
 		expression = format(expression);
@@ -193,6 +202,14 @@ public class Parser {
 		return expression;
 	}
 
+	/**
+	 * This method parses a string with more then one command.
+	 * Each command will be parsed separately. The returned list
+	 * will contained the parsed commands in the same order.
+	 * 
+	 * @param commands to parse
+	 * @return a list of parsed objects
+	 */
 	public List<LObject> parseAll(String commands) {
 
 		List<LObject> objects = new ArrayList<>();
@@ -269,6 +286,18 @@ public class Parser {
 		}
 	}
 
+	/**
+	 * This method is experimental and not used in the interpreter itself.
+	 * It can take a LObject and an environment and look for replacements 
+	 * for the object in this environment. E.g. it could replace a variable
+	 * called "a" with "3" if such a mapping was found in the environment. 
+	 * This could improve the performance of the interpreter, but causes 
+	 * various errors currently. Therefore the method is not used. 
+	 * 
+	 * @param tokens to replace
+	 * @param environment to search for replacements
+	 * @return a replacement for the object or the object itself if no replacement was found
+	 */
 	public LObject replace(LObject tokens, Environment environment) {
 
 		if(tokens instanceof LSymbol) {

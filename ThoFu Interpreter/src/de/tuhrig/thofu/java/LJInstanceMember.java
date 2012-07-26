@@ -8,6 +8,11 @@ import de.tuhrig.thofu.types.LList;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LSymbol;
 
+/**
+ * Represents an instance member.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LJInstanceMember extends LJava {
 
 	private LJObject object;
@@ -43,7 +48,7 @@ public class LJInstanceMember extends LJava {
 			}
 			catch (Exception e) {
 				
-				throw new LException("[" + e.getClass() + "] - " + e.getMessage());
+				throw new LException("[" + e.getClass() + "] - " + e.getMessage(), e);
 			}
 		}
 		

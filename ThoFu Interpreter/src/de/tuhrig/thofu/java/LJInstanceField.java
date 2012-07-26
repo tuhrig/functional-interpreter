@@ -8,6 +8,11 @@ import de.tuhrig.thofu.types.LList;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LSymbol;
 
+/**
+ * Represents an instance field.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LJInstanceField extends LJava {
 
 	private LJObject object;
@@ -36,7 +41,7 @@ public class LJInstanceField extends LJava {
 			}
 			catch (Exception e) {
 
-				throw new LException("[" + e.getClass() + "] - " + e.getMessage());
+				throw new LException("[" + e.getClass() + "] - " + e.getMessage(), e);
 			}
 		}
 		

@@ -2,10 +2,21 @@ package de.tuhrig.thofu.types;
 
 import de.tuhrig.thofu.Environment;
 
-public class LBoolean extends LObject { // LLeaf {
+/**
+ * Represents a boolean.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
+public class LBoolean extends LObject {
 
+	/**
+	 * The true boolean instance
+	 */
 	public static final LBoolean TRUE = new LBoolean();
 	
+	/**
+	 * The false boolean instance
+	 */
 	public static final LBoolean FALSE = new LBoolean();
 	
 	private LBoolean() {
@@ -13,6 +24,10 @@ public class LBoolean extends LObject { // LLeaf {
 		// singleton
 	}
 	
+	/**
+	 * @param condition to convert into a boolean
+	 * @return the true boolean instance for true and the false boolean instance for false
+	 */
 	public static LBoolean get(boolean condition) {
 		
 		if(condition)
@@ -53,6 +68,9 @@ public class LBoolean extends LObject { // LLeaf {
 		return System.identityHashCode(this);
 	}
 
+	/**
+	 * @return a Java boolean according to the instance
+	 */
 	public Object getValue() {
 
 		if(this == TRUE)

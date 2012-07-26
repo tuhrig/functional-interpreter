@@ -29,6 +29,13 @@ import de.tuhrig.thofu.types.LSymbol;
 import de.tuhrig.thofu.types.LTupel;
 
 /**
+ * The interpreter class itself. This class...
+ * 
+ * 		- ...adds all build-in operations and vairables
+ * 		- ...holds the root environment
+ * 		- ...can take a command and evaluate it
+ * 		- ...provides methods for the GUI (e.g. for the debugger)
+ * 
  * @author Thomas Uhrig (tuhrig.de)
  */
 public class Interpreter implements IInterpreter, IJava {
@@ -51,6 +58,10 @@ public class Interpreter implements IInterpreter, IJava {
 
 	private static boolean resume;
 
+	/**
+	 * Creates a new interpreter. Also, all built-in operations and
+	 * variables will be created.
+	 */
 	public Interpreter() {
 
 		/**
@@ -87,7 +98,7 @@ public class Interpreter implements IInterpreter, IJava {
 				}
 				catch (IOException e) {
 
-					throw new LException("[file not found] - file " + path + " can't be resolved");
+					throw new LException("[file not found] - file " + path + " can't be resolved", e);
 				}
 			}
 		});
@@ -723,8 +734,11 @@ public class Interpreter implements IInterpreter, IJava {
 	}
 
 	private LObject execute(LObject tokens, Environment environment) {
-		
-//		tokens = parser.replace(tokens, environment);
+
+		// This method is an experiment, it doesn't work. Therefore,
+		// it's commented our. It can be commented in and tested with
+		// the JUnit tests.
+		// tokens = parser.replace(tokens, environment);
 
 		Date before = new Date();
 
@@ -773,16 +787,35 @@ public class Interpreter implements IInterpreter, IJava {
 		print += object;
 	}
 
+	/**
+	 * Activates or de-activates the debugging mode.
+	 * 
+	 * @param b
+	 */
 	public static void setDebugg(boolean b) {
 
 		debugg = b;
 	}
 
+	/**
+	 * @return whether debugging is on or off
+	 */
 	public static boolean isDebugg() {
 
 		return debugg;
 	}
 
+	/**
+	 * This method returns true if the debugger should make another step.
+	 * It return false if the debugger should still stop at the current 
+	 * point.
+	 * 
+	 * If the method returns true, it will return false immediately after.
+	 * This makes the debugger stop at the next step until the user clicks
+	 * "next".
+	 * 
+	 * @return true if the next step should be made.
+	 */
 	public static boolean next() {
 
 		if(next) {
@@ -794,16 +827,27 @@ public class Interpreter implements IInterpreter, IJava {
 		return false;
 	}
 	
+	/**
+	 * @param b
+	 */
 	public static void setNext(boolean b) {
 
 		next = b;
 	}
 
+	/**
+	 * @return true if the debugger should resume (all steps)
+	 */
 	public static boolean resume() {
 
 		return resume;
 	}
 	
+	/**
+	 * Sets the resume-value to the different value as the current.
+	 * If resume is false, it will be true after the call. If resume
+	 * if true, it will be false after the call.
+	 */
 	public static void setResume() {
 
 		if(resume)

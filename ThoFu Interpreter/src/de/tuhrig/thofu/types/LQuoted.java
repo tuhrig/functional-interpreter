@@ -2,10 +2,21 @@ package de.tuhrig.thofu.types;
 
 import de.tuhrig.thofu.Environment;
 
+/**
+ * Represents a quoted value that won't be evaluated.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LQuoted extends LObject { // LLeaf {
 
+	/**
+	 * 
+	 */
 	public LObject value;
 
+	/**
+	 * @param value to wrap
+	 */
 	public LQuoted(LObject value) {
 
 		this.value = value;

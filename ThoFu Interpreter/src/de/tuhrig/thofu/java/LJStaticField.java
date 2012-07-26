@@ -7,6 +7,11 @@ import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LSymbol;
 
+/**
+ * Represents a static field.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LJStaticField extends LJava {
 
 	private String fieldName;
@@ -30,7 +35,7 @@ public class LJStaticField extends LJava {
 		}
 		catch (Exception e) {
 
-			throw new LException("[" + e.getClass() + "] - " + e.getMessage());
+			throw new LException("[" + e.getClass() + "] - " + e.getMessage(), e);
 		}
 		
 		return this;

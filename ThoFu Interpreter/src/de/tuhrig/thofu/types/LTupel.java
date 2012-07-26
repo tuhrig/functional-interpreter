@@ -7,12 +7,20 @@ import java.util.ListIterator;
 
 import de.tuhrig.thofu.Environment;
 
+/**
+ * Represents a LISP-like tupel.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LTupel extends LList {
 
 	private LObject first = LNull.NULL;
 
 	private LObject last = LNull.NULL;
 
+	/**
+	 * 
+	 */
 	public LTupel() {
 
 		// empty default constructor
@@ -37,9 +45,12 @@ public class LTupel extends LList {
 		return first;
 	}
 
-	public void setFirst(LObject first) {
+	/**
+	 * @param object to set at first
+	 */
+	public void setFirst(LObject object) {
 
-		this.first = first;
+		this.first = object;
 	}
 
 	public LObject getRest() {
@@ -47,9 +58,12 @@ public class LTupel extends LList {
 		return last;
 	}
 
-	public void setLast(LObject last) {
+	/**
+	 * @param object to set as last
+	 */
+	public void setLast(LObject object) {
 
-		this.last = last;
+		this.last = object;
 	}
 
 	public String toString() {
@@ -57,6 +71,12 @@ public class LTupel extends LList {
 		return "'(" + toSimpleString().trim() + ")";
 	}
 
+	/**
+	 * This method formats the tupel in a pretty nice way. Therefore, 
+	 * different cases are tested. 
+	 * 
+	 * @return simple and pretty formatted string representation of the tupel
+	 */
 	private String toSimpleString() {
 
 		if (!(first == LNull.NULL) && first instanceof LTupel && !(last == LNull.NULL) && last instanceof LTupel)

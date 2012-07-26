@@ -8,10 +8,18 @@ import java.util.ListIterator;
 
 import de.tuhrig.thofu.Environment;
 
+/**
+ * Represents a list.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LList extends LObject implements List<LObject> { // LNode {
 
 	private final ArrayList<LObject> list;
 
+	/**
+	 * Creates a new list.
+	 */
 	public LList() {
 
 		this.list = new ArrayList<>(0);
@@ -60,6 +68,9 @@ public class LList extends LObject implements List<LObject> { // LNode {
 		return System.identityHashCode(this);
 	}
 
+	/**
+	 * @return first object in the list
+	 */
 	public LObject getFirst() {
 
 		LObject first = this.get(0);
@@ -70,6 +81,9 @@ public class LList extends LObject implements List<LObject> { // LNode {
 		return first;
 	}
 
+	/**
+	 * @return all objects except of the first one
+	 */
 	public LObject getRest() {
 
 		LObject rest = (LObject) this.subList(1, this.size());

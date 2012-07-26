@@ -15,10 +15,19 @@ import org.apache.log4j.Logger;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 import de.tuhrig.thofu.types.LObject;
 
+/**
+ * The executer executes a command in a separate thread then the GUI.
+ * This makes the GUI responding, even when the evaluation takes long.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class Executer {
 
 	private static Logger logger = Logger.getLogger(Executer.class);
 	
+	/**
+	 * Singleton instance of the executer
+	 */
 	public final static Executer instance = new Executer();
 
 	private Executer() {
@@ -26,8 +35,14 @@ public class Executer {
 		// singleton
 	}
 
-	public void evaluate(final JTextArea area, final List<LObject> objects, final IInterpreter interpreter) {
+	/**
+	 * @param textArea to append the result to
+	 * @param objects to evaluate
+	 * @param interpreter to use
+	 */
+	public void evaluate(final JTextArea textArea, final List<LObject> objects, final IInterpreter interpreter) {
 
+		// start the "is running" animation
 		GUI.gui.start();
 		
 		Thread worker = new Thread() {
@@ -72,13 +87,14 @@ public class Executer {
 	                	
 	                    public void run() {
 	
-	                    	if(area != null) {
+	                    	if(textArea != null) {
 	                    		
-	                    		area.append(value + "\n>> ");
+	                    		textArea.append(value + "\n>> ");
 	                    	}
 	                    	
 	                    	GUI.gui.enableControls(true);
 	                    	
+	                    	// stop the "is running" animation
 							GUI.gui.stop();
 	                    }
 	                });

@@ -5,6 +5,11 @@ import java.util.Map.Entry;
 import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
 
+/**
+ * Represents a user-defined lambda.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LLambda extends LOperation {
 
 	private final LList parameters;
@@ -17,6 +22,11 @@ public class LLambda extends LOperation {
 
 	private int parametersSize;
 	
+	/**
+	 * @param parameters
+	 * @param definitions
+	 * @param closure
+	 */
 	public LLambda(LList parameters, LList definitions, Environment closure) {
 
 		super("lambda");
@@ -99,6 +109,9 @@ public class LLambda extends LOperation {
 		return false;
 	}
 
+	/**
+	 * @param name for the lambda
+	 */
 	public void setName(String name) {
 
 		this.name = name;
@@ -117,16 +130,25 @@ public class LLambda extends LOperation {
 		return list.size() + 1;
 	}
 	
+	/**
+	 * @return parameters of the lambda
+	 */
 	public LList getParameters() {
 		
 		return parameters;
 	}
 
+	/**
+	 * @return definitions of the lambda
+	 */
 	public LList getDefinitions() {
 	
 		return definitions;
 	}
 	
+	/**
+	 * @return closed environment of the lambda
+	 */
 	public Environment getClosure() {
 	
 		return closure;

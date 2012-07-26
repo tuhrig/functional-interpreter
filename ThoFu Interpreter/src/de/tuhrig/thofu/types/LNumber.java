@@ -4,15 +4,29 @@ import java.math.BigDecimal;
 
 import de.tuhrig.thofu.Environment;
 
+/**
+ * Represents a number.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LNumber extends LObject { // LLeaf {
 
+	/**
+	 * 
+	 */
 	public BigDecimal value;
 
-	LNumber(BigDecimal value) {
+	/**
+	 * @param value to store
+	 */
+	public LNumber(BigDecimal value) {
 
 		this.value = value;
 	}
 
+	/**
+	 * @param value to parse into a number
+	 */
 	public LNumber(String value) {
 
 		this(new BigDecimal(value));
@@ -43,29 +57,49 @@ public class LNumber extends LObject { // LLeaf {
 		return this;
 	}
 
-	public LNumber add(LNumber n) {
+	/**
+	 * @param number to add
+	 * @return calculation result as a new number instance
+	 */
+	public LNumber add(LNumber number) {
 
-		return new LNumber(value.add(n.value));
+		return new LNumber(value.add(number.value));
 	}
 
-	public LNumber subtract(LNumber n) {
+	/**
+	 * @param number to subtract
+	 * @return calculation result as a new number instance
+	 */
+	public LNumber subtract(LNumber number) {
 
-		return new LNumber(value.subtract(n.value));
+		return new LNumber(value.subtract(number.value));
 	}
 
-	public LNumber multiply(LNumber n) {
+	/**
+	 * @param number to multiply
+	 * @return calculation result as a new number instance
+	 */
+	public LNumber multiply(LNumber number) {
 
-		return new LNumber(value.multiply(n.value));
+		return new LNumber(value.multiply(number.value));
 	}
 
-	public LNumber divide(LNumber n) {
+	/**
+	 * @param number to divide
+	 * @return calculation result as a new number instance
+	 */
+	public LNumber divide(LNumber number) {
 
-		return new LNumber(value.divide(n.value));
+		return new LNumber(value.divide(number.value));
 	}
 
-	public int compareTo(LNumber n) {
+	/**
+	 * @param number to compare
+	 * @return calculation result as a new number instance
+	 */
+	public int compareTo(LNumber number) {
 
-		return value.compareTo(n.value);
+		return value.compareTo(number.value);
 	}
 
 	@Override

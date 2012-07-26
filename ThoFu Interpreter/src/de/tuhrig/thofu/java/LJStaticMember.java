@@ -7,6 +7,11 @@ import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LSymbol;
 
+/**
+ * Represents a static member.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class LJStaticMember extends LJava {
 
 	private String methodName;
@@ -34,7 +39,7 @@ public class LJStaticMember extends LJava {
 		}
 		catch (Exception e) {
 
-			throw new LException("[" + e.getClass() + "] - " + e.getMessage());
+			throw new LException("[" + e.getClass() + "] - " + e.getMessage(), e);
 		}
 		
 		return this;
