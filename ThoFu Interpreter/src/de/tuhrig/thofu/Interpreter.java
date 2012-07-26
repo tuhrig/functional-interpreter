@@ -2,10 +2,11 @@ package de.tuhrig.thofu;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
@@ -99,33 +100,35 @@ public class Interpreter implements IInterpreter, IJava {
 
 				LObject path = ((LList) tokens).get(0);
 
-				try {
-		
-					final File file = new File(getClass().getResource(path.toString().replaceAll("\"", "")).toURI());
-	
-					String content = parser.read(file);
-					
-					String commands = parser.format(content);
+				String rs = path.toString().replaceAll("\"", "");
 
-					List<LObject> objects = parser.parseAll(commands);
-					
-					LObject result = LNull.NULL;
-					
-					for(LObject object: objects) {
-
-						result = execute(object, environment);
-					}
-					
-					return result;
-				}
-				catch (IOException e) {
-
-					throw new LException("[file not found] - file " + path + " can't be resolved");
-				}
-				catch (URISyntaxException e) {
+				InputStream is = getClass().getResourceAsStream(rs);
 				
-					throw new LException("[resource not found] - resource " + path + " can't be resolved");
+				@SuppressWarnings("resource")
+				Scanner cns = new Scanner(is);
+				
+				StringBuilder content = new StringBuilder();
+				
+				String nl = "\n";
+				
+				while(cns.hasNext()) {
+					
+					content.append(cns.next());
+					content.append(nl);
 				}
+
+				String commands = parser.format(content.toString());
+
+				List<LObject> objects = parser.parseAll(commands);
+				
+				LObject result = LNull.NULL;
+				
+				for(LObject object: objects) {
+
+					result = execute(object, environment);
+				}
+				
+				return result;
 			}
 		});
 		
