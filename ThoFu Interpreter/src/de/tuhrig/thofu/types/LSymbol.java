@@ -65,6 +65,20 @@ public class LSymbol extends LObject {
 
 		return environment.get(this);
 	}
+	
+	public String inspect() {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(super.inspect());
+
+		builder.append(
+				"\n" +
+				"Value:\t\t" 	+ value
+				);
+		
+		return builder.toString();
+	}
 
 	@Override
 	public int argrumentSize(LObject object) {

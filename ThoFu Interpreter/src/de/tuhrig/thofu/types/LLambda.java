@@ -108,6 +108,22 @@ public class LLambda extends LOperation {
 
 		return false;
 	}
+	
+	public String inspect() {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(super.inspect());
+
+		builder.append(
+				"\n" +
+				"Parameters:\t" 	+ getParameters() + "\n" +
+				"Definitions:\t" 	+ getDefinitions() + "\n" +
+				"Closure:\t\t" 		+ getClosure()
+				);
+		
+		return builder.toString();
+	}
 
 	/**
 	 * @param name for the lambda

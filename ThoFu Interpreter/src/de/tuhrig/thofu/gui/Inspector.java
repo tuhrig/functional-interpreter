@@ -54,7 +54,7 @@ class Inspector extends JPanel implements EnvironmentListener {
 		root.add(variables);
 		root.add(operations);
 		root.add(lambdas);
-
+		
 		this.model = new DefaultTreeModel(root) {
 
 			private static final long serialVersionUID = 1L;
@@ -114,7 +114,7 @@ class Inspector extends JPanel implements EnvironmentListener {
 					for (Entry<LSymbol, Container> entry : environment.entrySet()) {
 
 						if ((entry.getValue().getObject() instanceof LLambda) == true) {
-
+							
 							objects.add(new DefaultMutableTreeNode(entry.getKey() + " = " + entry.getValue().getObject()));
 						}
 					}

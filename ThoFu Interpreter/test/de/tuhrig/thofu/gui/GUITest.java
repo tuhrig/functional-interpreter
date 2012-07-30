@@ -111,7 +111,6 @@ public class GUITest {
 		
 		gui.panel("status").background().requireEqualTo(Color.RED);
 		
-		
 		gui.textBox("editor").enterText("(define abc 5)");
 		gui.panel("status").background().requireEqualTo(Color.RED);
 		gui.menuItemWithPath("Run", "Start Script").click();

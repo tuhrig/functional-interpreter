@@ -53,6 +53,8 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	quicksort		sorts a list						(quicksort '(2 5 6 1))
 
 	load			loads a script						(load "myScript.txt")
+	resource		loads a script from inside the JAR	(resource "myScript.txt")
+	inspect			returns information about an object	(inspect 42)
 	print			prints a given value				(print "hello")
 
 	inc				increments a value					(inc 1)

@@ -49,7 +49,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	private IInterpreter interpreter;
 
-	private final static JTabbedPane tabbs = new JTabbedPane();
+	private JTabbedPane tabbs = new JTabbedPane();
 	
 	private int i = 0;
 
@@ -252,7 +252,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		return false;
 	}
 	
-	static class FileTabb extends RTextScrollPane {
+	class FileTabb extends RTextScrollPane {
 
 		private static final long serialVersionUID = 1L;
 		

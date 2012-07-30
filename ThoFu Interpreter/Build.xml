@@ -31,7 +31,6 @@
             <zipfileset excludes="META-INF/*.SF" src="libs/rsyntaxtextarea.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="libs/autocomplete-1.4.1.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="libs/swingx-all-1.6.3.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="libs/fest/jcip-annotations-1.0.jar"/>    		
             <zipfileset excludes="META-INF/*.SF" src="libs/commons-lang3-3.1.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="libs/markdownj-1.0.2b4-0.3.0.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="libs/javassist.jar"/>

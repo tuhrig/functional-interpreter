@@ -1,5 +1,6 @@
 package de.tuhrig.thofu.types;
 
+
 /**
  * Represents an abstract operation. It's the super class
  * of a user-defined lambda and of the build-in operations.
@@ -51,5 +52,19 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 		LList list = (LList) object;
 		
 		return list.size() + 1;
+	}
+	
+	public String inspect() {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(super.inspect());
+
+		builder.append(
+				"\n" +
+				"Name:\t\t" 	+ getName()
+				);
+		
+		return builder.toString();
 	}
 }

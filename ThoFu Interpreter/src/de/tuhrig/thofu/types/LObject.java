@@ -12,6 +12,10 @@ import de.tuhrig.thofu.gui.Debugger;
  */
 public abstract class LObject { // implements TreeNode {
 
+	private Environment environment;
+	
+	private LObject tokens;
+
 	/**
 	 * This method wraps the evaluate method that each object must
 	 * override. It enables a simple debugging mechanism. It can stop
@@ -23,6 +27,10 @@ public abstract class LObject { // implements TreeNode {
 	 * @return evaluation result
 	 */
 	public final LObject run(Environment environment, LObject tokens) {
+		
+		// store for inspection
+		this.environment = environment;
+		this.tokens = tokens;
 		
 		// stop before the call
 		if(Interpreter.isDebugg()) {
@@ -63,6 +71,10 @@ public abstract class LObject { // implements TreeNode {
 			}
 		}
 		
+		// store for inspection
+		this.environment = environment;
+		this.tokens = tokens;
+		
 		return result;
 	}
 
@@ -84,6 +96,23 @@ public abstract class LObject { // implements TreeNode {
 	 */
 	public abstract LObject evaluate(Environment environment, LObject tokens);
 
+	/**
+	 * @return a panel with information about the current object
+	 */
+	public String inspect() {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(
+				"toString():\t" 	+ this + "\n" + 
+			    "Class:\t\t" 		+ this.getClass() + "\n" +
+			    "Tokens:\t\t" 		+ tokens + "\n" +
+				"Environment:\t" 	+ environment
+				);
+		
+		return builder.toString();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see java.lang.Object#toString()

@@ -173,6 +173,28 @@ public class Interpreter implements IInterpreter, IJava {
 				return result;
 			}
 		});
+		
+		// (inspect object)
+		root.put(LSymbol.get("inspect"), new LOperation("inspect") {
+
+			@Override
+			public LObject evaluate(Environment environment, LObject tokens) {
+
+				LList list = (LList) tokens;
+				
+//				Test implementation
+//				if(list.getFirst() instanceof LList) {
+//					
+//					tokens = list.getFirst().run(environment, tokens);
+//					
+//					return new LString(tokens.inspect());
+//				}
+//
+//				return new LString(list.getFirst().inspect());
+				
+				return new LString(list.getFirst().run(environment, tokens).inspect());
+			}
+		});
 
 		// (let (parameters) body)
 		root.put(LSymbol.get("let"), new LOperation("let") {

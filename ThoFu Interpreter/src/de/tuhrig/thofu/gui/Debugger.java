@@ -19,9 +19,7 @@ import javax.swing.table.TableColumn;
 
 import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Interpreter;
-import de.tuhrig.thofu.types.LLambda;
 import de.tuhrig.thofu.types.LObject;
-import de.tuhrig.thofu.types.LOperation;
 
 public class Debugger extends JPanel {
 
@@ -149,8 +147,6 @@ public class Debugger extends JPanel {
 					String obj0 = (String) model.getValueAt(row,0);
 					int obj1 = (Integer) model.getValueAt(row,1);
 					LObject obj2 = (LObject) model.getValueAt(row, 2);
-					LObject obj4 = (LObject) model.getValueAt(row, 4);
-					Environment obj5 = (Environment) model.getValueAt(row, 5);
 	
 					JTextArea area = new JTextArea();
 					area.setEditable(false);
@@ -162,38 +158,11 @@ public class Debugger extends JPanel {
 					
 					// set general information
 					area.setText( 
-							"Action:\t" + obj0 + "\n\n" +
-					
-							"Genral:\n\n" + 
-							"toString():\t" + obj2 + "\n" + 
-							"Step:\t" + obj1 + "\n" + 
-						    "Class:\t" + obj2.getClass() + "\n" +
-						    "Tokens:\t" + obj4 + "\n" +
-							"Environment:\t" +obj5 + "\n"
+							"Action:\t\t" + obj0 + "\n" +
+							"Step:\t\t" + obj1 + "\n"
 							);
 					
-					// set specific information
-					if(obj2 instanceof LLambda) {
-						
-						LLambda tmp = (LLambda) obj2;
-						
-						area.append(
-								"Specific:\n\n" + 
-								"Name:\t" + tmp.getName() + "\n" +
-								"Parameters:\t" + tmp.getParameters() + "\n" +
-								"Definitions:\t" + tmp.getDefinitions() + "\n" +
-								"Closure:\t" + tmp.getClosure() + "\n"
-								);
-					}
-					else if(obj2 instanceof LOperation) {
-						
-						LOperation tmp = (LOperation) obj2;
-						
-						area.append(
-								"Specific:\n\n" + 
-								"Name:\t" + tmp.getName()
-								);
-					}
+					area.append(obj2.inspect());
 					
 					JFrame frame = new JFrame(obj2.toString());
 					frame.getContentPane().add(new JScrollPane(area));
