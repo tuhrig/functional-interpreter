@@ -2,6 +2,7 @@ package de.tuhrig.thofu.gui;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.Locale;
 
 import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.fixture.FrameFixture;
@@ -9,8 +10,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import de.tuhrig.thofu.gui.GUI;
 
 public class GUITest {
 
@@ -48,36 +47,49 @@ public class GUITest {
 	public void replIsPresent() {
 
 		gui.textBox("repl").requireText(
-					"LISP Interpreter\n" +
+					"ThoFu Interpreter\n" +
 					"Press CTRL + ENTER to submit a command\n" + 
 					">> "
 				);
 	}
-	
-	@Test
-	public void editorIsPresent() {
 
-		gui.textBox("editor").requireText("");
-	}
-	
 	@Test
 	public void runTextInEditor() {
 
+		Locale.setDefault(Locale.GERMAN);
+		
 		gui.panel("status").background().requireEqualTo(Color.GREEN);
+	
+		gui.menuItemWithPath("File", "New").click();
+		gui.fileChooser().fileNameTextBox().enterText("test.txt");
+		gui.fileChooser().approve();
+		
+		gui.panel("status").background().requireEqualTo(Color.RED);
 		gui.textBox("editor").enterText("(define a 5)");
 		gui.panel("status").background().requireEqualTo(Color.RED);
-		gui.menuItemWithPath("Run", "Start").click();
+		gui.menuItemWithPath("Run", "Start Script").click();
 		gui.panel("status").background().requireEqualTo(Color.GREEN);
 	}
 	
 	@Test
 	public void testAutoCompletionInEditor() {
 
+		Locale.setDefault(Locale.GERMAN);
+		
 		gui.panel("status").background().requireEqualTo(Color.GREEN);
-		gui.textBox("editor").enterText("(define abc 5)");
+	
+		gui.menuItemWithPath("File", "New").click();
+		gui.fileChooser().fileNameTextBox().enterText("test.txt");
+		gui.fileChooser().approve();
+		
 		gui.panel("status").background().requireEqualTo(Color.RED);
-		gui.menuItemWithPath("Run", "Start").click();
+		
+		gui.textBox("editor").enterText("(define abc 5)");
+
+		gui.menuItemWithPath("Run", "Start Script").click();
+		
 		gui.panel("status").background().requireEqualTo(Color.GREEN);
+		
 		gui.textBox("editor").enterText("\n");
 		gui.textBox("editor").enterText("(- 5 a");
 		gui.textBox("editor").pressAndReleaseKey(completion);
@@ -89,10 +101,20 @@ public class GUITest {
 	public void testScriptTestCase1() {
 
 		// define a variable in editor
+		Locale.setDefault(Locale.GERMAN);
+		
 		gui.panel("status").background().requireEqualTo(Color.GREEN);
+	
+		gui.menuItemWithPath("File", "New").click();
+		gui.fileChooser().fileNameTextBox().enterText("test.txt");
+		gui.fileChooser().approve();
+		
+		gui.panel("status").background().requireEqualTo(Color.RED);
+		
+		
 		gui.textBox("editor").enterText("(define abc 5)");
 		gui.panel("status").background().requireEqualTo(Color.RED);
-		gui.menuItemWithPath("Run", "Start").click();
+		gui.menuItemWithPath("Run", "Start Script").click();
 		gui.panel("status").background().requireEqualTo(Color.GREEN);
 		
 		// use variable in repl

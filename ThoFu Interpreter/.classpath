@@ -7,13 +7,10 @@
 	<classpathentry kind="lib" path="libs/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="libs/rsyntaxtextarea.jar"/>
 	<classpathentry kind="lib" path="libs/autocomplete-1.4.1.jar"/>
-	<classpathentry kind="lib" path="libs/swingx-all-1.6.3.jar"/>
 	<classpathentry kind="lib" path="libs/fest/fest-assert-1.2.jar"/>
 	<classpathentry kind="lib" path="libs/fest/fest-reflect-1.2.jar"/>
 	<classpathentry kind="lib" path="libs/fest/fest-util-1.1.2.jar"/>
-	<classpathentry kind="lib" path="libs/fest/jcip-annotations-1.0.jar"/>
 	<classpathentry kind="lib" path="libs/benchmark/bb.jar"/>
-	<classpathentry kind="lib" path="libs/benchmark/jsci-core.jar"/>
 	<classpathentry kind="lib" path="libs/benchmark/mt-13.jar"/>
 	<classpathentry kind="lib" path="libs/charts/jcommon-1.0.17.jar"/>
 	<classpathentry kind="lib" path="libs/charts/jfreechart-1.0.14.jar"/>
@@ -29,6 +26,9 @@
 			<attribute name="javadoc_location" value="http://fest.easytesting.org/swing/apidocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/swingx-all-1.6.3.jar"/>
+	<classpathentry kind="lib" path="libs/benchmark/jsci-core.jar"/>
+	<classpathentry kind="lib" path="libs/fest/jcip-annotations-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

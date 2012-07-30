@@ -149,6 +149,8 @@ class GUI extends JFrame {
 				editor.execute();
 
 				repl.focus();
+				
+				markFresh();
 			}
 		});
 
