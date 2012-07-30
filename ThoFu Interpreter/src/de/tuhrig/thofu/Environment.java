@@ -201,7 +201,7 @@ public class Environment {
 			place += "\t";
 		}
 		
-		return formated;
+		return formated.trim();
 	}
 
 	/**

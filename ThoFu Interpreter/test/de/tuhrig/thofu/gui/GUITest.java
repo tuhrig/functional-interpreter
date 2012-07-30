@@ -111,7 +111,7 @@ public class GUITest {
 		
 		gui.panel("status").background().requireEqualTo(Color.RED);
 		
-		gui.textBox("editor").enterText("(define abc 5)");
+		gui.textBox("editor").enterText("(define abc 5");
 		gui.panel("status").background().requireEqualTo(Color.RED);
 		gui.menuItemWithPath("Run", "Start Script").click();
 		gui.panel("status").background().requireEqualTo(Color.GREEN);
@@ -120,7 +120,7 @@ public class GUITest {
 		gui.textBox("repl").enterText("(- 5 a");
 		gui.textBox("repl").pressAndReleaseKey(completion);
 		gui.textBox("repl").pressAndReleaseKey(enter);
-		endsWith(gui.textBox("repl").text(), "(- 5 abc");
+		endsWith(gui.textBox("repl").text(), "(- 5 abc)");
 		gui.textBox("repl").enterText(")");
 		gui.textBox("repl").pressAndReleaseKey(submit);	
 		endsWith(gui.textBox("repl").text(), "0\n>> ");

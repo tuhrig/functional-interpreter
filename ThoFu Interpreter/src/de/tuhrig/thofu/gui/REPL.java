@@ -45,6 +45,8 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 
 	private final String welcome = "ThoFu Interpreter\nPress CTRL + ENTER to submit a command\n>> ";
 
+	private final char open = '(';
+	
 	REPL() {
 
 		setPreferredSize(new Dimension(100, 100));
@@ -61,6 +63,7 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 
 			private String lastInserted = "";
 
+			@Override
 			public void keyReleased(KeyEvent event) {
 
 				int code = event.getKeyCode();
@@ -72,6 +75,22 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 				}
 			}
 
+			@Override
+			public void keyTyped(KeyEvent event) {
+				
+				/**
+				 * Make a ) for every (
+				 */
+				if(event.getKeyChar() == open) {
+					
+					int current = textArea.getCaretPosition();
+					
+					textArea.append(")");
+					textArea.setCaretPosition(current);
+				}
+				
+			}
+			
 			@Override
 			public void keyPressed(KeyEvent event) {
 

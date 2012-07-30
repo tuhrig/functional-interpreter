@@ -53,6 +53,8 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	
 	private int i = 0;
 
+	private final char open = '(';
+	
 	Editor() {
 
 		this.setLayout(new BorderLayout(3, 3));
@@ -66,8 +68,26 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		setTabbs();
 		
-		RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
+		final RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
 
+		area.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyTyped(KeyEvent event) {
+				
+				/**
+				 * Make a ) for every (
+				 */
+				if(event.getKeyChar() == open) {
+					
+					int current = area.getCaretPosition();
+					
+					area.append(")");
+					area.setCaretPosition(current);
+				}
+			}
+		});
+		
 		AutoCompletion autoCompletion = new AutoCompletion(provider);
 		autoCompletion.install(area);
 
