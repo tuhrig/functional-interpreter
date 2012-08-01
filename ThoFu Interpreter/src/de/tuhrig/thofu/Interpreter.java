@@ -2,11 +2,9 @@ package de.tuhrig.thofu;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
@@ -113,21 +111,8 @@ public class Interpreter implements IInterpreter, IJava {
 
 				String rs = path.toString().replaceAll("\"", "");
 
-				InputStream is = getClass().getResourceAsStream(rs);
+				String content = parser.read(getClass(), rs);
 				
-				@SuppressWarnings("resource")
-				Scanner cns = new Scanner(is);
-				
-				StringBuilder content = new StringBuilder();
-				
-				String nl = "\n";
-				
-				while(cns.hasNext()) {
-					
-					content.append(cns.next());
-					content.append(nl);
-				}
-
 				String commands = parser.format(content.toString());
 
 				List<LObject> objects = parser.parseAll(commands);

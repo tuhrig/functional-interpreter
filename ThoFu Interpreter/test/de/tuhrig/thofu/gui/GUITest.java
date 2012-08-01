@@ -24,7 +24,7 @@ public class GUITest {
 	@Before
 	public void setUp() {
 
-		gui = new FrameFixture(new GUI());
+		gui = new FrameFixture(new ThoFuUi());
 		gui.show();
 	}
 

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -35,17 +34,18 @@ import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
 import de.tuhrig.thofu.Interpreter;
+import de.tuhrig.thofu.Parser;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 
-class GUI extends JFrame {
+class ThoFuUi extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = Logger.getLogger(GUI.class);
+	private static Logger logger = Logger.getLogger(ThoFuUi.class);
 
-	public static GUI gui;
+	public static ThoFuUi gui;
 
-	private final REPL repl = new REPL();
+	private final Repl repl = new Repl();
 
 	private final Inspector inspector = new Inspector();
 
@@ -67,7 +67,7 @@ class GUI extends JFrame {
 
 	private JMenuItem reset;
 
-	public GUI() {
+	public ThoFuUi() {
 		
 	    // singleton
 		gui = this;
@@ -92,7 +92,6 @@ class GUI extends JFrame {
 		tools.addTab("Debugger", SwingFactory.create("icons/Appointment Urgent.png", 24, 24), debugger);
 		tools.addTab("Inspector", SwingFactory.create("icons/inspect.png", 24, 24), inspector);
 		tools.addTab("History", SwingFactory.create("icons/tree.png", 24, 24), history);
-		
 		
 		// multi split pane
 		JXMultiSplitPane msp = new JXMultiSplitPane();
@@ -200,7 +199,7 @@ class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				int returnVal = fc.showSaveDialog(GUI.this);
+				int returnVal = fc.showSaveDialog(ThoFuUi.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 
@@ -214,7 +213,7 @@ class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				int returnVal = fc.showOpenDialog(GUI.this);
+				int returnVal = fc.showOpenDialog(ThoFuUi.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 
@@ -228,7 +227,7 @@ class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				int returnVal = fc.showSaveDialog(GUI.this);
+				int returnVal = fc.showSaveDialog(ThoFuUi.this);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 
@@ -242,16 +241,9 @@ class GUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				try {
-					
-					File readme = new File(getClass().getResource("README.md").toURI());
-					
-					new HTMLViewer(readme).scrollToTop();
-				}
-				catch (URISyntaxException e) {
+				String content = new Parser().read(getClass(), "README.md");
 
-					// works
-				}
+				new HtmlViewer(content);	
 			}
 		});
 		
@@ -442,7 +434,7 @@ class GUI extends JFrame {
 
 		Locale.setDefault(Locale.ENGLISH);
 
-		new GUI();
+		new ThoFuUi();
 
 		SwingUtilities.invokeLater(new Runnable() {
 

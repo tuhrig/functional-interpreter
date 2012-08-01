@@ -29,11 +29,11 @@ import de.tuhrig.thofu.interfaces.InterpreterListener;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LSymbol;
 
-class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
+class Repl extends JPanel implements EnvironmentListener, InterpreterListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = Logger.getLogger(REPL.class);
+	private static Logger logger = Logger.getLogger(Repl.class);
 
 	private final DefaultCompletionProvider provider = new DefaultCompletionProvider();
 
@@ -47,7 +47,7 @@ class REPL extends JPanel implements EnvironmentListener, InterpreterListener {
 
 	private final char open = '(';
 	
-	REPL() {
+	Repl() {
 
 		setPreferredSize(new Dimension(100, 100));
 		

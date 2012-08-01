@@ -109,7 +109,7 @@ class FileBrowser extends JPanel {
 	
 						if (file.exists() && file.isFile()) {
 	
-							GUI.gui.open(file);
+							ThoFuUi.gui.open(file);
 						}
 					}
 				}
@@ -127,11 +127,11 @@ class FileBrowser extends JPanel {
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
 
-							int returnVal = GUI.gui.showSaveDialog();
+							int returnVal = ThoFuUi.gui.showSaveDialog();
 
 							if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-								GUI.gui.open(GUI.gui.getSelectedFile());
+								ThoFuUi.gui.open(ThoFuUi.gui.getSelectedFile());
 							}
 						}
 					});
@@ -152,11 +152,11 @@ class FileBrowser extends JPanel {
 			
 			if(file.isDirectory()) {
 				
-				GUI.gui.setCurrentDirectory(file);
+				ThoFuUi.gui.setCurrentDirectory(file);
 			}
 			else {
 				
-				GUI.gui.setCurrentDirectory(file.getParentFile());
+				ThoFuUi.gui.setCurrentDirectory(file.getParentFile());
 			}
 		}
 	}

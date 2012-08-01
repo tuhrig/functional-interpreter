@@ -21,7 +21,7 @@
     	<jar destfile="ThoFu Interpreter.jar" filesetmanifest="mergewithoutmain">
             
         	<manifest>
-                <attribute name="Main-Class" value="de.tuhrig.thofu.gui.GUI"/>
+                <attribute name="Main-Class" value="de.tuhrig.thofu.gui.ThoFuUi"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
         	

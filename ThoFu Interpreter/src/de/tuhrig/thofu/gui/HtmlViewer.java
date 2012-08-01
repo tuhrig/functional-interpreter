@@ -1,7 +1,6 @@
 package de.tuhrig.thofu.gui;
 
 import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,54 +16,44 @@ import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 import com.petebevin.markdown.MarkdownProcessor;
 
-import de.tuhrig.thofu.Parser;
-
-class HTMLViewer extends JFrame implements HyperlinkListener {
+class HtmlViewer extends JFrame implements HyperlinkListener {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private JEditorPane htmlPane;
  
 	private JScrollPane scrollPane;
 	
-	HTMLViewer(File file) {
+	public HtmlViewer(String string) {
 		
-		try {
+		String html = getHTML(string);
 			
-			htmlPane = new JEditorPane("text/html", getHTML(new Parser().read(file)));
-		}
-		catch (Exception e) {
-
-			JOptionPane.showMessageDialog(this, "Can't access " + file, "Error", JOptionPane.ERROR_MESSAGE);		
-		}
-
+		htmlPane = new JEditorPane("text/html", html);
 		htmlPane.setEditable(false);
-		
 		htmlPane.addHyperlinkListener(this);
-
+		
 		scrollPane = new JScrollPane(htmlPane);
 	
-		
 		add(scrollPane);
-
 		setTitle("About");
 		setSize(800, 400);
 		setLocationRelativeTo(null);
+		scrollToTop();
 		setVisible(true);
-
 	}
 	
-	public void scrollToTop() {
+	private void scrollToTop() {
 		
 		htmlPane.setCaretPosition(0);
 		scrollPane.getVerticalScrollBar().setValue(0);
-		scrollPane.repaint();
-		
+		scrollPane.repaint();		
 	}
 	
 	public static String getHTML(String markdown) {
-	    MarkdownProcessor markdown_processor = new MarkdownProcessor();
-	    return markdown_processor.markdown(markdown);
+		
+	    MarkdownProcessor processor = new MarkdownProcessor();
+	    
+	    return processor.markdown(markdown);
 	}
 
 	public void hyperlinkUpdate(HyperlinkEvent e) {

@@ -2,11 +2,13 @@ package de.tuhrig.thofu;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +27,9 @@ import de.tuhrig.thofu.types.LTupel;
 
 /**
  * A Parser instance can be used to parse a command into
- * a list of tokens. A parser can also remove comments, read a
- * file or execute a list of several commands.
+ * a list of tokens. A parser can also remove comments, 
+ * read a file/resource or execute a list of several 
+ * commands.
  * 
  * @author Thomas Uhrig (tuhrig.de)
  */
@@ -40,6 +43,8 @@ public class Parser {
 
 	private static final Pattern SPLIT = Pattern.compile("[^\\s\"]+|\"([^\"]*)\"");
 
+	private static final String nl = "\n";
+	
 	private int i;
 
 	/**
@@ -51,12 +56,39 @@ public class Parser {
 		
 		List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
 
-		StringBuilder builder = new StringBuilder();
+		StringBuilder content = new StringBuilder();
 		
-		for (String line : lines)
-			builder.append(line + "\n");
+		for (String line : lines) {
+			
+			content.append(line);
+			content.append(nl);
+		}
 		
-		return builder.toString();
+		return content.toString();
+	}
+	
+	/**
+	 * @param clazz to use for resource loading
+	 * @param resource name to load
+	 * @return the content of the resource as a String
+	 */
+	public String read(Class<?> clazz, String resource) {
+
+		InputStream stream = clazz.getResourceAsStream(resource);
+		
+		Scanner scanner = new Scanner(stream);
+	 
+		StringBuilder content = new StringBuilder();
+		
+		while(scanner.hasNext()) {
+			
+			content.append(scanner.nextLine());
+			content.append(nl);
+		}
+		
+		scanner.close();
+		
+		return content.toString();
 	}
 
 	/**
@@ -253,7 +285,14 @@ public class Parser {
 		return objects;
 	}
 	
-	void validate(final String expression) {
+	/**
+	 * This method validated an expression due to its parenthesis. If
+	 * a parenthesis is wrong (missing, too much, wrong place) it will
+	 * throw a LException.
+	 * 
+	 * @param expression to validate
+	 */
+	public void validate(final String expression) {
 
 		if (!expression.trim().startsWith("(") && !expression.trim().startsWith("'("))
 			throw new LException(LException.MISSING_INITIAL_OPENING + expression);

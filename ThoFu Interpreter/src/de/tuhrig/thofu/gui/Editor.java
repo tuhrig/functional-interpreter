@@ -43,7 +43,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = Logger.getLogger(REPL.class);
+	private static Logger logger = Logger.getLogger(Repl.class);
 
 	private final DefaultCompletionProvider provider = new DefaultCompletionProvider();
 
@@ -297,7 +297,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 				@Override
 				public void keyPressed(KeyEvent event) {
 
-					GUI.gui.markGrubby();
+					ThoFuUi.gui.markGrubby();
 					FileTabb.this.markDirty();
 				}
 			});

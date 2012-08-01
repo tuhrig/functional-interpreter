@@ -15,7 +15,7 @@ public class ThoFuApplet extends JApplet {
 
 	public void init() {
 		
-		GUI gui = new GUI();
+		ThoFuUi gui = new ThoFuUi();
 		
 		Container pane = gui.getContentPane();
 		
