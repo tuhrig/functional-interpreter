@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Literal;
 
 /**
  * Represents a symbol (e.g. a variable).
@@ -73,7 +74,7 @@ public class LSymbol extends LObject {
 		builder.append(super.inspect());
 
 		builder.append(
-				"\n" +
+				Literal.NL +
 				"Value:\t\t" 	+ value
 				);
 		

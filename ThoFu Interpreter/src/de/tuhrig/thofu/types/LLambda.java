@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 
 import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Literal;
 
 /**
  * Represents a user-defined lambda.
@@ -116,10 +117,10 @@ public class LLambda extends LOperation {
 		builder.append(super.inspect());
 
 		builder.append(
-				"\n" +
-				"Parameters:\t" 	+ getParameters() + "\n" +
-				"Definitions:\t" 	+ getDefinitions() + "\n" +
-				"Closure:\t\t" 		+ getClosure()
+				Literal.NL +
+				"Parameters:" + Literal.TP + getParameters() + Literal.NL +
+				"Definitions:" + Literal.TP + getDefinitions() + Literal.NL +
+				"Closure:" + Literal.TP + Literal.TP + getClosure()
 				);
 		
 		return builder.toString();

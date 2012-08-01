@@ -47,7 +47,7 @@ public class Executer {
 		
 		Thread worker = new Thread() {
 			
-            private String value = "";
+            private String value;
 
 			public void run() {
 

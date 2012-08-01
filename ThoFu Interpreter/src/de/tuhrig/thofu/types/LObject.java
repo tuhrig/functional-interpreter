@@ -2,6 +2,7 @@ package de.tuhrig.thofu.types;
 
 import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Interpreter;
+import de.tuhrig.thofu.Literal;
 import de.tuhrig.thofu.gui.Debugger;
 
 /**
@@ -104,9 +105,9 @@ public abstract class LObject { // implements TreeNode {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(
-				"toString():\t" 	+ this + "\n" + 
-			    "Class:\t\t" 		+ this.getClass() + "\n" +
-			    "Tokens:\t\t" 		+ tokens + "\n" +
+				"toString():\t" 	+ this + Literal.NL + 
+			    "Class:\t\t" 		+ this.getClass() + Literal.NL +
+			    "Tokens:\t\t" 		+ tokens + Literal.NL +
 				"Environment:\t" 	+ environment
 				);
 		

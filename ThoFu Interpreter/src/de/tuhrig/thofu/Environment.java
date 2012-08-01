@@ -188,20 +188,20 @@ public class Environment {
 			tmp = tmp.parent;
 		}
 
-		String formated = "";
+		StringBuilder formated = new StringBuilder();
 
 		if(lambda != null)
-			formated = "Holded by " + lambda + "\n";
+			formated.append("Holded by " + lambda + Literal.NL);
 		
 		String place = "";
 		
 		for(int i = 0; i < envs.size(); i++) {
 			
-			formated += place + envs.get(i) + "\n";
-			place += "\t";
+			formated.append(place + envs.get(i) + Literal.NL);
+			place += Literal.TP;
 		}
 		
-		return formated.trim();
+		return formated.toString().trim();
 	}
 
 	/**

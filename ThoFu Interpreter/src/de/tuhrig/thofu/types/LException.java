@@ -9,6 +9,9 @@ public class LException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Default header for a parenthesis exception
+	 */
 	private static final String PARANTHESIS_EXCEPTION = "[parenthesis exception] - ";
 
 	/**

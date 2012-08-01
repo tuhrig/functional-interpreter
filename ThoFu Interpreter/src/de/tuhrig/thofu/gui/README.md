@@ -41,6 +41,7 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	lambda			creates a user defined function		(lambda (x) (+ x 1))
 	begin			executes a list of statements		(begin (+ 1 2) (+ 1 2))
 	let				defines a local scope				(let ((x 1)) (+ x 1))
+	try				simple exception handling     		(try (/ 42 0) (print "don't devide by 0!"))
 
 	cons			creates a new pair					(cons 1 2)
 	first			returns first value of a list		(first list)

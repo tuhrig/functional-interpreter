@@ -1,5 +1,7 @@
 package de.tuhrig.thofu.types;
 
+import de.tuhrig.thofu.Literal;
+
 
 /**
  * Represents an abstract operation. It's the super class
@@ -61,7 +63,7 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 		builder.append(super.inspect());
 
 		builder.append(
-				"\n" +
+				Literal.NL +
 				"Name:\t\t" 	+ getName()
 				);
 		

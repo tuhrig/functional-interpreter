@@ -8,6 +8,7 @@ import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Literal;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LLambda;
@@ -106,7 +107,7 @@ public abstract class LJava extends LObject {
 			}
 			else {
 				
-				throw new LException("[unsupported type] - " + o.getClass());
+				throw new LException(Literal.LEFT_BRAKET + "unsupported type] - " + o.getClass());
 			}
 		}
 		
@@ -148,7 +149,7 @@ public abstract class LJava extends LObject {
 			}
 			else {
 				
-				throw new LException("[unsupported object] - " + o.getClass());
+				throw new LException(Literal.LEFT_BRAKET + "unsupported object] - " + o.getClass());
 			}
 		}
 		
@@ -175,7 +176,7 @@ public abstract class LJava extends LObject {
 					}
 					catch (ClassNotFoundException e1) {
 
-						throw new LException("[" + e.getClass() + "] - " + e.getMessage());
+						throw new LException(Literal.LEFT_BRAKET + e.getClass() + "] - " + e.getMessage());
 					}
 				}
 			}
@@ -192,7 +193,7 @@ public abstract class LJava extends LObject {
 				}
 			}
 			
-			throw new LException("[" + e.getClass() + "] - " + e.getMessage());
+			throw new LException(Literal.LEFT_BRAKET + e.getClass() + "] - " + e.getMessage());
 		}
 	}
 	
@@ -238,7 +239,7 @@ public abstract class LJava extends LObject {
 		}
 		catch (Exception e) {
 
-			throw new LException("[" + e.getClass() + "] - " + e.getMessage());
+			throw new LException(Literal.LEFT_BRAKET + e.getClass() + "] - " + e.getMessage());
 		}
 	}
 
@@ -268,7 +269,7 @@ public abstract class LJava extends LObject {
 		}
 		catch (Exception e) {
 
-			throw new LException("[" + e.getClass() + "] - " + e.getMessage());
+			throw new LException(Literal.LEFT_BRAKET + e.getClass() + "] - " + e.getMessage());
 		}
 	}
 

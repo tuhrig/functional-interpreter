@@ -49,12 +49,18 @@ public class Running extends JPanel {
         stop();
 	}
 
+	/**
+	 * Starts the busy-animation
+	 */
 	public void start() {
 		
         label.setBusy(true); 
         label.setText("Running");
 	}
 	
+	/**
+	 * Stops the busy-animation
+	 */
 	public void stop() {
 		
         label.setBusy(false); 

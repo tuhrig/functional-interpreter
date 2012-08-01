@@ -75,8 +75,8 @@ public class Interpreter implements IInterpreter, IJava {
 
 				LObject path = ((LList) tokens).get(0);
 
-				final File file = new File(path.toString().replace("\"", ""));
-
+				final File file = new File(path.toString().replace(Literal.DOUBLE_QUOTE, Literal.EMPTY));
+				
 				try {
 					
 					String content = parser.read(file);
@@ -96,7 +96,7 @@ public class Interpreter implements IInterpreter, IJava {
 				}
 				catch (IOException e) {
 
-					throw new LException("[file not found] - file " + path + " can't be resolved", e);
+					throw new LException("[file not found] - " + path + " can't be resolved", e);
 				}
 			}
 		});
@@ -109,7 +109,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 				LObject path = ((LList) tokens).get(0);
 
-				String rs = path.toString().replaceAll("\"", "");
+				String rs = path.toString().replaceAll(Literal.DOUBLE_QUOTE, Literal.EMPTY);
 
 				String content = parser.read(getClass(), rs);
 				
@@ -139,8 +139,32 @@ public class Interpreter implements IInterpreter, IJava {
 				return LBoolean.get(tokens instanceof LTupel);
 			}
 		});
+		
+		// (try (expression) (expression))
+		root.put(LSymbol.get("try"), new LOperation("try") {
 
-		// (beginne (expression1) (expression2) ...)
+			@Override
+			public LObject evaluate(Environment environment, LObject tokens) {
+
+				LList list = (LList) tokens;
+				
+				LObject first = list.get(0);
+				LObject second = list.get(1);
+				
+				try {
+					
+					return first.run(environment, first);
+				}
+				catch(Exception e) {
+					
+					logger.info("Caught exception", e);
+					
+					return second.run(environment, second);
+				}
+			}
+		});
+
+		// (begin (expression1) (expression2) ...)
 		root.put(LSymbol.get("begin"), new LOperation("begin") {
 
 			@Override
@@ -166,17 +190,7 @@ public class Interpreter implements IInterpreter, IJava {
 			public LObject evaluate(Environment environment, LObject tokens) {
 
 				LList list = (LList) tokens;
-				
-//				Test implementation
-//				if(list.getFirst() instanceof LList) {
-//					
-//					tokens = list.getFirst().run(environment, tokens);
-//					
-//					return new LString(tokens.inspect());
-//				}
-//
-//				return new LString(list.getFirst().inspect());
-				
+
 				return new LString(list.getFirst().run(environment, tokens).inspect());
 			}
 		});

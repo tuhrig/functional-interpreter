@@ -1,6 +1,7 @@
 package de.tuhrig.thofu.types;
 
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Literal;
 
 /**
  * Represents a boolean.
@@ -46,9 +47,9 @@ public class LBoolean extends LObject {
 	public String toString() {
 
 		if(this == TRUE)
-			return "true";
+			return Literal.TRUE;
 
-		return "false";
+		return Literal.FALSE;
 	}
 
 	@Override

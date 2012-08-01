@@ -1,5 +1,8 @@
 package de.tuhrig.thofu.gui;
 
+import static de.tuhrig.thofu.Literal.NL;
+import static de.tuhrig.thofu.Literal.TP;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +22,7 @@ import javax.swing.table.TableColumn;
 
 import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Interpreter;
+import de.tuhrig.thofu.Literal;
 import de.tuhrig.thofu.types.LObject;
 
 public class Debugger extends JPanel {
@@ -44,7 +48,7 @@ public class Debugger extends JPanel {
 
 		setLayout(new BorderLayout());
 
-		model.addColumn("");
+		model.addColumn(Literal.EMPTY);
 		model.addColumn("#");
 		model.addColumn("Object");
 		model.addColumn("Type");
@@ -158,8 +162,8 @@ public class Debugger extends JPanel {
 					
 					// set general information
 					area.setText( 
-							"Action:\t\t" + obj0 + "\n" +
-							"Step:\t\t" + obj1 + "\n"
+							"Action:" + TP + TP + obj0 + NL +
+							"Step:" + TP + TP + obj1 + NL
 							);
 					
 					area.append(obj2.inspect());

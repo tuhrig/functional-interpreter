@@ -1,6 +1,7 @@
 package de.tuhrig.thofu.types;
 
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Literal;
 
 /**
  * Represents a quoted value that won't be evaluated.
@@ -31,7 +32,7 @@ public class LQuoted extends LObject { // LLeaf {
 	@Override
 	public String toString() {
 
-		return "'" + value;
+		return Literal.SINGLE_QUOTE + value;
 	}
 
 	@Override

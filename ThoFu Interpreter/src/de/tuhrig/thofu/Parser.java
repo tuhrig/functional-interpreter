@@ -1,5 +1,19 @@
 package de.tuhrig.thofu;
 
+import static de.tuhrig.thofu.Literal.BLANK;
+import static de.tuhrig.thofu.Literal.DOUBLE_QUOTE;
+import static de.tuhrig.thofu.Literal.EMPTY;
+import static de.tuhrig.thofu.Literal.FALSE;
+import static de.tuhrig.thofu.Literal.LEFT_PARENTHESIS;
+import static de.tuhrig.thofu.Literal.LEFT_PARENTHESIS_BLANKED;
+import static de.tuhrig.thofu.Literal.NL;
+import static de.tuhrig.thofu.Literal.NULL;
+import static de.tuhrig.thofu.Literal.QUOTED_LEFT_PARENTHESIS;
+import static de.tuhrig.thofu.Literal.RIGHT_PARENTHESIS;
+import static de.tuhrig.thofu.Literal.RIGHT_PARENTHESIS_BLANKED;
+import static de.tuhrig.thofu.Literal.SINGLE_QUOTE;
+import static de.tuhrig.thofu.Literal.TRUE;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +30,12 @@ import org.apache.log4j.Logger;
 
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
+import de.tuhrig.thofu.types.LLambda;
 import de.tuhrig.thofu.types.LList;
 import de.tuhrig.thofu.types.LNull;
 import de.tuhrig.thofu.types.LNumber;
 import de.tuhrig.thofu.types.LObject;
+import de.tuhrig.thofu.types.LOperation;
 import de.tuhrig.thofu.types.LQuoted;
 import de.tuhrig.thofu.types.LString;
 import de.tuhrig.thofu.types.LSymbol;
@@ -42,8 +58,6 @@ public class Parser {
 	static final Pattern MULTI_LINE_COMMENT = Pattern.compile("(#\\|+)(.*)(\\|#+)", Pattern.MULTILINE | Pattern.DOTALL);
 
 	private static final Pattern SPLIT = Pattern.compile("[^\\s\"]+|\"([^\"]*)\"");
-
-	private static final String nl = "\n";
 	
 	private int i;
 
@@ -61,7 +75,7 @@ public class Parser {
 		for (String line : lines) {
 			
 			content.append(line);
-			content.append(nl);
+			content.append(NL);
 		}
 		
 		return content.toString();
@@ -83,7 +97,7 @@ public class Parser {
 		while(scanner.hasNext()) {
 			
 			content.append(scanner.nextLine());
-			content.append(nl);
+			content.append(NL);
 		}
 		
 		scanner.close();
@@ -113,7 +127,7 @@ public class Parser {
 
 			if (regexMatcher.group(1) != null) {
 
-				matchList.add("\"" + regexMatcher.group(1) + "\"");
+				matchList.add(DOUBLE_QUOTE + regexMatcher.group(1) + DOUBLE_QUOTE);
 			}
 			else {
 
@@ -129,12 +143,12 @@ public class Parser {
 		for (; i < tokens.size(); i++) {
 
 			Object current = tokens.get(i);
-			Object next = new String("");
+			Object next = new String(EMPTY);
 
 			if (tokens.size() > i + 1)
 				next = tokens.get(i + 1);
 
-			if (current.equals("'") && next.equals("(")) {
+			if (current.equals(SINGLE_QUOTE) && next.equals(LEFT_PARENTHESIS)) {
 
 				LTupel tmp = new LTupel();
 
@@ -148,7 +162,7 @@ public class Parser {
 
 				parse(tmp, tokens);
 			}
-			else if (current.equals("(")) {
+			else if (current.equals(LEFT_PARENTHESIS)) {
 
 				LList tmp = new LList();
 
@@ -161,13 +175,13 @@ public class Parser {
 
 				parse(tmp, tokens);
 			}
-			else if (current.equals(")")) {
+			else if (current.equals(RIGHT_PARENTHESIS)) {
 
 				return list;
 			}
-			else if (current.toString().startsWith("'")) {
+			else if (current.toString().startsWith(SINGLE_QUOTE)) {
 
-				String name = current.toString().replace("'", "");
+				String name = current.toString().replace(SINGLE_QUOTE, EMPTY);
 
 				LSymbol symbol = LSymbol.get(name);
 
@@ -192,19 +206,19 @@ public class Parser {
 		}
 		catch (NumberFormatException e) {
 
-			if (current.equals("true")) {
+			if (current.equals(TRUE)) {
 
 				return LBoolean.TRUE;
 			}
-			else if (current.equals("false")) {
+			else if (current.equals(FALSE)) {
 
 				return LBoolean.FALSE;
 			}
-			else if (current.equals("null")) {
+			else if (current.equals(NULL)) {
 
 				return LNull.NULL;
 			}
-			else if (current.startsWith("\"") && current.endsWith("\"")) {
+			else if (current.startsWith(DOUBLE_QUOTE) && current.endsWith(DOUBLE_QUOTE)) {
 
 				return new LString(current);
 			}
@@ -225,11 +239,11 @@ public class Parser {
 	 */
 	public String format(String expression) {
 
-		expression = SINGLE_LINE_COMMENT.matcher(expression).replaceAll("");
-		expression = MULTI_LINE_COMMENT.matcher(expression).replaceAll("");
-		expression = expression.replace("\n", " ");
-		expression = expression.replace("(", " ( ");
-		expression = expression.replace(")", " ) ");
+		expression = SINGLE_LINE_COMMENT.matcher(expression).replaceAll(EMPTY);
+		expression = MULTI_LINE_COMMENT.matcher(expression).replaceAll(EMPTY);
+		expression = expression.replace(NL, BLANK);
+		expression = expression.replace(LEFT_PARENTHESIS, LEFT_PARENTHESIS_BLANKED);
+		expression = expression.replace(RIGHT_PARENTHESIS, RIGHT_PARENTHESIS_BLANKED);
 
 		return expression;
 	}
@@ -256,13 +270,13 @@ public class Parser {
 
 			char currentChar = chars[i];
 
-			if ("'".equals(String.valueOf(currentChar)) && i == 0)
+			if (SINGLE_QUOTE.equals(String.valueOf(currentChar)) && i == 0)
 				continue;
 
-			if ("(".equals(String.valueOf(currentChar)))
+			if (LEFT_PARENTHESIS.equals(String.valueOf(currentChar)))
 				count++;
 
-			if (")".equals(String.valueOf(currentChar)))
+			if (RIGHT_PARENTHESIS.equals(String.valueOf(currentChar)))
 				count--;
 
 			buffer.append(currentChar);
@@ -271,7 +285,7 @@ public class Parser {
 
 				String command = buffer.toString().trim();
 
-				if (!command.trim().equals("")) {
+				if (!command.trim().equals(EMPTY)) {
 
 					LList tmp = parse(command);
 					
@@ -294,10 +308,10 @@ public class Parser {
 	 */
 	public void validate(final String expression) {
 
-		if (!expression.trim().startsWith("(") && !expression.trim().startsWith("'("))
+		if (!expression.trim().startsWith(LEFT_PARENTHESIS) && !expression.trim().startsWith(QUOTED_LEFT_PARENTHESIS))
 			throw new LException(LException.MISSING_INITIAL_OPENING + expression);
 
-		if (!expression.trim().endsWith(")"))
+		if (!expression.trim().endsWith(RIGHT_PARENTHESIS))
 			throw new LException(LException.MISSING_FINAL_CLOSING + expression);
 
 		int count = 0;
@@ -308,13 +322,13 @@ public class Parser {
 
 			char currentChar = chars[i];
 
-			if ("'".equals(String.valueOf(currentChar)) && i == 0)
+			if (SINGLE_QUOTE.equals(String.valueOf(currentChar)) && i == 0)
 				continue;
 
-			if ("(".equals(String.valueOf(currentChar)))
+			if (LEFT_PARENTHESIS.equals(String.valueOf(currentChar)))
 				count++;
 
-			if (")".equals(String.valueOf(currentChar)))
+			if (RIGHT_PARENTHESIS.equals(String.valueOf(currentChar)))
 				count--;
 
 			if (i == chars.length - 1 && count > 0)
@@ -339,6 +353,7 @@ public class Parser {
 	 */
 	public LObject replace(LObject tokens, Environment environment) {
 
+		// if the token is a symbol, we resolve it
 		if(tokens instanceof LSymbol) {
 			
 			if(environment.contains((LSymbol) tokens))
@@ -350,7 +365,11 @@ public class Parser {
 			
 			LObject first = replace(tmp.getFirst(), environment);
 			
-			tmp.set(0, first);
+			// only replace in-built operations
+			if(first instanceof LOperation && !(first instanceof LLambda)) {
+				
+				tmp.set(0, first);
+			}
 			
 			ListIterator<LObject> iterator = tmp.listIterator();
 			

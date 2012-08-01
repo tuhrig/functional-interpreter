@@ -18,6 +18,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import de.tuhrig.thofu.Literal;
 import de.tuhrig.thofu.gui.History.Identifier;
 import de.tuhrig.thofu.interfaces.HistoryListener;
 import de.tuhrig.thofu.types.LList;
@@ -67,7 +68,7 @@ public class HistoryView extends JPanel implements HistoryListener {
 				}
 				else if(o.toString().startsWith("#")) {
 					
-					int i = Integer.parseInt(o.toString().replace("#", "").split(" ")[0]);
+					int i = Integer.parseInt(o.toString().replace("#", "").split(Literal.BLANK)[0]);
 					
 					Entry<Identifier, LList> entry = history.get(i-1);
 

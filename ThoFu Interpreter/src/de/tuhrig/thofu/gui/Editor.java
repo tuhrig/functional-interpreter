@@ -32,6 +32,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Literal;
 import de.tuhrig.thofu.Parser;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
@@ -68,7 +69,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		setTabbs();
 		
-		final RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", "");
+		final RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", Literal.EMPTY);
 
 		area.addKeyListener(new KeyAdapter() {
 
@@ -82,7 +83,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 					
 					int current = area.getCaretPosition();
 					
-					area.append(")");
+					area.append(Literal.RIGHT_PARENTHESIS);
 					area.setCaretPosition(current);
 				}
 			}
@@ -107,7 +108,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			}
 		}
 		
-		tabbs.addTab("" + i++, tab);
+		tabbs.addTab(String.valueOf(i++), tab);
 
 		JLabel label = new JLabel(tab.getName());
 		label.setSize(30, 5);
@@ -150,7 +151,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		title.add(label);
 		title.add(tmp1);
 
-		tabbs.setTabComponentAt(tabbs.indexOfTab("" + (i-1)), title);
+		tabbs.setTabComponentAt(tabbs.indexOfTab(String.valueOf(i-1)), title);
 	}
 
 	private void setTabbs() {

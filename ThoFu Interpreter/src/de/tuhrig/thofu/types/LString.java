@@ -1,6 +1,7 @@
 package de.tuhrig.thofu.types;
 
 import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.Literal;
 
 /**
  * Represents string.
@@ -27,9 +28,9 @@ public class LString extends LObject { // LLeaf {
 	
 	public String toString() {
 
-		return "\"" + value + "\"";
+		return Literal.DOUBLE_QUOTE + value + Literal.DOUBLE_QUOTE;
 	}
-
+ 
 	/**
 	 * @return string value
 	 */
