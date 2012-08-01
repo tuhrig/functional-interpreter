@@ -4,7 +4,7 @@ import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Literal;
 
 /**
- * Represents string.
+ * Represents a string.
  * 
  * @author Thomas Uhrig (tuhrig.de)
  */
@@ -13,7 +13,7 @@ public class LString extends LObject { // LLeaf {
 	/**
 	 * 
 	 */
-	public String value;
+	private String value;
 
 	/**
 	 * The given token will be stored in its string representation

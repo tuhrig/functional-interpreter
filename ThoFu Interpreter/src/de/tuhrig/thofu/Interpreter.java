@@ -73,9 +73,9 @@ public class Interpreter implements IInterpreter, IJava {
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				LObject path = ((LList) tokens).get(0);
+				LString path = (LString) ((LList) tokens).get(0);
 
-				final File file = new File(path.toString().replace(Literal.DOUBLE_QUOTE, Literal.EMPTY));
+				final File file = new File(path.getValue());
 				
 				try {
 					
@@ -107,9 +107,9 @@ public class Interpreter implements IInterpreter, IJava {
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				LObject path = ((LList) tokens).get(0);
+				LString path = (LString) ((LList) tokens).get(0);
 
-				String rs = path.toString().replaceAll(Literal.DOUBLE_QUOTE, Literal.EMPTY);
+				String rs = path.getValue();
 
 				String content = parser.read(getClass(), rs);
 				

@@ -10,7 +10,7 @@ import de.tuhrig.thofu.interfaces.IInterpreter;
 public class IInterpreterTest {
 
 	/**
-	 * The tested IInterpreter instanze
+	 * The tested IInterpreter instance
 	 */
 	private IInterpreter interpreter;
 
@@ -562,6 +562,13 @@ public class IInterpreterTest {
 
 		Assert.assertEquals("8", interpreter.execute("(load \"test/test.txt\")"));
 		Assert.assertEquals("8", interpreter.execute("(print test)"));
+	}
+	
+	@Test
+	public void tryblock() {
+
+		Assert.assertEquals("\"ups\"", interpreter.execute("(try (/ 42 0) (print \"ups\"))"));
+		Assert.assertEquals("21", interpreter.execute("(try (/ 42 2) (print \"ups\"))"));
 	}
 	
 	@Test
