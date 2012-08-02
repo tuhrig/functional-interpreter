@@ -13,6 +13,7 @@ import de.tuhrig.thofu.interfaces.HistoryListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 import de.tuhrig.thofu.interfaces.IJava;
 import de.tuhrig.thofu.java.LJClass;
+import de.tuhrig.thofu.java.LJObject;
 import de.tuhrig.thofu.java.LJava;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
@@ -140,7 +141,7 @@ public class Interpreter implements IInterpreter, IJava {
 			}
 		});
 		
-		// (try (expression) (expression))
+		// (try (expression) (exception (expression)))
 		root.put(LSymbol.get("try"), new LOperation("try") {
 
 			@Override
@@ -158,8 +159,14 @@ public class Interpreter implements IInterpreter, IJava {
 				catch(Exception e) {
 					
 					logger.info("Caught exception", e);
+			
+					LList tmp = (LList) second;
+					LObject name = tmp.getFirst();
+					LObject expression = tmp.getRest();
 					
-					return second.run(environment, second);
+					environment.put(LSymbol.get(name), new LJObject(e));
+					
+					return expression.run(environment, expression);
 				}
 			}
 		});

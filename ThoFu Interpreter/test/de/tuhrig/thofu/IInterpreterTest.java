@@ -567,8 +567,9 @@ public class IInterpreterTest {
 	@Test
 	public void tryblock() {
 
-		Assert.assertEquals("\"ups\"", interpreter.execute("(try (/ 42 0) (print \"ups\"))"));
-		Assert.assertEquals("21", interpreter.execute("(try (/ 42 2) (print \"ups\"))"));
+		Assert.assertEquals("\"ups\"", interpreter.execute("(try (/ 42 0) (e (print \"ups\")))"));
+		Assert.assertEquals("java.lang.ArithmeticException: Division by zero", interpreter.execute("(try (/ 42 0) (e (print e)))"));
+		Assert.assertEquals("21", interpreter.execute("(try (/ 42 2) (e (print \"ups\")))"));
 	}
 	
 	@Test
