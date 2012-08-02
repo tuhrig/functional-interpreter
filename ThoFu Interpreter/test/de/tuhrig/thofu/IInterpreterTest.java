@@ -61,6 +61,13 @@ public class IInterpreterTest {
 		Assert.assertEquals("<Operation: <Lambda: a><Lambda: b>>", interpreter.execute("(define c (+ a b))"));
 		Assert.assertEquals("ab", interpreter.execute("(c)"));
 	}
+	
+	@Test
+	public void plusList() {
+
+		Assert.assertEquals("(1, 2, 3)", interpreter.execute("(+ '(1 2) 3)"));
+		Assert.assertEquals("(1, 2, 3, 4, 5, 6)", interpreter.execute("(+ '(1 2 3) '(4 5 6))"));
+	}
 
 	@Test
 	public void minus() {

@@ -80,7 +80,7 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	Class.method	calls a class method				(java.lang.Math.round aNumber)
 	Class.field$	calls a class field					(java.lang.Math.PI$)
 
-* Some of these operations can not only be used for numbers, but also for strings (e.g. (+ "a" "b")). If the method is not available for the given type, an exception will be thrown.
+*Some of these operations can not only be used for numbers, but also for strings (e.g. (+ "a" "b")), operations (+ a b) or lists (+ '(1 2) '(3 4)). If the method is not available for the given type, an exception will be thrown.
 
 # The Java API
 
