@@ -1,7 +1,6 @@
 package de.tuhrig.thofu.types;
 
 import de.tuhrig.thofu.Environment;
-import de.tuhrig.thofu.Literal;
 
 /**
  * Represents a string.
@@ -26,9 +25,31 @@ public class LString extends LObject { // LLeaf {
 		this.value = token.toString().replaceAll("\"", "");
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#sum(de.tuhrig.thofu.types.LObject)
+	 */
+	public LObject sum(LObject object) {
+		
+		return new LString(value + object.toString());
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#compareTo(de.tuhrig.thofu.types.LObject)
+	 */
+	public int compareTo(LObject object) {
+
+		return value.compareTo(object.toString());
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#toString()
+	 */
 	public String toString() {
 
-		return Literal.DOUBLE_QUOTE + value + Literal.DOUBLE_QUOTE;
+		return value;
 	}
  
 	/**
@@ -39,6 +60,10 @@ public class LString extends LObject { // LLeaf {
 		return value;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#equals(java.lang.Object)
+	 */
 	public boolean equals(Object o) {
 
 		if (o instanceof LString)
@@ -47,18 +72,30 @@ public class LString extends LObject { // LLeaf {
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#evaluate(de.tuhrig.thofu.Environment, de.tuhrig.thofu.types.LObject)
+	 */
 	@Override
 	public LObject evaluate(Environment environment, LObject tokens) {
 
 		return this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 
 		return value.hashCode();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#argrumentSize(de.tuhrig.thofu.types.LObject)
+	 */
 	@Override
 	public int argrumentSize(LObject object) {
 

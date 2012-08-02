@@ -25,7 +25,7 @@ public class LTupel extends LList {
 
 		// empty default constructor
 	}
-
+	
 	public boolean equals(Object o) {
 
 		if (o instanceof LTupel)

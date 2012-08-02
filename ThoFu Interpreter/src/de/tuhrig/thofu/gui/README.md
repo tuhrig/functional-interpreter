@@ -17,22 +17,22 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 ## Basic functional language constructs
 	Name			Description							Example		
 	----------------------------------------------------------------------------------------
-	+				sums a list of numbers				(+ 1 2 3)
-	-				substracts a list of numbers		(- 1 2 3)
-	*				multiplies a list of numbers		(* 1 2 3)
-	/				devides a list of numbers			(/ 1 2 3)
-	%				modulo								(% 3 2)
+	+				sums a list of objects*				(+ 1 2 3)
+	-				substracts a list of objects*		(- 1 2 3)
+	*				multiplies a list of objects*		(* 1 2 3)
+	/				devides a list of objects*			(/ 1 2 3)
+	%				modulo*								(% 3 2)
 
 	||				logical or							(|| true false)
 	&&				logical and							(&& true false)
 	!				logical inversion					(! false)
 
-	<				lesser-then							(< 3 1)
-	<=				lesser-then or equals				(<= 3 1)
-	>				greater-then						(> 3 1)
-	>=				greater-then or equals				(>= 3 1)
-	eq?				equals								(eq? 3 1)
-	nq?				not-equals							(nq? 3 1)
+	<				lesser-then*						(< 3 1)
+	<=				lesser-then or equals*				(<= 3 1)
+	>				greater-then*						(> 3 1)
+	>=				greater-then or equals*				(>= 3 1)
+	eq?				equals*								(eq? 3 1)
+	nq?				not-equals*							(nq? 3 1)
 
 	if				if-clause							(if (true) (print "true) (print "false"))
 
@@ -79,6 +79,8 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	Class.class		access a class						(java.lang.Math.class)
 	Class.method	calls a class method				(java.lang.Math.round aNumber)
 	Class.field$	calls a class field					(java.lang.Math.PI$)
+
+* Some of these operations can not only be used for numbers, but also for strings (e.g. (+ "a" "b")). If the method is not available for the given type, an exception will be thrown.
 
 # The Java API
 

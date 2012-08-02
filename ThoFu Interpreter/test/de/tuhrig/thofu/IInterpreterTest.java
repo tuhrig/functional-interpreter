@@ -45,6 +45,22 @@ public class IInterpreterTest {
 		Assert.assertEquals("15", interpreter.execute("(+ 1 2 3 4 5)"));
 		Assert.assertEquals("15", interpreter.execute("(+ 1 (+ 2 (+ 3 4 5)))"));
 	}
+	
+	@Test
+	public void plusString() {
+
+		Assert.assertEquals("a1", interpreter.execute("(+ \"a\" 1)"));
+		Assert.assertEquals("ab", interpreter.execute("(+ \"a\" \"b\")"));
+	}
+	
+	@Test
+	public void plusOperations() {
+
+		Assert.assertEquals("<Lambda: a>", interpreter.execute("(define a (lambda () (print \"a\")))"));
+		Assert.assertEquals("<Lambda: b>", interpreter.execute("(define b (lambda () (print \"b\")))"));
+		Assert.assertEquals("<Operation: <Lambda: a><Lambda: b>>", interpreter.execute("(define c (+ a b))"));
+		Assert.assertEquals("ab", interpreter.execute("(c)"));
+	}
 
 	@Test
 	public void minus() {
@@ -307,8 +323,8 @@ public class IInterpreterTest {
 	@Test
 	public void ifExpression() {
 
-		Assert.assertEquals("\"a\"", interpreter.execute("(if true \"a\" \"b\")"));
-		Assert.assertEquals("\"b\"", interpreter.execute("(if false \"a\" \"b\")"));
+		Assert.assertEquals("a", interpreter.execute("(if true \"a\" \"b\")"));
+		Assert.assertEquals("b", interpreter.execute("(if false \"a\" \"b\")"));
 	}
 
 	@Test
@@ -333,21 +349,21 @@ public class IInterpreterTest {
 	@Test
 	public void ifExpressionWithOperator() {
 
-		Assert.assertEquals("\"a\"", interpreter.execute("(if (> 10 5) \"a\" \"b\")"));
-		Assert.assertEquals("\"b\"", interpreter.execute("(if (> (+ 1 1) (- 100 1)) \"a\" \"b\")"));
+		Assert.assertEquals("a", interpreter.execute("(if (> 10 5) \"a\" \"b\")"));
+		Assert.assertEquals("b", interpreter.execute("(if (> (+ 1 1) (- 100 1)) \"a\" \"b\")"));
 	}
 
 	@Test
 	public void ifExpressionWithDefine() {
 
 		Assert.assertEquals("true", interpreter.execute("(define wahr true)"));
-		Assert.assertEquals("\"a\"", interpreter.execute("(if wahr \"a\" \"b\")"));
+		Assert.assertEquals("a", interpreter.execute("(if wahr \"a\" \"b\")"));
 	}
 
 	@Test
 	public void ifExpressionNested() {
 
-		Assert.assertEquals("\"a\"", interpreter.execute("(if (> 2 1) (if (> 3 (+ 1 1)) \"a\" \"c\") \"b\")"));
+		Assert.assertEquals("a", interpreter.execute("(if (> 2 1) (if (> 3 (+ 1 1)) \"a\" \"c\") \"b\")"));
 	}
 
 	@Test
@@ -416,7 +432,7 @@ public class IInterpreterTest {
 	@Test
 	public void print() {
 
-		Assert.assertEquals("\"aaa\"", interpreter.execute("(print \"aaa\")"));
+		Assert.assertEquals("aaa", interpreter.execute("(print \"aaa\")"));
 		Assert.assertEquals("2", interpreter.execute("(print (+ 1 1))"));
 		Assert.assertEquals("3.141", interpreter.execute("(print pi)"));
 		Assert.assertEquals("<Operation: +>", interpreter.execute("(print +)"));
@@ -425,7 +441,7 @@ public class IInterpreterTest {
 	@Test
 	public void stringInQuotes() {
 
-		Assert.assertEquals("\"a a a\"", interpreter.execute("(print \"a a a\")"));
+		Assert.assertEquals("a a a", interpreter.execute("(print \"a a a\")"));
 	}
 
 	@Test
@@ -484,8 +500,8 @@ public class IInterpreterTest {
 	@Test
 	public void begin() {
 
-		Assert.assertEquals("\"hallo\"", interpreter.execute("(begin (print \"hallo\"))"));
-		Assert.assertEquals("\"one\"\"two\"", interpreter.execute("(begin (print \"one\") (print \"two\"))"));
+		Assert.assertEquals("hallo", interpreter.execute("(begin (print \"hallo\"))"));
+		Assert.assertEquals("onetwo", interpreter.execute("(begin (print \"one\") (print \"two\"))"));
 		Assert.assertEquals("2", interpreter.execute("(begin (define aaa 1) (+ aaa aaa))"));
 	}
 
@@ -514,7 +530,7 @@ public class IInterpreterTest {
 
 		String command = "((lambda (a b) (print \"x\") (print \"y\")) 2 3)";
 
-		Assert.assertEquals("\"x\"\"y\"", interpreter.execute(command));
+		Assert.assertEquals("xy", interpreter.execute(command));
 	}
 
 	@Test
@@ -523,12 +539,12 @@ public class IInterpreterTest {
 		String command = "(define foo (lambda (a b) (print \"x\") (print \"y\")))";
 
 		Assert.assertEquals("<Lambda: foo>", interpreter.execute(command));
-		Assert.assertEquals("\"x\"\"y\"", interpreter.execute("(foo 5 2)"));
+		Assert.assertEquals("xy", interpreter.execute("(foo 5 2)"));
 
 		command = "(define (foo a b) (print \"x\") (print \"y\"))";
 
 		Assert.assertEquals("<Lambda: foo>", interpreter.execute(command));
-		Assert.assertEquals("\"x\"\"y\"", interpreter.execute("(foo 5 2)"));
+		Assert.assertEquals("xy", interpreter.execute("(foo 5 2)"));
 	}
 
 	@Test
@@ -567,7 +583,7 @@ public class IInterpreterTest {
 	@Test
 	public void tryblock() {
 
-		Assert.assertEquals("\"ups\"", interpreter.execute("(try (/ 42 0) (e (print \"ups\")))"));
+		Assert.assertEquals("ups", interpreter.execute("(try (/ 42 0) (e (print \"ups\")))"));
 		Assert.assertEquals("java.lang.ArithmeticException: Division by zero", interpreter.execute("(try (/ 42 0) (e (print e)))"));
 		Assert.assertEquals("21", interpreter.execute("(try (/ 42 2) (e (print \"ups\")))"));
 	}
@@ -845,8 +861,8 @@ public class IInterpreterTest {
 
 		Assert.assertEquals("<Lambda: make-adder>", interpreter.execute(c1));
 		Assert.assertEquals("<Lambda: myAdder>", interpreter.execute(c2));
-		Assert.assertEquals("\"prpr\"30", interpreter.execute(c3));
-		Assert.assertEquals("\"prpr\"30", interpreter.execute(c4));
+		Assert.assertEquals("prpr30", interpreter.execute(c3));
+		Assert.assertEquals("prpr30", interpreter.execute(c4));
 	}
 
 	@Test

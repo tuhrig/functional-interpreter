@@ -20,7 +20,6 @@ import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LLambda;
 import de.tuhrig.thofu.types.LList;
 import de.tuhrig.thofu.types.LNull;
-import de.tuhrig.thofu.types.LNumber;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LOperation;
 import de.tuhrig.thofu.types.LString;
@@ -74,9 +73,9 @@ public class Interpreter implements IInterpreter, IJava {
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				LString path = (LString) ((LList) tokens).get(0);
+				String path = ((LList) tokens).get(0).toString();
 
-				final File file = new File(path.getValue());
+				final File file = new File(path);
 				
 				try {
 					
@@ -108,9 +107,7 @@ public class Interpreter implements IInterpreter, IJava {
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				LString path = (LString) ((LList) tokens).get(0);
-
-				String rs = path.getValue();
+				String rs = ((LList) tokens).get(0).toString();
 
 				String content = parser.read(getClass(), rs);
 				
@@ -266,17 +263,17 @@ public class Interpreter implements IInterpreter, IJava {
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				LNumber n = null;
+				LObject n = null;
 
 				for (LObject token : (LList) tokens) {
 
 					if (n == null) {
 
-						n = (LNumber) token.run(environment, token);
+						n = token.run(environment, token);
 					}
 					else {
 
-						n = n.add((LNumber) token.run(environment, token));
+						n = n.sum(token.run(environment, token));
 					}
 				}
 
@@ -290,17 +287,17 @@ public class Interpreter implements IInterpreter, IJava {
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				LNumber n = null;
+				LObject n = null;
 
 				for (LObject token : (LList) tokens) {
 
 					if (n == null) {
 
-						n = (LNumber) token.run(environment, token);
+						n = token.run(environment, token);
 					}
 					else {
 
-						n = n.subtract((LNumber) token.run(environment, token));
+						n = n.subtract(token.run(environment, token));
 					}
 				}
 
@@ -314,17 +311,17 @@ public class Interpreter implements IInterpreter, IJava {
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				LNumber n = null;
+				LObject n = null;
 
 				for (LObject token : (LList) tokens) {
 
 					if (n == null) {
 
-						n = (LNumber) token.run(environment, token);
+						n = token.run(environment, token);
 					}
 					else {
 
-						n = n.multiply((LNumber) token.run(environment, token));
+						n = n.multiply(token.run(environment, token));
 					}
 				}
 
@@ -338,17 +335,17 @@ public class Interpreter implements IInterpreter, IJava {
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				LNumber n = null;
+				LObject n = null;
 
 				for (LObject token : (LList) tokens) {
 
 					if (n == null) {
 
-						n = (LNumber) token.run(environment, token);
+						n = token.run(environment, token);
 					}
 					else {
 
-						n = n.divide((LNumber) token.run(environment, token));
+						n = n.divide(token.run(environment, token));
 					}
 				}
 
@@ -365,10 +362,10 @@ public class Interpreter implements IInterpreter, IJava {
 				LObject first = ((LList) tokens).getFirst();
 				LObject second = ((LList) tokens).getRest();
 
-				LNumber f = (LNumber) first.run(environment, tokens);
-				LNumber s = (LNumber) second.run(environment, tokens);
+				first = first.run(environment, tokens);
+				second = second.run(environment, tokens);
 
-				boolean result = (1 == f.compareTo(s));
+				boolean result = (1 == first.compareTo(second));
 
 				return LBoolean.get(result);
 			}
@@ -383,10 +380,10 @@ public class Interpreter implements IInterpreter, IJava {
 				LObject first = ((LList) tokens).getFirst();
 				LObject second = ((LList) tokens).getRest();
 
-				LNumber f = (LNumber) first.run(environment, tokens);
-				LNumber s = (LNumber) second.run(environment, tokens);
+				first = first.run(environment, tokens);
+				second = second.run(environment, tokens);
 
-				boolean result = (-1 == f.compareTo(s));
+				boolean result = (-1 == first.compareTo(second));
 
 				return LBoolean.get(result);
 			}
@@ -634,7 +631,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 				for (LObject object: list) {
 				
-					String tmp = ((LString) object).getValue();
+					String tmp = object.toString();
 					
 					if(tmp.endsWith("*")) {
 						
@@ -697,6 +694,10 @@ public class Interpreter implements IInterpreter, IJava {
 		root.put(LSymbol.get("null"), LNull.NULL);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IInterpreter#execute(java.lang.String)
+	 */
 	@Override
 	public String execute(String expression) {
 
@@ -731,6 +732,10 @@ public class Interpreter implements IInterpreter, IJava {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IInterpreter#execute(de.tuhrig.thofu.types.LObject)
+	 */
 	@Override
 	public String execute(LObject tokens) {
 
@@ -780,18 +785,30 @@ public class Interpreter implements IInterpreter, IJava {
 		return 	result;	
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IInterpreter#addEnvironmentListener(de.tuhrig.thofu.interfaces.EnvironmentListener)
+	 */
 	@Override
 	public void addEnvironmentListener(EnvironmentListener listener) {
 
 		this.environmentListeners.add(listener);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IInterpreter#addHistoryListener(de.tuhrig.thofu.interfaces.HistoryListener)
+	 */
 	@Override
 	public void addHistoryListener(HistoryListener listener) {
 
 		this.historyListeners.add(listener);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IInterpreter#getEnvironment()
+	 */
 	@Override
 	public Environment getEnvironment() {
 

@@ -61,45 +61,60 @@ public class LNumber extends LObject { // LLeaf {
 	 * @param number to add
 	 * @return calculation result as a new number instance
 	 */
-	public LNumber add(LNumber number) {
+	public LObject sum(LObject number) {
 
-		return new LNumber(value.add(number.value));
+		if(number instanceof LNumber)
+			return new LNumber(value.add(((LNumber) number).value));
+		
+		throw new LException("Can't sum " + this + " and " + number);
 	}
 
 	/**
 	 * @param number to subtract
 	 * @return calculation result as a new number instance
 	 */
-	public LNumber subtract(LNumber number) {
+	public LObject subtract(LObject number) {
 
-		return new LNumber(value.subtract(number.value));
+		if(number instanceof LNumber)
+			return new LNumber(value.subtract(((LNumber) number).value));
+		
+		throw new LException("Can't subtract " + this + " and " + number);
 	}
 
 	/**
 	 * @param number to multiply
 	 * @return calculation result as a new number instance
 	 */
-	public LNumber multiply(LNumber number) {
-
-		return new LNumber(value.multiply(number.value));
+	public LObject multiply(LObject number) {
+		
+		if(number instanceof LNumber)
+			return new LNumber(value.multiply(((LNumber) number).value));
+		
+		throw new LException("Can't multiply " + this + " and " + number);
 	}
 
 	/**
 	 * @param number to divide
 	 * @return calculation result as a new number instance
 	 */
-	public LNumber divide(LNumber number) {
+	public LObject divide(LObject number) {
 
-		return new LNumber(value.divide(number.value));
+		if(number instanceof LNumber)
+			return new LNumber(value.divide(((LNumber) number).value));
+		
+		throw new LException("Can't divide " + this + " and " + number);
 	}
 
 	/**
 	 * @param number to compare
 	 * @return calculation result as a new number instance
 	 */
-	public int compareTo(LNumber number) {
+	public int compareTo(LObject number) {
 
-		return value.compareTo(number.value);
+		if(number instanceof LNumber)
+			return value.compareTo(((LNumber) number).value);
+		
+		throw new LException("Can't compare " + this + " and " + number);
 	}
 
 	@Override

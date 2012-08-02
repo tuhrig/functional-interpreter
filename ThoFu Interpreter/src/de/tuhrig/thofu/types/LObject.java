@@ -11,10 +11,18 @@ import de.tuhrig.thofu.gui.Debugger;
  * 
  * @author Thomas Uhrig (tuhrig.de)
  */
-public abstract class LObject { // implements TreeNode {
+public abstract class LObject {
 
+	/**
+	 * The environment passed to the object in the run method. It's
+	 * only stored for debugging and object inspection.
+	 */
 	private Environment environment;
 	
+	/**
+	 * The tokens passed to the object in the run method. It's
+	 * only stored for debugging and object inspection.
+	 */
 	private LObject tokens;
 
 	/**
@@ -91,11 +99,80 @@ public abstract class LObject { // implements TreeNode {
 	public abstract int argrumentSize(LObject tokens);
 
 	/**
+	 * This method does the actual evaluation of the object. It must
+	 * be overwritten be every implementation. It should never be called
+	 * directly! It's only called by the run-method of the object itself.
+	 * 
 	 * @param environment to evaluate the object with
 	 * @param tokens to evaluate the object with
 	 * @return evaluation result
 	 */
 	public abstract LObject evaluate(Environment environment, LObject tokens);
+
+	/**
+	 * Basic arithmetic operation. A subtype can override this method
+	 * if suitable. If not, the standard implementation will throw a
+	 * LException.
+	 * 
+	 * @param object to operate
+	 * @return result depending on the subtype implementation
+	 */
+	public LObject sum(LObject object) {
+		
+		throw new LException("Not implemented for " + getClass());
+	}
+
+	/**
+	 * Basic arithmetic operation. A subtype can override this method
+	 * if suitable. If not, the standard implementation will throw a
+	 * LException.
+	 * 
+	 * @param object to operate
+	 * @return result depending on the subtype implementation
+	 */
+	public LObject subtract(LObject object) {
+		
+		throw new LException("Not implemented for " + getClass());
+	}
+
+	/**
+	 * Basic arithmetic operation. A subtype can override this method
+	 * if suitable. If not, the standard implementation will throw a
+	 * LException.
+	 * 
+	 * @param object to operate
+	 * @return result depending on the subtype implementation
+	 */
+	public LObject multiply(LObject object) {
+		
+		throw new LException("Not implemented for " + getClass());
+	}
+
+	/**
+	 * Basic arithmetic operation. A subtype can override this method
+	 * if suitable. If not, the standard implementation will throw a
+	 * LException.
+	 * 
+	 * @param object to operate
+	 * @return result depending on the subtype implementation
+	 */
+	public LObject divide(LObject object) {
+		
+		throw new LException("Not implemented for " + getClass());
+	}
+
+	/**
+	 * Basic arithmetic operation. A subtype can override this method
+	 * if suitable. If not, the standard implementation will throw a
+	 * LException.
+	 * 
+	 * @param object to operate
+	 * @return result depending on the subtype implementation
+	 */
+	public int compareTo(LObject object) {
+		
+		throw new LException("Not implemented for " + getClass());
+	}
 
 	/**
 	 * @return a panel with information about the current object
