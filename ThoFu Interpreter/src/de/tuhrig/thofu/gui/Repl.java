@@ -180,16 +180,16 @@ class Repl extends JPanel implements EnvironmentListener, InterpreterListener {
 
 						try {
 
-							String input = "";
+							String commands = "";
 
 							int lineCount = 2;
 
 							while (true) {
 
 								// if we have the first line of the command
-								if (input.startsWith(">>")) {
+								if (commands.startsWith(">>")) {
 
-									input = input.replaceFirst(">>", "").trim();
+									commands = commands.replaceFirst(">>", "").trim();
 									break;
 								}
 								// if we have another line
@@ -200,20 +200,21 @@ class Repl extends JPanel implements EnvironmentListener, InterpreterListener {
 									int lineStart = line.getStartOffset();
 									int lineEnd = line.getEndOffset();
 
-									input = textArea.getText(lineStart, lineEnd - lineStart) + input;
+									commands = textArea.getText(lineStart, lineEnd - lineStart) + commands;
 									lineCount++;
 								}
 							}
 
-							logger.info("Input: " + input);
+							logger.info("Input: " + commands);
 
-							history.add(0, input);
+							history.add(0, commands);
 		
 							Parser parser = new Parser();
-							
-							input = parser.format(input);
 
-							List<LObject> objects = parser.parseAll(input);
+							// + nl, otherwise there will be errors
+							commands = parser.format(commands + "\n");
+
+							List<LObject> objects = parser.parseAll(commands);
 						
 							Executer.instance.evaluate(textArea, objects, interpreter);
 						}

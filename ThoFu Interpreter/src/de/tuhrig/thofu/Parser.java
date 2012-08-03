@@ -245,7 +245,7 @@ public class Parser {
 		expression = expression.replace(LEFT_PARENTHESIS, LEFT_PARENTHESIS_BLANKED);
 		expression = expression.replace(RIGHT_PARENTHESIS, RIGHT_PARENTHESIS_BLANKED);
 
-		return expression;
+		return expression.trim();
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class Parser {
 				String command = buffer.toString().trim();
 
 				if (!command.trim().equals(EMPTY)) {
-
+					
 					LList tmp = parse(command);
 					
 					objects.add(tmp);

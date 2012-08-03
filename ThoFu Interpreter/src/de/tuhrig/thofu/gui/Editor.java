@@ -236,7 +236,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			String commands = ((FileTabb) tabbs.getComponentAt(i)).getText();
 	
 			Parser parser = new Parser();
-			
+	
 			commands = parser.format(commands);
 
 			List<LObject> objects = parser.parseAll(commands);

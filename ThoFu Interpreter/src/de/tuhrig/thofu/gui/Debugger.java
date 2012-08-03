@@ -135,6 +135,8 @@ public class Debugger extends JPanel implements IDebugger {
 		
 		table.addMouseListener(new MouseAdapter() {
 
+		
+
 			public void mouseClicked(MouseEvent e) {
 
 				if (e.getClickCount() == 2) {
@@ -163,8 +165,14 @@ public class Debugger extends JPanel implements IDebugger {
 					
 					area.append(obj2.inspect());
 					
+					JScrollPane scrollPane = new JScrollPane(area);
+					
+					area.setCaretPosition(0);
+					scrollPane.getVerticalScrollBar().setValue(0);
+					scrollPane.repaint();		
+					
 					JFrame frame = new JFrame(obj2.toString());
-					frame.getContentPane().add(new JScrollPane(area));
+					frame.getContentPane().add(scrollPane);
 					frame.setSize(800, 400);
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
@@ -180,7 +188,7 @@ public class Debugger extends JPanel implements IDebugger {
 		add(buttons, BorderLayout.SOUTH);
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.interfaces.IDebugger#pushCall(de.tuhrig.thofu.types.LObject, de.tuhrig.thofu.Environment, de.tuhrig.thofu.types.LObject, int)
