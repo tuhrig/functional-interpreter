@@ -1,5 +1,7 @@
 (define inc (lambda (a) (+ a 1)))
 
+(define dec (lambda (a) (- a 1)))
+
 (define double (lambda (a) (* a 2)))
 
 (define sqr (lambda (a) (* a a)))
@@ -72,3 +74,16 @@
 (define typeOf (lambda (object) (.getClass object)))
 
 (define asString (lambda (object) (de.tuhrig.thofu.types.LString. object)))
+
+(define asNumber (lambda (object) (de.tuhrig.thofu.types.LNumber. object)))
+
+(define asList (lambda (object)
+		(let ((a))
+			(begin 
+				(set! a (de.tuhrig.thofu.types.LTupel.))
+				(.add a object)
+				(a)
+			)
+		)
+	)
+)

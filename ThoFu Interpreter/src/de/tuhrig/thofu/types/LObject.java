@@ -4,6 +4,7 @@ import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Literal;
 import de.tuhrig.thofu.gui.ThoFuUi;
 import de.tuhrig.thofu.interfaces.IDebugger;
+import de.tuhrig.thofu.java.LJObject;
 
 /**
  * Represents an abstract object. It's the super class of 
@@ -69,6 +70,12 @@ public abstract class LObject {
 		}
 		
 		LObject result = evaluate(environment, tokens);
+		
+		if(result instanceof LJObject) {
+			
+			if(((LJObject) result).getJObject() instanceof LObject)
+				result = (LObject) ((LJObject) result).getJObject();
+		}
 		
 		// stop after the call
 		if(debugger.debugg()) {

@@ -66,13 +66,8 @@ public abstract class LJava extends LObject {
 
 		return result.equals(o);
 	}
-	
-	/**
-	 * @param tokens
-	 * @param environment
-	 * @return
-	 */
-	public static Class<?>[] getTypes(LObject tokens, Environment environment) {
+
+	public static Class<?>[] getConvertedTypes(LObject tokens, Environment environment) {
 		
 		LList list = (LList) tokens;
 		
@@ -92,7 +87,7 @@ public abstract class LJava extends LObject {
 				types[i] = (String.class);
 			}
 			else if(o instanceof LNumber) {
-				
+
 				types[i] = (String.class);
 			}
 			else if(o instanceof LBoolean) {
@@ -114,7 +109,7 @@ public abstract class LJava extends LObject {
 		return types;
 	}
 	
-	public static Object[] getObjects(LObject tokens, Environment environment) {
+	public static Object[] getConvertedObjects(LObject tokens, Environment environment) {
 		
 		LList list = (LList) tokens;
 		
@@ -135,7 +130,7 @@ public abstract class LJava extends LObject {
 			}
 			else if(o instanceof LNumber) {
 				
-				args[i] = o.toString(); 
+				args[i] = o.toString();
 			}
 			else if(o instanceof LBoolean) {
 				
@@ -151,6 +146,58 @@ public abstract class LJava extends LObject {
 				
 				throw new LException(Literal.LEFT_BRAKET + "unsupported object] - " + o.getClass());
 			}
+		}
+		
+		return args;
+	}
+	
+	public static Class<?>[] getTypes(LObject tokens, Environment environment) {
+		
+		LList list = (LList) tokens;
+		
+		Class<?>[] types = new Class[list.size()];
+		
+		for(int i = 0; i < list.size(); i ++) {
+			
+			Object o = list.get(i);
+			
+			if(o instanceof LSymbol) {
+				
+				o = environment.get((LSymbol) o);
+			}
+			
+			if(o instanceof LJava) {
+
+				o = ((LJava) o).run(environment, tokens);
+			}
+				
+			types[i] = o.getClass();
+		}
+		
+		return types;
+	}
+	
+	public static Object[] getObjects(LObject tokens, Environment environment) {
+		
+		LList list = (LList) tokens;
+		
+		Object[] args = new Object[list.size()];
+		
+		for(int i = 0; i < list.size(); i ++) {
+			
+			Object o = list.get(i);
+			
+			if(o instanceof LSymbol) {
+				
+				o = environment.get((LSymbol) o);
+			}
+			
+			if(o instanceof LJava) {
+				
+				o = ((LJava) o).run(environment, tokens);
+			}
+				
+			args[i] = o;
 		}
 		
 		return args;

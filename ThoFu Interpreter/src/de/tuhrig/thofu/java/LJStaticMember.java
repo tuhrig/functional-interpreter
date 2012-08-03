@@ -1,5 +1,6 @@
 package de.tuhrig.thofu.java;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import de.tuhrig.thofu.Environment;
@@ -30,12 +31,23 @@ public class LJStaticMember extends LJava {
 		try {
 
 			Class<?> c = LJava.getClass(className);
-
-			Class<?>[] types = LJava.getTypes(tokens, environment);
-
-			Object[] args = LJava.getObjects(tokens, environment);
-
-			this.result = MethodUtils.invokeStaticMethod(c, methodName, args, types);
+			
+			if(ClassUtils.getAllSuperclasses(c).contains(LObject.class)) {
+				
+				Class<?>[] types = LJava.getTypes(tokens, environment);
+				
+				Object[] args = LJava.getObjects(tokens, environment);
+	
+				this.result = MethodUtils.invokeStaticMethod(c, methodName, args, types);
+			}
+			else {
+				
+				Class<?>[] types = LJava.getConvertedTypes(tokens, environment);
+	
+				Object[] args = LJava.getConvertedObjects(tokens, environment);
+	
+				this.result = MethodUtils.invokeStaticMethod(c, methodName, args, types);
+			}
 		}
 		catch (Exception e) {
 

@@ -635,6 +635,38 @@ public class IInterpreterTest {
 		Assert.assertEquals("false", interpreter.execute("(pair? 'a)"));
 		Assert.assertEquals("false", interpreter.execute("(pair? (+ 1 2))"));
 	}
+	
+	/**
+	 * Build-in lambdas
+	 */
+	
+	@Test
+	public void typeOf() {
+
+		Assert.assertEquals("class de.tuhrig.thofu.types.LNumber", interpreter.execute("(typeOf 1)"));
+		Assert.assertEquals("class de.tuhrig.thofu.types.LString", interpreter.execute("(typeOf \"1\")"));
+	}
+	
+	@Test
+	public void asString() {
+
+		Assert.assertEquals("1", interpreter.execute("(asString 1)"));
+		Assert.assertEquals("class de.tuhrig.thofu.types.LString", interpreter.execute("(typeOf (asString 1))"));
+	}
+	
+	@Test
+	public void asNumber() {
+
+		Assert.assertEquals("1", interpreter.execute("(asNumber \"1\")"));
+		Assert.assertEquals("class de.tuhrig.thofu.types.LNumber", interpreter.execute("(typeOf (asNumber \"1\"))"));
+	}
+	
+	@Test
+	public void asList() {
+
+		Assert.assertEquals("'(1)", interpreter.execute("(asList \"1\")"));
+		Assert.assertEquals("class de.tuhrig.thofu.types.LTupel", interpreter.execute("(typeOf (asList \"1\"))"));
+	}
 
 	/**
 	 * ALGORITHEM TESTS

@@ -1,5 +1,6 @@
 package de.tuhrig.thofu.java;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 
 import de.tuhrig.thofu.Environment;
@@ -37,11 +38,22 @@ public class LJObject extends LJava {
 
 				Class<?> c = LJava.getClass(className);
 
-				Class<?>[] types = LJava.getTypes(tokens, environment);
-
-				Object[] args = LJava.getObjects(tokens, environment);
+				if(ClassUtils.getAllSuperclasses(c).contains(LObject.class)) {
 				
-				this.result = ConstructorUtils.invokeConstructor(c, args, types);
+					Class<?>[] types = LJava.getTypes(tokens, environment);
+
+					Object[] args = LJava.getObjects(tokens, environment);
+					
+					this.result = ConstructorUtils.invokeConstructor(c, args, types);
+				}
+				else {
+					
+					Class<?>[] types = LJava.getConvertedTypes(tokens, environment);
+
+					Object[] args = LJava.getConvertedObjects(tokens, environment);
+					
+					this.result = ConstructorUtils.invokeConstructor(c, args, types);
+				}
 			}
 			catch (Exception e) {
 	

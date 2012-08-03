@@ -35,16 +35,24 @@ public class LJInstanceMember extends LJava {
 				
 				LList tmp = (LList) tokens;
 
-				Class<?>[] types = LJava.getTypes(tmp.getRest(), environment);
-
-				Object[] args = LJava.getObjects(tmp.getRest(), environment);
-	
 				LObject obj = (LObject) tmp.get(0).run(environment, tokens);
 				
-				if(obj instanceof LJava)
+				if(obj instanceof LJava) {
+	
+					Class<?>[] types = LJava.getConvertedTypes(tmp.getRest(), environment);
+
+					Object[] args = LJava.getConvertedObjects(tmp.getRest(), environment);
+	
 					this.result = MethodUtils.invokeMethod(((LJava) obj).getJObject(), methodName, args, types);
-				else	
+				}
+				else {	
+					
+					Class<?>[] types = LJava.getTypes(tmp.getRest(), environment);
+
+					Object[] args = LJava.getObjects(tmp.getRest(), environment);
+
 					this.result = MethodUtils.invokeMethod(obj, methodName, args, types);
+				}
 				
 				if(result == null)
 					result = "void";

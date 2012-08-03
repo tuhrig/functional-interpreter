@@ -5,7 +5,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.tuhrig.thofu.Interpreter;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 
 public class IJavaTest {
@@ -54,9 +53,11 @@ public class IJavaTest {
 	@Test
 	public void newInteger() {
 
-		Assert.assertEquals("1", interpreter.execute("(java.lang.Integer. 1)"));	
+		Assert.assertEquals("1", interpreter.execute("(java.lang.Integer. \"1\")"));
+		Assert.assertEquals("1", interpreter.execute("(java.lang.Integer. 1)"));
+		Assert.assertEquals("2", interpreter.execute("(define a (java.lang.Integer. \"2\"))"));
 		Assert.assertEquals("2", interpreter.execute("(define a (java.lang.Integer. 2))"));
-		Assert.assertEquals("3", interpreter.execute("(define b (java.lang.Integer. 3))"));
+		Assert.assertEquals("3", interpreter.execute("(define b (java.lang.Integer. \"3\"))"));
 		Assert.assertEquals("2", interpreter.execute("(print a)"));
 		Assert.assertEquals("3", interpreter.execute("(print b)"));
 	}
@@ -74,9 +75,10 @@ public class IJavaTest {
 	@Test
 	public void newDouble() {
 
-		Assert.assertEquals("1.0", interpreter.execute("(java.lang.Double. 1)"));	
-		Assert.assertEquals("2.5", interpreter.execute("(define a (java.lang.Double. 2.5))"));
-		Assert.assertEquals("3.5", interpreter.execute("(define b (java.lang.Double. 3.5))"));
+		Assert.assertEquals("1.0", interpreter.execute("(java.lang.Double. \"1\")"));	
+		Assert.assertEquals("1.0", interpreter.execute("(java.lang.Double. 1)"));
+		Assert.assertEquals("2.5", interpreter.execute("(define a (java.lang.Double. \"2.5\"))"));
+		Assert.assertEquals("3.5", interpreter.execute("(define b (java.lang.Double. \"3.5\"))"));
 		Assert.assertEquals("2.5", interpreter.execute("(print a)"));
 		Assert.assertEquals("3.5", interpreter.execute("(print b)"));
 	}
@@ -85,8 +87,9 @@ public class IJavaTest {
 	@Test
 	public void newBigDezimal() {
 
+		Assert.assertEquals("3", interpreter.execute("(define a (java.math.BigDecimal. \"3\"))"));
 		Assert.assertEquals("3", interpreter.execute("(define a (java.math.BigDecimal. 3))"));
-		Assert.assertEquals("3", interpreter.execute("(define b (java.lang.Integer. 3))"));
+		Assert.assertEquals("3", interpreter.execute("(define b (java.lang.Integer. \"3\"))"));
 		Assert.assertEquals("3", interpreter.execute("(define c (java.math.BigDecimal. b))"));
 	}
 	
@@ -109,12 +112,12 @@ public class IJavaTest {
 		Assert.assertEquals("abc", interpreter.execute("(define a (java.lang.String. \"abc\"))"));
 		
 		// substring(int a)
-		Assert.assertEquals("1", interpreter.execute("(define b (java.lang.Integer. 1))"));
+		Assert.assertEquals("1", interpreter.execute("(define b (java.lang.Integer. \"1\"))"));
 		Assert.assertEquals("bc", interpreter.execute("(.substring a b)"));
 		
 		// substring(int a, int b)
-		Assert.assertEquals("1", interpreter.execute("(define b (java.lang.Integer. 1))"));
-		Assert.assertEquals("3", interpreter.execute("(define c (java.lang.Integer. 3))"));
+		Assert.assertEquals("1", interpreter.execute("(define b (java.lang.Integer. \"1\"))"));
+		Assert.assertEquals("3", interpreter.execute("(define c (java.lang.Integer. \"3\"))"));
 		Assert.assertEquals("bc", interpreter.execute("(.substring a b c)"));	
 	}
 	
@@ -132,11 +135,11 @@ public class IJavaTest {
 	@Test
 	public void mathRound() {
 
-		Assert.assertEquals("2.123", interpreter.execute("(define a (java.lang.Double. 2.123))"));
+		Assert.assertEquals("2.123", interpreter.execute("(define a (java.lang.Double. \"2.123\"))"));
 		Assert.assertEquals("2", interpreter.execute("(java.lang.Math.round a)"));
 		
-		Assert.assertEquals("2.0", interpreter.execute("(define a (java.lang.Double. 2))"));
-		Assert.assertEquals("8.0", interpreter.execute("(define b (java.lang.Double. 8))"));
+		Assert.assertEquals("2.0", interpreter.execute("(define a (java.lang.Double. \"2\"))"));
+		Assert.assertEquals("8.0", interpreter.execute("(define b (java.lang.Double. \"8\"))"));
 		Assert.assertEquals("256.0", interpreter.execute("(java.lang.Math.pow a b)"));
 	}
 	
@@ -189,7 +192,7 @@ public class IJavaTest {
 		
 		interpreter.execute("(define control 0)");	
 		interpreter.execute("(define o (java.lang.Object.))");	
-		interpreter.execute("(define i (java.lang.Integer. 0))");	
+		interpreter.execute("(define i (java.lang.Integer. \"0\"))");	
 		interpreter.execute("(define s (java.lang.String. \"s\"))");	
 		interpreter.execute("(define e (java.awt.event.ActionEvent. o i s))");	
 

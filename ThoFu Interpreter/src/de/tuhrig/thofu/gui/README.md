@@ -59,6 +59,7 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	print			prints a given value				(print "hello")
 
 	inc				increments a value					(inc 1)
+	dec				decrements a value					(dec 1)
 	double			doubles a value						(double 2)
 	sqr				multiplies a value with itself		(sqr 2)
 
@@ -75,6 +76,7 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	
 	typeOf			returns the type					(typeOf 42)
 	asString		conversion to string				(asString 42)
+	asList			conversion to list					(asList 42)
 
 ## Java language constructs
 	Name			Description							Example		
