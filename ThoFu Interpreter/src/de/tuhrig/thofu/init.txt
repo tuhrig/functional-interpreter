@@ -87,3 +87,17 @@
 		)
 	)
 )
+
+(define inspect (lambda (object) (.inspect object)))
+
+(define cons (lambda (a b) (
+		(let ((tupel))
+			(begin 
+				(set! tupel (de.tuhrig.thofu.types.LTupel.))
+				(.setFirst tupel a)
+				(.setLast tupel b)
+				(tupel)
+			)
+		)
+	)
+))

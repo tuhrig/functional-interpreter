@@ -22,7 +22,6 @@ import de.tuhrig.thofu.types.LList;
 import de.tuhrig.thofu.types.LNull;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LOperation;
-import de.tuhrig.thofu.types.LString;
 import de.tuhrig.thofu.types.LSymbol;
 import de.tuhrig.thofu.types.LTupel;
 
@@ -183,17 +182,19 @@ public class Interpreter implements IInterpreter, IJava {
 			}
 		});
 		
-		// (inspect object)
-		root.put(LSymbol.get("inspect"), new LOperation("inspect") {
-
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				LList list = (LList) tokens;
-
-				return new LString(list.getFirst().run(environment, tokens).inspect());
-			}
-		});
+// 		replaced by lambda in init.txt
+//		
+//		// (inspect object)
+//		root.put(LSymbol.get("inspect"), new LOperation("inspect") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				LList list = (LList) tokens;
+//
+//				return new LString(list.getFirst().run(environment, tokens).inspect());
+//			}
+//		});
 
 		// (let (parameters) body)
 		root.put(LSymbol.get("let"), new LOperation("let") {
@@ -565,23 +566,25 @@ public class Interpreter implements IInterpreter, IJava {
 			}
 		});
 
-		// (cons value1 value2)
-		root.put(LSymbol.get("cons"), new LOperation("cons") {
-
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				LObject value1 = ((LList) tokens).get(0);
-				LObject value2 = ((LList) tokens).get(1);
-
-				LTupel tupel = new LTupel();
-
-				tupel.setFirst(value1.run(environment, tokens));
-				tupel.setLast(value2.run(environment, tokens));
-
-				return tupel;
-			}
-		});
+// 		replaced by lambda in init.txt
+//
+//		// (cons value1 value2)
+//		root.put(LSymbol.get("cons"), new LOperation("cons") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				LObject value1 = ((LList) tokens).get(0);
+//				LObject value2 = ((LList) tokens).get(1);
+//
+//				LTupel tupel = new LTupel();
+//
+//				tupel.setFirst(value1.run(environment, tokens));
+//				tupel.setLast(value2.run(environment, tokens));
+//
+//				return tupel;
+//			}
+//		});
 
 		// (first value)
 		root.put(LSymbol.get("first"), new LOperation("first") {
