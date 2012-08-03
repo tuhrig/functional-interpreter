@@ -350,41 +350,45 @@ public class Interpreter implements IInterpreter, IJava {
 			}
 		});
 
-		// (> first second)
-		root.put(LSymbol.get(">"), new LOperation(">") {
+// 		replaced by lambda in init.txt
+//	
+//		// (> first second)
+//		root.put(LSymbol.get(">"), new LOperation(">") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				LObject first = ((LList) tokens).getFirst();
+//				LObject second = ((LList) tokens).getRest();
+//
+//				first = first.run(environment, tokens);
+//				second = second.run(environment, tokens);
+//
+//				boolean result = (1 == first.compareTo(second));
+//
+//				return LBoolean.get(result);
+//			}
+//		});
 
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				LObject first = ((LList) tokens).getFirst();
-				LObject second = ((LList) tokens).getRest();
-
-				first = first.run(environment, tokens);
-				second = second.run(environment, tokens);
-
-				boolean result = (1 == first.compareTo(second));
-
-				return LBoolean.get(result);
-			}
-		});
-		
-		// (< first second)
-		root.put(LSymbol.get("<"), new LOperation("<") {
-
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				LObject first = ((LList) tokens).getFirst();
-				LObject second = ((LList) tokens).getRest();
-
-				first = first.run(environment, tokens);
-				second = second.run(environment, tokens);
-
-				boolean result = (-1 == first.compareTo(second));
-
-				return LBoolean.get(result);
-			}
-		});
+// 		replaced by lambda in init.txt
+//	
+//		// (< first second)
+//		root.put(LSymbol.get("<"), new LOperation("<") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				LObject first = ((LList) tokens).getFirst();
+//				LObject second = ((LList) tokens).getRest();
+//
+//				first = first.run(environment, tokens);
+//				second = second.run(environment, tokens);
+//
+//				boolean result = (-1 == first.compareTo(second));
+//
+//				return LBoolean.get(result);
+//			}
+//		});
 
 		// (eq? first second)
 		root.put(LSymbol.get("eq?"), new LOperation("eq?") {

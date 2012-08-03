@@ -63,7 +63,7 @@ public class LJInstanceMember extends LJava {
 			}
 //		}
 		
-		return this;
+		return new LJObject(result);
 	}
 	
 	@Override

@@ -64,6 +64,9 @@ public abstract class LJava extends LObject {
 	@Override
 	public boolean equals(Object o) {
 
+		if(o instanceof LJObject)
+			return result.equals(((LJObject) o).result);
+		
 		return result.equals(o);
 	}
 
