@@ -17,11 +17,7 @@ public class LJClass extends LJava {
 	public LJClass(LSymbol key) {
 
 		className = key.toString().replace(".class", "");
-	}
-
-	@Override
-	public LObject evaluate(Environment environment, LObject tokens) {
-
+		
 		if(result == null) {
 			
 			try {
@@ -33,6 +29,10 @@ public class LJClass extends LJava {
 				throw new LException("[" + e.getClass() + "] - " + e.getMessage(), e);
 			}
 		}
+	}
+
+	@Override
+	public LObject evaluate(Environment environment, LObject tokens) {
 		
 		return this;
 	}

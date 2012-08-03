@@ -64,6 +64,14 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 
 	null			null								(null)
 	pi				the constant PI						(print pi)
+	
+	pair? 			instance of	pair					(pair? var)
+	number?			instance of	number					(number? var)
+	list? 			instance of	list					(list? var)
+	string?			instance of	string					(string? var)
+	symbol? 		instance of	symbol					(symbol? var)
+	operation? 		instance of	operation				(operation? var)
+	lambda?			instance of	lambda					(lambda? var)
 
 ## Java language constructs
 	Name			Description							Example		
@@ -79,6 +87,8 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	Class.class		access a class						(java.lang.Math.class)
 	Class.method	calls a class method				(java.lang.Math.round aNumber)
 	Class.field$	calls a class field					(java.lang.Math.PI$)
+	
+	instance?		instance of							(instance? 3 de.tuhrig.thofu.types.LNumber.class)
 
 *Some of these operations can not only be used for numbers, but also for strings (e.g. (+ "a" "b")), operations (+ a b) or lists (+ '(1 2) '(3 4)). If the method is not available for the given type, an exception will be thrown.
 

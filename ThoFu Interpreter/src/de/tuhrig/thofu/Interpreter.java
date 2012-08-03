@@ -119,15 +119,18 @@ public class Interpreter implements IInterpreter, IJava {
 			}
 		});
 		
-		// (pair? '(pair))
-		root.put(LSymbol.get("pair?"), new LOperation("pair?") {
+		// (instance? object class)
+		root.put(LSymbol.get("instance?"), new LOperation("instance?") {
 
 			@Override
 			public LObject evaluate(Environment environment, LObject tokens) {
 
-				tokens = tokens.run(environment, tokens);
-
-				return LBoolean.get(tokens instanceof LTupel);
+				LList list = (LList) tokens;
+	
+				LObject first = list.get(0).run(environment, tokens);
+				LJClass second = (LJClass) list.get(1).run(environment, tokens);
+			
+				return LBoolean.get(((Class<?>) second.getJObject()).isInstance(first));
 			}
 		});
 		

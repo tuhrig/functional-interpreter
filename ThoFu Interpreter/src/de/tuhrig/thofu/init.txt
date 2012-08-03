@@ -41,3 +41,11 @@
 			(append3 (quicksort (filter (lambda (x) (< x pivot)) list)) 
 			(filter  (lambda (x) (eq? x pivot)) list) 
 			(quicksort (filter  (lambda (x) (> x pivot)) list))))))
+
+(define pair? (lambda (object) (instance? object de.tuhrig.thofu.types.LTupel.class)))
+(define number? (lambda (object) (instance? object de.tuhrig.thofu.types.LNumber.class)))
+(define list? (lambda (object) (instance? object de.tuhrig.thofu.types.LList.class)))
+(define string? (lambda (object) (instance? object de.tuhrig.thofu.types.LString.class)))
+(define symbol? (lambda (object) (instance? object de.tuhrig.thofu.types.LSymbol.class)))
+(define operation? (lambda (object) (instance? object de.tuhrig.thofu.types.LOperation.class)))
+(define lambda? (lambda (object) (instance? object de.tuhrig.thofu.types.LLambda.class)))
