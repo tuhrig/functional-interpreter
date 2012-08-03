@@ -34,6 +34,7 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.types.LObject#sum(de.tuhrig.thofu.types.LObject)
 	 */
+	@Override
 	public LObject sum(final LObject object) {
 
 		// return a new operation that contains the original two
@@ -55,6 +56,7 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.types.LObject#toString()
 	 */
+	@Override
 	public String toString() {
 
 		return "<Operation: " + name + ">";
@@ -64,6 +66,7 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.types.LObject#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object o) {
 
 		if (o instanceof LOperation) {
@@ -78,6 +81,7 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.types.LObject#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		
 		return name.hashCode();
@@ -87,6 +91,7 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.types.LObject#argrumentSize(de.tuhrig.thofu.types.LObject)
 	 */
+	@Override
 	public int argrumentSize(LObject object) {
 		
 		LList list = (LList) object;
@@ -98,6 +103,7 @@ public abstract class LOperation extends LObject { // extends LLeaf {
 	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.types.LObject#inspect()
 	 */
+	@Override
 	public String inspect() {
 
 		StringBuilder builder = new StringBuilder();

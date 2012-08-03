@@ -29,10 +29,9 @@ import de.tuhrig.thofu.types.LTupel;
 /**
  * The interpreter class itself. This class...
  * 
- * 		- ...adds all build-in operations and vairables
+ * 		- ...adds all build-in operations and variables
  * 		- ...holds the root environment
  * 		- ...can take a command and evaluate it
- * 		- ...provides methods for the GUI (e.g. for the debugger)
  * 
  * @author Thomas Uhrig (tuhrig.de)
  */

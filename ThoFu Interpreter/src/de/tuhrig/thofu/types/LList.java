@@ -80,6 +80,20 @@ public class LList extends LObject implements List<LObject> { // LNode {
 	
 	/*
 	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#compareTo(de.tuhrig.thofu.types.LObject)
+	 */
+	public int compareTo(LObject object) {
+		
+		if(object instanceof LList) {
+			
+			return Integer.compare(size(), ((LList) object).size());
+		}
+		
+		throw new LException("Can't compare " + this + " and " + object);
+	}
+	
+	/*
+	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.types.LObject#toString()
 	 */
 	@Override

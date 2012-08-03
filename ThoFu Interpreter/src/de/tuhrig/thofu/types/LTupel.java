@@ -18,14 +18,22 @@ public class LTupel extends LList {
 
 	private LObject last = LNull.NULL;
 
-	/**
-	 * 
-	 */
 	public LTupel() {
 
 		// empty default constructor
 	}
 	
+	public LTupel(LObject first, LObject last) {
+
+		this.first = first;
+		this.last = last;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#equals(java.lang.Object)
+	 */
+	@Override
 	public boolean equals(Object o) {
 
 		if (o instanceof LTupel)
@@ -34,12 +42,11 @@ public class LTupel extends LList {
 		return false;
 	}
 
-	LTupel(LObject first, LObject last) {
-
-		this.first = first;
-		this.last = last;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#getFirst()
+	 */
+	@Override
 	public LObject getFirst() {
 
 		return first;
@@ -53,6 +60,11 @@ public class LTupel extends LList {
 		this.first = object;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#getRest()
+	 */
+	@Override
 	public LObject getRest() {
 
 		return last;
@@ -66,6 +78,11 @@ public class LTupel extends LList {
 		this.last = object;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#toString()
+	 */
+	@Override
 	public String toString() {
 
 		return "'(" + toSimpleString().trim() + ")";
@@ -75,7 +92,7 @@ public class LTupel extends LList {
 	 * This method formats the tupel in a pretty nice way. Therefore, 
 	 * different cases are tested. 
 	 * 
-	 * @return simple and pretty formatted string representation of the tupel
+	 * @return pretty formatted string representation of the tupel
 	 */
 	private String toSimpleString() {
 
@@ -107,16 +124,20 @@ public class LTupel extends LList {
 		return "";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#evaluate(de.tuhrig.thofu.Environment, de.tuhrig.thofu.types.LObject)
+	 */
 	@Override
 	public LObject evaluate(Environment environment, LObject tokens) {
 
 		return this;
 	}
 
-	/**
-	 * 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#add(de.tuhrig.thofu.types.LObject)
 	 */
-
 	@Override
 	public boolean add(LObject e) {
 
@@ -146,6 +167,10 @@ public class LTupel extends LList {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#clear()
+	 */
 	@Override
 	public void clear() {
 
@@ -153,6 +178,10 @@ public class LTupel extends LList {
 		last = LNull.NULL;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#contains(java.lang.Object)
+	 */
 	@Override
 	public boolean contains(Object o) {
 		
@@ -165,6 +194,10 @@ public class LTupel extends LList {
 		return ((LTupel) last).contains(o);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#get(int)
+	 */
 	@Override
 	public LObject get(int index) {
 
@@ -177,12 +210,20 @@ public class LTupel extends LList {
 		return ((LTupel) last).get(index - 1);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#isEmpty()
+	 */
 	@Override
 	public boolean isEmpty() {
 
 		return first == LNull.NULL && last == LNull.NULL;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#size()
+	 */
 	@Override
 	public int size() {
 
@@ -204,6 +245,10 @@ public class LTupel extends LList {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#toArray()
+	 */
 	@Override
 	public Object[] toArray() {
 
@@ -215,6 +260,10 @@ public class LTupel extends LList {
 		return array;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#indexOf(java.lang.Object)
+	 */
 	@Override
 	public int indexOf(Object o) {
 
@@ -230,6 +279,10 @@ public class LTupel extends LList {
 		return -1;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LList#subList(int, int)
+	 */
 	@Override
 	public List<LObject> subList(int fromIndex, int toIndex) {
 

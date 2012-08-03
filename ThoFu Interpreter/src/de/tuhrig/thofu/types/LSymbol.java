@@ -18,7 +18,7 @@ public class LSymbol extends LObject {
 	private final static List<LSymbol> symbols = new ArrayList<LSymbol>();
 
 	/**
-	 * every symbol can only exist once. This method will return
+	 * Every symbol can only exist once. This method will return
 	 * the existing symbol for the given object. If no symbol 
 	 * exists, it will create a new one.
 	 * 
@@ -47,26 +47,51 @@ public class LSymbol extends LObject {
 		this.value = value.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#toString()
+	 */
+	@Override
 	public String toString() {
 
 		return value;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#equals(java.lang.Object)
+	 */
+	@Override
 	public boolean equals(Object object) {
 
 		return this == object;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#hashCode()
+	 */
+	@Override
 	public int hashCode() {
 		
 		return value.hashCode();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#evaluate(de.tuhrig.thofu.Environment, de.tuhrig.thofu.types.LObject)
+	 */
+	@Override
 	public LObject evaluate(Environment environment, LObject tokens) {
 
 		return environment.get(this);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#inspect()
+	 */
+	@Override
 	public String inspect() {
 
 		StringBuilder builder = new StringBuilder();
@@ -81,6 +106,10 @@ public class LSymbol extends LObject {
 		return builder.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#argrumentSize(de.tuhrig.thofu.types.LObject)
+	 */
 	@Override
 	public int argrumentSize(LObject object) {
 

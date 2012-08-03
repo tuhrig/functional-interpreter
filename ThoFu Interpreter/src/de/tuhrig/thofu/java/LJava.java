@@ -131,7 +131,7 @@ public abstract class LJava extends LObject {
 			
 			if(o instanceof LString) {
 				
-				args[i] = ((LString) o).getValue(); 
+				args[i] = o.toString();
 			}
 			else if(o instanceof LNumber) {
 				

@@ -14,7 +14,7 @@ public class LNumber extends LObject { // LLeaf {
 	/**
 	 * 
 	 */
-	public BigDecimal value;
+	private BigDecimal value;
 
 	/**
 	 * @param value to store
@@ -32,11 +32,21 @@ public class LNumber extends LObject { // LLeaf {
 		this(new BigDecimal(value));
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#toString()
+	 */
+	@Override
 	public String toString() {
 
 		return value.toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#equals(java.lang.Object)
+	 */
+	@Override
 	public boolean equals(Object object) {
 
 		if (object instanceof LNumber)
@@ -45,22 +55,31 @@ public class LNumber extends LObject { // LLeaf {
 		return false;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 
 		return value.hashCode();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#evaluate(de.tuhrig.thofu.Environment, de.tuhrig.thofu.types.LObject)
+	 */
 	@Override
 	public LObject evaluate(Environment environment, LObject tokens) {
 
 		return this;
 	}
 
-	/**
-	 * @param number to add
-	 * @return calculation result as a new number instance
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#sum(de.tuhrig.thofu.types.LObject)
 	 */
+	@Override
 	public LObject sum(LObject number) {
 
 		if(number instanceof LNumber)
@@ -69,10 +88,11 @@ public class LNumber extends LObject { // LLeaf {
 		throw new LException("Can't sum " + this + " and " + number);
 	}
 
-	/**
-	 * @param number to subtract
-	 * @return calculation result as a new number instance
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#subtract(de.tuhrig.thofu.types.LObject)
 	 */
+	@Override
 	public LObject subtract(LObject number) {
 
 		if(number instanceof LNumber)
@@ -81,10 +101,11 @@ public class LNumber extends LObject { // LLeaf {
 		throw new LException("Can't subtract " + this + " and " + number);
 	}
 
-	/**
-	 * @param number to multiply
-	 * @return calculation result as a new number instance
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#multiply(de.tuhrig.thofu.types.LObject)
 	 */
+	@Override
 	public LObject multiply(LObject number) {
 		
 		if(number instanceof LNumber)
@@ -93,10 +114,11 @@ public class LNumber extends LObject { // LLeaf {
 		throw new LException("Can't multiply " + this + " and " + number);
 	}
 
-	/**
-	 * @param number to divide
-	 * @return calculation result as a new number instance
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#divide(de.tuhrig.thofu.types.LObject)
 	 */
+	@Override
 	public LObject divide(LObject number) {
 
 		if(number instanceof LNumber)
@@ -105,10 +127,11 @@ public class LNumber extends LObject { // LLeaf {
 		throw new LException("Can't divide " + this + " and " + number);
 	}
 
-	/**
-	 * @param number to compare
-	 * @return calculation result as a new number instance
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#compareTo(de.tuhrig.thofu.types.LObject)
 	 */
+	@Override
 	public int compareTo(LObject number) {
 
 		if(number instanceof LNumber)
@@ -117,6 +140,10 @@ public class LNumber extends LObject { // LLeaf {
 		throw new LException("Can't compare " + this + " and " + number);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LObject#argrumentSize(de.tuhrig.thofu.types.LObject)
+	 */
 	@Override
 	public int argrumentSize(LObject object) {
 

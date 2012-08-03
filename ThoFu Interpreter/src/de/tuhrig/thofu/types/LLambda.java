@@ -19,10 +19,8 @@ public class LLambda extends LOperation {
 	
 	private final LList definitions;
 
-	private Environment closure;
+	private final Environment closure;
 
-	private int parametersSize;
-	
 	/**
 	 * @param parameters
 	 * @param definitions
@@ -30,11 +28,11 @@ public class LLambda extends LOperation {
 	 */
 	public LLambda(LList parameters, LList definitions, Environment closure) {
 
-		super("lambda");
+		// call super to set the name
+		super("unnamed lambda");
 
 		this.closure = closure;
 		this.parameters = parameters;
-		this.parametersSize = parameters.size();
 		this.definitions = definitions;
 	}
 
@@ -42,7 +40,7 @@ public class LLambda extends LOperation {
 	public LObject evaluate(Environment environment, LObject tokens) {
 
 		// error checking
-		if (parametersSize != ((LList) tokens).size())
+		if (parameters.size() != ((LList) tokens).size())
 			throw new LException("[wrong number of arguments] - expected " + parameters.size() + ", but were " + ((LList) tokens).size() + " [args = " + ((LList) tokens) + "]");
 
 		// we make a new and empty inner environment
@@ -61,7 +59,7 @@ public class LLambda extends LOperation {
 			}
 		}
 
-		for (int i = 0; i < parametersSize; i++) {
+		for (int i = 0; i < parameters.size(); i++) {
 
 			LSymbol key = LSymbol.get(parameters.get(i));
 
@@ -99,6 +97,10 @@ public class LLambda extends LOperation {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LOperation#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o) {
 
@@ -110,6 +112,11 @@ public class LLambda extends LOperation {
 		return false;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LOperation#inspect()
+	 */
+	@Override
 	public String inspect() {
 
 		StringBuilder builder = new StringBuilder();
@@ -118,9 +125,9 @@ public class LLambda extends LOperation {
 
 		builder.append(
 				Literal.NL +
-				"Parameters:" + Literal.TP + getParameters() + Literal.NL +
-				"Definitions:" + Literal.TP + getDefinitions() + Literal.NL +
-				"Closure:" + Literal.TP + Literal.TP + getClosure()
+				"Parameters:" + Literal.TP + parameters + Literal.NL +
+				"Definitions:" + Literal.TP + definitions + Literal.NL +
+				"Closure:" + Literal.TP + Literal.TP + closure
 				);
 		
 		return builder.toString();
@@ -134,40 +141,25 @@ public class LLambda extends LOperation {
 		this.name = name;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LOperation#toString()
+	 */
+	@Override
 	public String toString() {
 
 		return "<Lambda: " + name + ">";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.types.LOperation#argrumentSize(de.tuhrig.thofu.types.LObject)
+	 */
 	@Override
 	public int argrumentSize(LObject object) {
 
 		LList list = (LList) object;
 		
 		return list.size() + 1;
-	}
-	
-	/**
-	 * @return parameters of the lambda
-	 */
-	public LList getParameters() {
-		
-		return parameters;
-	}
-
-	/**
-	 * @return definitions of the lambda
-	 */
-	public LList getDefinitions() {
-	
-		return definitions;
-	}
-	
-	/**
-	 * @return closed environment of the lambda
-	 */
-	public Environment getClosure() {
-	
-		return closure;
 	}
 }

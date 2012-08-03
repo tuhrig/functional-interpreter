@@ -51,14 +51,6 @@ public class LString extends LObject { // LLeaf {
 
 		return value;
 	}
- 
-	/**
-	 * @return string value
-	 */
-	public String getValue() {
-
-		return value;
-	}
 	
 	/*
 	 * (non-Javadoc)

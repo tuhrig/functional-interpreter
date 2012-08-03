@@ -1,7 +1,8 @@
 package de.tuhrig.thofu.types;
 
 /**
- * Represents an exception.
+ * Represents an exception, but is not a real LObject,
+ * because its super class is RuntimeException.
  * 
  * @author Thomas Uhrig (tuhrig.de)
  */
