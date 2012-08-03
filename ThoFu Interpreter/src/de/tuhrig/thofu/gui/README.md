@@ -72,6 +72,9 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	symbol? 		instance of	symbol					(symbol? var)
 	operation? 		instance of	operation				(operation? var)
 	lambda?			instance of	lambda					(lambda? var)
+	
+	typeOf			returns the type					(typeOf 42)
+	asString		conversion to string				(asString 42)
 
 ## Java language constructs
 	Name			Description							Example		

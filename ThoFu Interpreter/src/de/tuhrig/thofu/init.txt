@@ -1,10 +1,17 @@
 (define inc (lambda (a) (+ a 1)))
+
 (define double (lambda (a) (* a 2)))
+
 (define sqr (lambda (a) (* a a)))
+
 (define ! (lambda (exp) (if (exp) false true)))
+
 (define nq? (lambda (o1 o2) (if (eq? o1 o2) false true)))
+
 (define (last L) (if (eq? null (rest L)) (first L) (last (rest L))))
+
 (define pi 3.141)
+
 (define (% a b) 
 	(if (eq? a 0) 
 		0
@@ -12,6 +19,7 @@
 		a 
 	;else	
 		(% (- a b) b))))
+		
 (define (<= a b)
 	(if (< a b)
 		true
@@ -20,6 +28,7 @@
 	;else
 		false
 		)))
+		
 (define (>= a b)
 	(if (> a b)
 		true
@@ -30,9 +39,13 @@
 		)))
 		
 (define length (lambda (L) (if (eq? L null) 0 (+ (length   (rest L)) 1))))
+
 (define (append2 l1 l2) (if (eq? l1 null) l2 (cons (first l1) (append2 (rest l1) l2))))
+
 (define (append3 a b c) (append2 a (append2 b c)))
+
 (define (filter pred list) (if (eq? list null) null (if (pred (first list)) (cons (first list) (filter pred (rest list))) (filter pred (rest list)))))
+
 (define (quicksort list) 
 	(if (<= (length list) 1)
 		list
@@ -43,9 +56,19 @@
 			(quicksort (filter  (lambda (x) (> x pivot)) list))))))
 
 (define pair? (lambda (object) (instance? object de.tuhrig.thofu.types.LTupel.class)))
+
 (define number? (lambda (object) (instance? object de.tuhrig.thofu.types.LNumber.class)))
+
 (define list? (lambda (object) (instance? object de.tuhrig.thofu.types.LList.class)))
+
 (define string? (lambda (object) (instance? object de.tuhrig.thofu.types.LString.class)))
+
 (define symbol? (lambda (object) (instance? object de.tuhrig.thofu.types.LSymbol.class)))
+
 (define operation? (lambda (object) (instance? object de.tuhrig.thofu.types.LOperation.class)))
+
 (define lambda? (lambda (object) (instance? object de.tuhrig.thofu.types.LLambda.class)))
+
+(define typeOf (lambda (object) (.getClass object)))
+
+(define asString (lambda (object) (de.tuhrig.thofu.types.LString. object)))

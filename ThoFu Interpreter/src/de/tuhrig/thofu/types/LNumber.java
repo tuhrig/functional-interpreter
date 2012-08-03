@@ -80,12 +80,15 @@ public class LNumber extends LObject { // LLeaf {
 	 * @see de.tuhrig.thofu.types.LObject#sum(de.tuhrig.thofu.types.LObject)
 	 */
 	@Override
-	public LObject sum(LObject number) {
+	public LObject sum(LObject object) {
 
-		if(number instanceof LNumber)
-			return new LNumber(value.add(((LNumber) number).value));
+		if(object instanceof LNumber)
+			return new LNumber(value.add(((LNumber) object).value));
 		
-		throw new LException("Can't sum " + this + " and " + number);
+		else if(object instanceof LString)
+			return new LString(value + object.toString());
+		
+		throw new LException("Can't sum " + this + " and " + object);
 	}
 
 	/*

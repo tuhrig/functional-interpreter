@@ -15,7 +15,7 @@ import de.tuhrig.thofu.types.LSymbol;
  */
 public class LJInstanceMember extends LJava {
 
-	private LJObject object;
+//	private LJObject object;
 	
 	private String methodName;
 
@@ -29,20 +29,23 @@ public class LJInstanceMember extends LJava {
 	@Override
 	public LObject evaluate(Environment environment, LObject tokens) {
 
-		if(object == null) {
+//		if(object == null) {
 			
 			try {
 				
 				LList tmp = (LList) tokens;
 
-				object = (LJObject) tmp.get(0).run(environment, tokens);
-
 				Class<?>[] types = LJava.getTypes(tmp.getRest(), environment);
 
 				Object[] args = LJava.getObjects(tmp.getRest(), environment);
 	
-				this.result = MethodUtils.invokeMethod(object.getJObject(), methodName, args, types);
-
+				LObject obj = (LObject) tmp.get(0).run(environment, tokens);
+				
+				if(obj instanceof LJava)
+					this.result = MethodUtils.invokeMethod(((LJava) obj).getJObject(), methodName, args, types);
+				else	
+					this.result = MethodUtils.invokeMethod(obj, methodName, args, types);
+				
 				if(result == null)
 					result = "void";
 			}
@@ -50,7 +53,7 @@ public class LJInstanceMember extends LJava {
 				
 				throw new LException("[" + e.getClass() + "] - " + e.getMessage(), e);
 			}
-		}
+//		}
 		
 		return this;
 	}
