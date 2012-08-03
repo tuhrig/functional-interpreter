@@ -199,4 +199,11 @@ public class IJavaTest {
 		Assert.assertEquals("void", interpreter.execute("(.actionPerformed int e)"));
 		Assert.assertEquals("1", interpreter.execute("(control)"));
 	}
+	
+	@Test
+	public void javaUi() {
+		
+		Assert.assertEquals("void", interpreter.execute("(load \"examples/Java API.txt\")"));
+		Assert.assertEquals("true", interpreter.execute("(.isVisible win)"));
+	}
 }
