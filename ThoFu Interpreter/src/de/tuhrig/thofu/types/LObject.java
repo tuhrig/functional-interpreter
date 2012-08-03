@@ -1,9 +1,9 @@
 package de.tuhrig.thofu.types;
 
 import de.tuhrig.thofu.Environment;
-import de.tuhrig.thofu.Interpreter;
 import de.tuhrig.thofu.Literal;
-import de.tuhrig.thofu.gui.Debugger;
+import de.tuhrig.thofu.gui.ThoFuUi;
+import de.tuhrig.thofu.interfaces.IDebugger;
 
 /**
  * Represents an abstract object. It's the super class of 
@@ -24,6 +24,11 @@ public abstract class LObject {
 	 * only stored for debugging and object inspection.
 	 */
 	private LObject tokens;
+	
+	/**
+	 * The debugger instance, a singleton created in the UI
+	 */
+	private final IDebugger debugger = ThoFuUi.getDebugger();
 
 	/**
 	 * This method wraps the evaluate method that each object must
@@ -42,18 +47,18 @@ public abstract class LObject {
 		this.tokens = tokens;
 		
 		// stop before the call
-		if(Interpreter.isDebugg()) {
+		if(debugger.debugg()) {
 			
 			if(this instanceof LOperation) {
 	
-				Debugger.getInstance().pushCall(this, environment, tokens, 1);
+				debugger.pushCall(this, environment, tokens, 1);
 			}
 			else {
 
-				Debugger.getInstance().pushCall(this, environment, tokens, 0);
+				debugger.pushCall(this, environment, tokens, 0);
 			}
 
-			while(Interpreter.resume() == false && Interpreter.next() == false) {
+			while(debugger.resume() == false && debugger.next() == false) {
 			
 				try {
 					
@@ -66,11 +71,11 @@ public abstract class LObject {
 		LObject result = evaluate(environment, tokens);
 		
 		// stop after the call
-		if(Interpreter.isDebugg()) {
+		if(debugger.debugg()) {
 
-			Debugger.getInstance().pushResult(result, environment, tokens, argrumentSize(tokens));
+			debugger.pushResult(result, environment, tokens, argrumentSize(tokens));
 		
-			while(Interpreter.resume() == false && Interpreter.next() == false) {
+			while(debugger.resume() == false && debugger.next() == false) {
 				
 				try {
 					

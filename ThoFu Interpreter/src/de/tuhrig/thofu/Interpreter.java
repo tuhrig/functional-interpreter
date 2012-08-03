@@ -50,12 +50,6 @@ public class Interpreter implements IInterpreter, IJava {
 
 	private String print = "";
 
-	private static boolean debugg;
-
-	private static boolean next;
-
-	private static boolean resume;
-
 	/**
 	 * Creates a new interpreter. Also, all built-in operations and
 	 * variables will be created.
@@ -815,89 +809,29 @@ public class Interpreter implements IInterpreter, IJava {
 		return root;
 	}
 	
+	/**
+	 * Calls all registered environment listeners.
+	 */
 	private void callEnvironmentListeners() {
 
 		for (EnvironmentListener listener : environmentListeners)
 			listener.update(root);
 	}
 	
+	/**
+	 * Calls all registered history listeners.
+	 */
 	private void archive(LList tokens, Date started, Date ended) {
 
 		for (HistoryListener listener : historyListeners)
 			listener.update(tokens, started, ended);
 	}
 
+	/**
+	 * @param object to add to the print string
+	 */
 	private void print(LObject object) {
 
 		print += object;
-	}
-
-	/**
-	 * Activates or de-activates the debugging mode.
-	 * 
-	 * @param b
-	 */
-	public static void setDebugg(boolean b) {
-
-		debugg = b;
-	}
-
-	/**
-	 * @return whether debugging is on or off
-	 */
-	public static boolean isDebugg() {
-
-		return debugg;
-	}
-
-	/**
-	 * This method returns true if the debugger should make another step.
-	 * It return false if the debugger should still stop at the current 
-	 * point.
-	 * 
-	 * If the method returns true, it will return false immediately after.
-	 * This makes the debugger stop at the next step until the user clicks
-	 * "next".
-	 * 
-	 * @return true if the next step should be made.
-	 */
-	public static boolean next() {
-
-		if(next) {
-			
-			next = false;
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * @param b
-	 */
-	public static void setNext(boolean b) {
-
-		next = b;
-	}
-
-	/**
-	 * @return true if the debugger should resume (all steps)
-	 */
-	public static boolean resume() {
-
-		return resume;
-	}
-	
-	/**
-	 * Sets the resume-value to the different value as the current.
-	 * If resume is false, it will be true after the call. If resume
-	 * if true, it will be false after the call.
-	 */
-	public static void setResume() {
-
-		if(resume)
-			resume = false;
-		else
-			resume = true;
 	}
 }

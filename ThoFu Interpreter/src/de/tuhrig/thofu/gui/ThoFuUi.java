@@ -35,9 +35,15 @@ import org.jdesktop.swingx.MultiSplitLayout;
 
 import de.tuhrig.thofu.Interpreter;
 import de.tuhrig.thofu.Parser;
+import de.tuhrig.thofu.interfaces.IDebugger;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 
-class ThoFuUi extends JFrame {
+/**
+ * The GUI.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
+public class ThoFuUi extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,11 +59,11 @@ class ThoFuUi extends JFrame {
 
 	private final Status status = new Status();
 
-	private final Running running = new Running();
+	private final static Running running = new Running();
 	
-	private final HistoryView history = new HistoryView();
+	private final static HistoryView history = new HistoryView();
 	
-	private final Debugger debugger = Debugger.getInstance();
+	private final static Debugger debugger = new Debugger();
 	
 	private final JFileChooser fc = new JFileChooser();
 
@@ -142,7 +148,7 @@ class ThoFuUi extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 	
 				logger.warn("================================================");
-				logger.warn("Start");
+				logger.warn("Started Script");
 				logger.warn("================================================");
 
 				editor.execute();
@@ -176,6 +182,8 @@ class ThoFuUi extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
+				debugger.setDebugg(false);
+				
 				setInterpreter(new Interpreter());
 				
 				if(editor.openFiles())
@@ -451,5 +459,10 @@ class ThoFuUi extends JFrame {
 		repl.setEnabled(b);
 		start.setEnabled(b);
 		reset.setEnabled(b);
+	}
+
+	public static IDebugger getDebugger() {
+
+		return debugger;
 	}
 }

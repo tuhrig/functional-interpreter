@@ -6,6 +6,11 @@ import java.awt.Dimension;
 import javax.swing.JApplet;
 import javax.swing.JMenuBar;
 
+/**
+ * An applet containg the GUI.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
 public class ThoFuApplet extends JApplet {
 
 	/**
@@ -13,6 +18,10 @@ public class ThoFuApplet extends JApplet {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.applet.Applet#init()
+	 */
 	public void init() {
 		
 		ThoFuUi gui = new ThoFuUi();

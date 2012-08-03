@@ -21,30 +21,39 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import de.tuhrig.thofu.Environment;
-import de.tuhrig.thofu.Interpreter;
 import de.tuhrig.thofu.Literal;
+import de.tuhrig.thofu.interfaces.IDebugger;
 import de.tuhrig.thofu.types.LObject;
 
-public class Debugger extends JPanel {
+/**
+ * A simple graphical debugger that shows a stack. It's 
+ * currently not working for complex commands. However,
+ * simple commands like (+ 1 2 3) are working fine.
+ * 
+ * @author Thomas Uhrig (tuhrig.de)
+ */
+public class Debugger extends JPanel implements IDebugger {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final Debugger instance = new Debugger();
-	
-	private final JToggleButton active = new JToggleButton("Activate Step-by-Step Debugger");
-
-	private final JButton next = new JButton("Next");
-	
-	private final JToggleButton resume = new JToggleButton("Resume");
-
 	private final DefaultTableModel model = new DefaultTableModel();
 	
-	private JTable table;
+	private final JToggleButton activeButton = new JToggleButton("Activate Step-by-Step Debugger");
+	
+	private final JButton nextButton = new JButton("Next");
+	
+	private final JToggleButton resumeButton = new JToggleButton("Resume");
 	
 	private int step = 0;
 	
+	private boolean debugg;
+
+	private boolean next;
+
+	private boolean resume;
+	
 	// singleton
-	private Debugger() {
+	public Debugger() {
 
 		setLayout(new BorderLayout());
 
@@ -55,8 +64,7 @@ public class Debugger extends JPanel {
 		model.addColumn("Tokens");
 		model.addColumn("Environment");
 
-		
-		table = new JTable(model){
+		final JTable table = new JTable(model){
 
 			private static final long serialVersionUID = 1L;
 
@@ -81,60 +89,47 @@ public class Debugger extends JPanel {
 		TableColumn environment = table.getColumnModel().getColumn(5);
 		environment.setPreferredWidth(100);
 
-		next.setIcon(new ImageIcon(SwingFactory.create("icons/Play Blue Button.png")));
+		nextButton.setIcon(new ImageIcon(SwingFactory.create("icons/Play Blue Button.png")));
 		
-		resume.setIcon(new ImageIcon(SwingFactory.create("icons/Play Green Button.png")));
+		resumeButton.setIcon(new ImageIcon(SwingFactory.create("icons/Play Green Button.png")));
 		
-		active.setIcon(new ImageIcon(SwingFactory.create("icons/Grey Ball.png")));
-		active.setSelectedIcon(new ImageIcon(SwingFactory.create("icons/Green Ball.png")));
+		activeButton.setIcon(new ImageIcon(SwingFactory.create("icons/Grey Ball.png")));
+		activeButton.setSelectedIcon(new ImageIcon(SwingFactory.create("icons/Green Ball.png")));
 		
-		next.setEnabled(false);
-		resume.setEnabled(false);
+		nextButton.setEnabled(false);
+		resumeButton.setEnabled(false);
 		
-		active.addActionListener(new ActionListener() {
-			
+		activeButton.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			
-				if(active.isSelected()) {
+				if(activeButton.isSelected()) {
 					
-					Interpreter.setDebugg(true);
-					active.setText("Reset");
-					
-					while(model.getRowCount() > 0)
-						model.removeRow(0);
-					
-					Interpreter.setNext(false);
-					
-					next.setEnabled(true);
-					resume.setEnabled(true);
+					setDebugg(true);
 				}
 				else {
 					
-					Interpreter.setDebugg(false);
-					active.setText("Activate Step-by-Step Debugger");
-					
-					next.setEnabled(false);
-					resume.setEnabled(false);
+					setDebugg(false);
 				}
 			}
 		});
 		
-		next.addActionListener(new ActionListener() {
+		nextButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			
-				Interpreter.setNext(true);
+				setNext(true);
 			}
 		});
 		
-		resume.addActionListener(new ActionListener() {
+		resumeButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				Interpreter.setResume();
+				setResume();
 			}
 		});
 		
@@ -178,14 +173,19 @@ public class Debugger extends JPanel {
 		});
 		
 		JPanel buttons = new JPanel();
-		buttons.add(next);
-		buttons.add(resume);
+		buttons.add(nextButton);
+		buttons.add(resumeButton);
 		
-		add(active, BorderLayout.NORTH);
+		add(activeButton, BorderLayout.NORTH);
 		add(buttons, BorderLayout.SOUTH);
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IDebugger#pushCall(de.tuhrig.thofu.types.LObject, de.tuhrig.thofu.Environment, de.tuhrig.thofu.types.LObject, int)
+	 */
+	@Override
 	public void pushCall(final LObject self, Environment environment, LObject tokens, int arguments) {
 
 		step++;
@@ -196,6 +196,11 @@ public class Debugger extends JPanel {
 		model.addRow(new Object[]{">", step, self, self.getClass(), tokens, environment});
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IDebugger#pushResult(de.tuhrig.thofu.types.LObject, de.tuhrig.thofu.Environment, de.tuhrig.thofu.types.LObject, int)
+	 */
+	@Override
 	public void pushResult(LObject result, Environment environment, LObject tokens, int arguments) {
 
 		for(int i = 0; i < arguments; i++)
@@ -204,8 +209,96 @@ public class Debugger extends JPanel {
 		model.addRow(new Object[]{"<", step, result, result.getClass(), tokens, environment});
 	}
 
-	public static Debugger getInstance() {
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IDebugger#isDebugging()
+	 */
+	@Override
+	public boolean debugg() {
 
-		return instance;
+		return debugg;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IDebugger#setDebugging(boolean)
+	 */
+	@Override
+	public void setDebugg(boolean debugg) {
+
+		this.debugg = debugg;
+		
+		if(debugg) {
+			
+			activeButton.setText("Reset");
+			activeButton.setSelected(true);		// selected manually for the case that
+												// the interpreter was reseted
+			
+			while(model.getRowCount() > 0)
+				model.removeRow(0);
+			
+			setNext(false);
+		}
+		else {
+		
+			activeButton.setText("Activate Step-by-Step Debugger");
+			activeButton.setSelected(false);	// selected manually for the case that
+												// the interpreter was reseted
+			
+			nextButton.setEnabled(false);
+			resumeButton.setEnabled(false);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IDebugger#next()
+	 */
+	@Override
+	public boolean next() {
+
+		if(next) {
+			
+			next = false;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IDebugger#setNext(boolean)
+	 */
+	@Override
+	public void setNext(boolean b) {
+
+		next = b;
+
+		nextButton.setEnabled(true);
+		resumeButton.setEnabled(true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IDebugger#resume()
+	 */
+	@Override
+	public boolean resume() {
+
+		return resume;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IDebugger#setResume()
+	 */
+	@Override
+	public void setResume() {
+
+		if(resume)
+			resume = false;
+		else
+			resume = true;
 	}
 }
