@@ -692,11 +692,6 @@ public class Interpreter implements IInterpreter, IJava {
 		logger.info("adding lambdas");
 
 		execute("(resource \"init.txt\")");
-
-		/**
-		 * NULL
-		 */
-		root.put(LSymbol.get("null"), LNull.NULL);
 	}
 
 	/*

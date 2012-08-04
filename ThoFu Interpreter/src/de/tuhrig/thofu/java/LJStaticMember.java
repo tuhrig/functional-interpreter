@@ -37,19 +37,7 @@ public class LJStaticMember extends LJava {
 				Class<?>[] types = LJava.getTypes(tokens, environment);
 				
 				Object[] args = LJava.getObjects(tokens, environment);
-	
-				System.out.println("1");
-				System.out.println(types);
-				System.out.println(args);
-				
-				for(int i = 0; i < types.length; i++)
-					System.out.println(types[i]);
-				
-				for(int i = 0; i < args.length; i++)
-					System.out.println(args[i]);
-				
-				System.out.println(c);
-				
+
 				this.result = MethodUtils.invokeStaticMethod(c, methodName, args, types);
 			}
 			else {
@@ -58,18 +46,6 @@ public class LJStaticMember extends LJava {
 	
 				Object[] args = LJava.getConvertedObjects(tokens, environment);
 	
-				System.out.println("2");
-				System.out.println(types);
-				System.out.println(args);
-				
-				for(int i = 0; i < types.length; i++)
-					System.out.println(types[i]);
-				
-				for(int i = 0; i < args.length; i++)
-					System.out.println(args[i]);
-				
-				System.out.println(c);
-				
 				this.result = MethodUtils.invokeStaticMethod(c, methodName, args, types);
 			}
 		}

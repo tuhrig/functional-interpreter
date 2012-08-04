@@ -1,3 +1,5 @@
+(define null (de.tuhrig.thofu.types.LNull.NULL$))
+
 (define inc (lambda (a) (+ a 1)))
 
 (define dec (lambda (a) (- a 1)))
