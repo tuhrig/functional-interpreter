@@ -1,3 +1,10 @@
+;; Initiation file
+;;
+;; This file creates many use-full (and less use-full) functions. Therefore,
+;; it uses build-in functions (like + - / or define) as well as the Java API.
+;;
+;; Author: Thomas Uhrig (tuhrig.de)
+
 (define first (lambda (list) (.getFirst list)))
 
 (define rest (lambda (list) (.getRest list)))

@@ -1,0 +1,30 @@
+This package provides access to all java classes on the class-
+path through the interpreter. It contains classes that represents
+instances, instance-methods, instances-fields, classes, class-methods 
+and class-fields. Every such class wraps a specific instance, class,
+or method. Theses Java types are called through reflexion.
+
+Example 1:
+
+(lambda (list) (.getRest list))
+
+This user-defined function will call a method called "getRest" on a
+given object (list). If the object has no such method, an error will
+be thrown. Otherwise, the method will be called and the result will be
+returned.
+
+Example 2:
+
+(import "java.awt.event.*")		
+(import "javax.swing.*")
+(import "java.lang.*")
+(import "java.awt.*")
+
+(define win (JFrame. "JavaExample1"))
+(define visible (Boolean. true))
+(.setVisible win visible))
+
+This example imports some java packages and creates an instance of a JFrame.
+After that, it sets is visible.
+
+The syntax is described in the README.md.
