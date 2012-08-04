@@ -23,7 +23,6 @@ import de.tuhrig.thofu.types.LNull;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LOperation;
 import de.tuhrig.thofu.types.LSymbol;
-import de.tuhrig.thofu.types.LTupel;
 
 /**
  * The interpreter class itself. This class...
@@ -596,35 +595,39 @@ public class Interpreter implements IInterpreter, IJava {
 //			}
 //		});
 
-		// (first value)
-		root.put(LSymbol.get("first"), new LOperation("first") {
+// 		replaced by lambda in init.txt
+//
+//		// (first value)
+//		root.put(LSymbol.get("first"), new LOperation("first") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				if (tokens instanceof List)
+//					tokens = tokens.run(environment, ((LList) tokens).getRest());
+//
+//				tokens = tokens.run(environment, tokens);
+//
+//				return ((LTupel) tokens).getFirst();
+//			}
+//		});
 
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				if (tokens instanceof List)
-					tokens = tokens.run(environment, ((LList) tokens).getRest());
-
-				tokens = tokens.run(environment, tokens);
-
-				return ((LTupel) tokens).getFirst();
-			}
-		});
-
-		// (rest value)
-		root.put(LSymbol.get("rest"), new LOperation("rest") {
-
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				if (tokens instanceof List)
-					tokens = tokens.run(environment, ((LList) tokens).getRest());
-
-				tokens = tokens.run(environment, tokens);
-
-				return ((LTupel) tokens).getRest();
-			}
-		});
+// 		replaced by lambda in init.txt
+//
+//		// (rest value)
+//		root.put(LSymbol.get("rest"), new LOperation("rest") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				if (tokens instanceof List)
+//					tokens = tokens.run(environment, ((LList) tokens).getRest());
+//
+//				tokens = tokens.run(environment, tokens);
+//
+//				return ((LTupel) tokens).getRest();
+//			}
+//		});
 
 		/**
 		 * Java functions
