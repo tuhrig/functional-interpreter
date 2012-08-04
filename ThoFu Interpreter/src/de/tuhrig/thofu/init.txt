@@ -125,3 +125,23 @@
 		)
 	)
 ))
+
+(define || (lambda (a b)
+	(if (eq? a true) 
+		true 
+		(if (eq? b true) 
+			(true) 
+			(false)
+		)
+	)
+))
+
+(define && (lambda (a b)
+	(if (eq? a true) 
+		(if (eq? b true) 
+			(true) 
+			(false)
+		)
+		(false)
+	)
+))

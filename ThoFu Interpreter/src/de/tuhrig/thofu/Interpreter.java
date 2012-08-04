@@ -222,37 +222,41 @@ public class Interpreter implements IInterpreter, IJava {
 			}
 		});
 
-		// (|| first second)
-		root.put(LSymbol.get("||"), new LOperation("||") {
+// 		replaced by lambda in init.txt
+//	
+//		// (|| first second)
+//		root.put(LSymbol.get("||"), new LOperation("||") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				LObject first = ((LList) tokens).getFirst();
+//				LObject second = ((LList) tokens).getRest();
+//
+//				first = first.run(environment, tokens);
+//				second = second.run(environment, tokens);
+//
+//				return LBoolean.get(first.equals(LBoolean.TRUE) || second.equals(LBoolean.TRUE));
+//			}
+//		});
 
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				LObject first = ((LList) tokens).getFirst();
-				LObject second = ((LList) tokens).getRest();
-
-				first = first.run(environment, tokens);
-				second = second.run(environment, tokens);
-
-				return LBoolean.get(first.equals(LBoolean.TRUE) || second.equals(LBoolean.TRUE));
-			}
-		});
-
-		// (&& first second)
-		root.put(LSymbol.get("&&"), new LOperation("&&") {
-
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				LObject first = ((LList) tokens).getFirst();
-				LObject second = ((LList) tokens).getRest();
-
-				first = first.run(environment, tokens);
-				second = second.run(environment, tokens);
-
-				return LBoolean.get(first.equals(LBoolean.TRUE) && second.equals(LBoolean.TRUE));
-			}
-		});
+// 		replaced by lambda in init.txt
+//	
+//		// (&& first second)
+//		root.put(LSymbol.get("&&"), new LOperation("&&") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				LObject first = ((LList) tokens).getFirst();
+//				LObject second = ((LList) tokens).getRest();
+//
+//				first = first.run(environment, tokens);
+//				second = second.run(environment, tokens);
+//
+//				return LBoolean.get(first.equals(LBoolean.TRUE) && second.equals(LBoolean.TRUE));
+//			}
+//		});
 
 		// (+ token..)
 		root.put(LSymbol.get("+"), new LOperation("+") {
