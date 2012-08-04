@@ -390,26 +390,28 @@ public class Interpreter implements IInterpreter, IJava {
 //			}
 //		});
 
-		// (eq? first second)
-		root.put(LSymbol.get("eq?"), new LOperation("eq?") {
-
-			@Override
-			public LObject evaluate(Environment environment, LObject tokens) {
-
-				LObject first = ((LList) tokens).get(0);
-				LObject second = ((LList) tokens).get(1);
-
-				if(first instanceof LList || first instanceof LSymbol)
-					first = first.run(environment, tokens);
-
-				if(second instanceof LList || second instanceof LSymbol)
-					second = second.run(environment, tokens);
-
-				boolean result = first.equals(second);
-
-				return LBoolean.get(result);
-			}
-		});
+// 		replaced by lambda in init.txt
+//	
+//		// (eq? first second)
+//		root.put(LSymbol.get("eq?"), new LOperation("eq?") {
+//
+//			@Override
+//			public LObject evaluate(Environment environment, LObject tokens) {
+//
+//				LObject first = ((LList) tokens).get(0);
+//				LObject second = ((LList) tokens).get(1);
+//
+//				if(first instanceof LList || first instanceof LSymbol)
+//					first = first.run(environment, tokens);
+//
+//				if(second instanceof LList || second instanceof LSymbol)
+//					second = second.run(environment, tokens);
+//
+//				boolean result = first.equals(second);
+//
+//				return LBoolean.get(result);
+//			}
+//		});
 
 		// (define name expression)
 		root.put(LSymbol.get("define"), new LOperation("define") {

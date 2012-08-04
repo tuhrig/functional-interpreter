@@ -38,7 +38,7 @@ public class LJInstanceMember extends LJava {
 				LObject obj = (LObject) tmp.get(0).run(environment, tokens);
 				
 				if(obj instanceof LJava) {
-	
+					
 					Class<?>[] types = LJava.getConvertedTypes(tmp.getRest(), environment);
 
 					Object[] args = LJava.getConvertedObjects(tmp.getRest(), environment);

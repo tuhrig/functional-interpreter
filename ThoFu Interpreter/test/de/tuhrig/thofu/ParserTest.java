@@ -7,7 +7,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.tuhrig.thofu.Parser;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LList;
@@ -137,15 +136,15 @@ public class ParserTest {
 
 		singleLineComment = "(+ \n" + "-1 \n" + "; comment \n" + "6\n" + ")";
 
-		Assert.assertEquals(" ( +  -1  6  ) ", parser.format(singleLineComment));
+		Assert.assertEquals("( +  -1  6  )", parser.format(singleLineComment));
 
 		singleLineComment = "(+ \n" + "-1 \n" + ";; comment \n" + "6\n" + ")";
 
-		Assert.assertEquals(" ( +  -1  6  ) ", parser.format(singleLineComment));
+		Assert.assertEquals("( +  -1  6  )", parser.format(singleLineComment));
 
 		singleLineComment = "(+ \n" + "-1 ; comment \n" + "6\n" + ")";
 
-		Assert.assertEquals(" ( +  -1 6  ) ", parser.format(singleLineComment));
+		Assert.assertEquals("( +  -1 6  )", parser.format(singleLineComment));
 	}
 	
 	@Test

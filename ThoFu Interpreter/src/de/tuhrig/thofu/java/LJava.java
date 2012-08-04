@@ -137,7 +137,7 @@ public abstract class LJava extends LObject {
 			}
 			else if(o instanceof LBoolean) {
 				
-				args[i] = ((LBoolean) o).getValue();
+				args[i] = Boolean.valueOf(o.toString());
 			}
 			else if(o instanceof LJava) {
 				

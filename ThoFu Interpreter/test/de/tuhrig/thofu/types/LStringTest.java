@@ -4,8 +4,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import de.tuhrig.thofu.types.LString;
-
 public class LStringTest extends LObjectTest {
 
 	@Test
@@ -14,7 +12,7 @@ public class LStringTest extends LObjectTest {
 		LString string = new LString("aaa");
 		
 		Assert.assertEquals(new LString("aaa"), string);
-		Assert.assertEquals("\"aaa\"", string.toString());
+		Assert.assertEquals("aaa", string.toString());
 	}
 	
 	@Test
@@ -23,7 +21,7 @@ public class LStringTest extends LObjectTest {
 		LString string = new LString("aaa");
 		
 		Assert.assertEquals(new LString("aaa"), string.run(null, null));
-		Assert.assertEquals("\"aaa\"", string.run(null, null).toString());
+		Assert.assertEquals("aaa", string.run(null, null).toString());
 	}
 	
 	@Test
