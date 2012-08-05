@@ -74,6 +74,8 @@ public class ThoFuUi extends JFrame {
 	private JMenuItem reset;
 
 	ThoFuUi() {
+		
+		gui = this;
 
 		// Create the components of the GUI
 		final FileBrowser browser = new FileBrowser();
@@ -439,7 +441,7 @@ public class ThoFuUi extends JFrame {
 
 		Locale.setDefault(Locale.ENGLISH);
 
-		gui = new ThoFuUi();
+		new ThoFuUi();
 
 		SwingUtilities.invokeLater(new Runnable() {
 
