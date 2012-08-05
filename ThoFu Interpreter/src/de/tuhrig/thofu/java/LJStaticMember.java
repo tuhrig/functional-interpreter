@@ -45,7 +45,7 @@ public class LJStaticMember extends LJava {
 				Class<?>[] types = LJava.getConvertedTypes(tokens, environment);
 	
 				Object[] args = LJava.getConvertedObjects(tokens, environment);
-	
+				
 				this.result = MethodUtils.invokeStaticMethod(c, methodName, args, types);
 			}
 		}
@@ -54,7 +54,7 @@ public class LJStaticMember extends LJava {
 			throw new LException("[" + e.getClass() + "] - " + e.getMessage(), e);
 		}
 		
-		return this;
+		return new LJObject(result);
 	}
 
 	@Override

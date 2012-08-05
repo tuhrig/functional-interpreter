@@ -978,4 +978,13 @@ public class IInterpreterTest {
 		Assert.assertEquals("20", interpreter.execute(c4));
 		Assert.assertEquals("200", interpreter.execute(c5));
 	}
+	
+	@Test
+	public void loadAndExecutePeano() {
+
+		Assert.assertEquals("<Lambda: POW_NAT>", interpreter.execute("(load \"examples/Peano.txt\")"));
+		Assert.assertEquals("8", interpreter.execute("(PRINT_NAT (ADD_NAT _5 _3))"));
+		Assert.assertEquals("5", interpreter.execute("(PRINT_NAT (DIV_NAT _10 _2))"));
+	}
+
 }
