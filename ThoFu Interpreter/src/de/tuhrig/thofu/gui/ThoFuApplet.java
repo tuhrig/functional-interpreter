@@ -23,12 +23,10 @@ public class ThoFuApplet extends JApplet {
 	 * @see java.applet.Applet#init()
 	 */
 	public void init() {
+
+		Container pane = ThoFuUi.gui.getContentPane();
 		
-		ThoFuUi gui = new ThoFuUi();
-		
-		Container pane = gui.getContentPane();
-		
-		JMenuBar menu = gui.getJMenuBar();
+		JMenuBar menu = ThoFuUi.gui.getJMenuBar();
 
 		setSize(1000, 500);
 		

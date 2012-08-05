@@ -180,20 +180,6 @@ public class Interpreter implements IInterpreter, IJava {
 				return result;
 			}
 		});
-		
-// 		replaced by lambda in init.txt
-//		
-//		// (inspect object)
-//		root.put(LSymbol.get("inspect"), new LOperation("inspect") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				LList list = (LList) tokens;
-//
-//				return new LString(list.getFirst().run(environment, tokens).inspect());
-//			}
-//		});
 
 		// (let (parameters) body)
 		root.put(LSymbol.get("let"), new LOperation("let") {
@@ -220,42 +206,6 @@ public class Interpreter implements IInterpreter, IJava {
 				return body.run(innerEnvironment, tokens);
 			}
 		});
-
-// 		replaced by lambda in init.txt
-//	
-//		// (|| first second)
-//		root.put(LSymbol.get("||"), new LOperation("||") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				LObject first = ((LList) tokens).getFirst();
-//				LObject second = ((LList) tokens).getRest();
-//
-//				first = first.run(environment, tokens);
-//				second = second.run(environment, tokens);
-//
-//				return LBoolean.get(first.equals(LBoolean.TRUE) || second.equals(LBoolean.TRUE));
-//			}
-//		});
-
-// 		replaced by lambda in init.txt
-//	
-//		// (&& first second)
-//		root.put(LSymbol.get("&&"), new LOperation("&&") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				LObject first = ((LList) tokens).getFirst();
-//				LObject second = ((LList) tokens).getRest();
-//
-//				first = first.run(environment, tokens);
-//				second = second.run(environment, tokens);
-//
-//				return LBoolean.get(first.equals(LBoolean.TRUE) && second.equals(LBoolean.TRUE));
-//			}
-//		});
 
 		// (+ token..)
 		root.put(LSymbol.get("+"), new LOperation("+") {
@@ -352,69 +302,6 @@ public class Interpreter implements IInterpreter, IJava {
 				return n;
 			}
 		});
-
-// 		replaced by lambda in init.txt
-//	
-//		// (> first second)
-//		root.put(LSymbol.get(">"), new LOperation(">") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				LObject first = ((LList) tokens).getFirst();
-//				LObject second = ((LList) tokens).getRest();
-//
-//				first = first.run(environment, tokens);
-//				second = second.run(environment, tokens);
-//
-//				boolean result = (1 == first.compareTo(second));
-//
-//				return LBoolean.get(result);
-//			}
-//		});
-
-// 		replaced by lambda in init.txt
-//	
-//		// (< first second)
-//		root.put(LSymbol.get("<"), new LOperation("<") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				LObject first = ((LList) tokens).getFirst();
-//				LObject second = ((LList) tokens).getRest();
-//
-//				first = first.run(environment, tokens);
-//				second = second.run(environment, tokens);
-//
-//				boolean result = (-1 == first.compareTo(second));
-//
-//				return LBoolean.get(result);
-//			}
-//		});
-
-// 		replaced by lambda in init.txt
-//	
-//		// (eq? first second)
-//		root.put(LSymbol.get("eq?"), new LOperation("eq?") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				LObject first = ((LList) tokens).get(0);
-//				LObject second = ((LList) tokens).get(1);
-//
-//				if(first instanceof LList || first instanceof LSymbol)
-//					first = first.run(environment, tokens);
-//
-//				if(second instanceof LList || second instanceof LSymbol)
-//					second = second.run(environment, tokens);
-//
-//				boolean result = first.equals(second);
-//
-//				return LBoolean.get(result);
-//			}
-//		});
 
 		// (define name expression)
 		root.put(LSymbol.get("define"), new LOperation("define") {
@@ -575,60 +462,6 @@ public class Interpreter implements IInterpreter, IJava {
 			}
 		});
 
-// 		replaced by lambda in init.txt
-//
-//		// (cons value1 value2)
-//		root.put(LSymbol.get("cons"), new LOperation("cons") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				LObject value1 = ((LList) tokens).get(0);
-//				LObject value2 = ((LList) tokens).get(1);
-//
-//				LTupel tupel = new LTupel();
-//
-//				tupel.setFirst(value1.run(environment, tokens));
-//				tupel.setLast(value2.run(environment, tokens));
-//
-//				return tupel;
-//			}
-//		});
-
-// 		replaced by lambda in init.txt
-//
-//		// (first value)
-//		root.put(LSymbol.get("first"), new LOperation("first") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				if (tokens instanceof List)
-//					tokens = tokens.run(environment, ((LList) tokens).getRest());
-//
-//				tokens = tokens.run(environment, tokens);
-//
-//				return ((LTupel) tokens).getFirst();
-//			}
-//		});
-
-// 		replaced by lambda in init.txt
-//
-//		// (rest value)
-//		root.put(LSymbol.get("rest"), new LOperation("rest") {
-//
-//			@Override
-//			public LObject evaluate(Environment environment, LObject tokens) {
-//
-//				if (tokens instanceof List)
-//					tokens = tokens.run(environment, ((LList) tokens).getRest());
-//
-//				tokens = tokens.run(environment, tokens);
-//
-//				return ((LTupel) tokens).getRest();
-//			}
-//		});
-
 		/**
 		 * Java functions
 		 */
@@ -694,9 +527,9 @@ public class Interpreter implements IInterpreter, IJava {
 		});
 		
 		/**
-		 * Build-in lambdas
+		 * Build-in lambdas from initiation file (init.txt)
 		 */
-		logger.info("adding lambdas");
+		logger.info("loading initiation file");
 
 		execute("(resource \"init.txt\")");
 	}

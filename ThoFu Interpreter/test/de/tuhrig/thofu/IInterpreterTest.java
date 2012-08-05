@@ -978,6 +978,4 @@ public class IInterpreterTest {
 		Assert.assertEquals("20", interpreter.execute(c4));
 		Assert.assertEquals("200", interpreter.execute(c5));
 	}
-	
-	
 }
