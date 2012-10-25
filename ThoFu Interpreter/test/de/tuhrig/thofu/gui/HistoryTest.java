@@ -1,4 +1,4 @@
-package de.tuhrig.thofu;
+package de.tuhrig.thofu.gui;
 
 import java.util.Date;
 

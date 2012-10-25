@@ -24,6 +24,14 @@ public class LList extends LObject implements List<LObject> { // LNode {
 
 		this.list = new ArrayList<>(0);
 	}
+	
+	public LList(LObject... objects) {
+		
+		this.list = new ArrayList<>(0);
+		
+		for(LObject object: objects)
+			this.list.add(object);
+	}
 
 	/*
 	 * (non-Javadoc)

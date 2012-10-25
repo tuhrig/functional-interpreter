@@ -1,4 +1,4 @@
-package de.tuhrig.thofu;
+package de.tuhrig.thofu.parser;
 
 import static de.tuhrig.thofu.Literal.BLANK;
 import static de.tuhrig.thofu.Literal.DOUBLE_QUOTE;
@@ -14,20 +14,16 @@ import static de.tuhrig.thofu.Literal.RIGHT_PARENTHESIS_BLANKED;
 import static de.tuhrig.thofu.Literal.SINGLE_QUOTE;
 import static de.tuhrig.thofu.Literal.TRUE;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import de.tuhrig.thofu.Environment;
+import de.tuhrig.thofu.interfaces.Parser;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LLambda;
@@ -49,66 +45,23 @@ import de.tuhrig.thofu.types.LTupel;
  * 
  * @author Thomas Uhrig (tuhrig.de)
  */
-public class Parser {
+public class DefaultParser implements Parser {
 
-	private static Logger logger = Logger.getLogger(Parser.class);
+	private static Logger logger = Logger.getLogger(DefaultParser.class);
 
 	static final Pattern SINGLE_LINE_COMMENT = Pattern.compile("(;+)(.*)(\\n+)");
 
 	static final Pattern MULTI_LINE_COMMENT = Pattern.compile("(#\\|+)(.*)(\\|#+)", Pattern.MULTILINE | Pattern.DOTALL);
 
-	private static final Pattern SPLIT = Pattern.compile("[^\\s\"]+|\"([^\"]*)\"");
+	static final Pattern SPLIT = Pattern.compile("[^\\s\"]+|\"([^\"]*)\"");
 	
 	private int i;
 
-	/**
-	 * @param file to read
-	 * @return content of the file
-	 * @throws IOException if the file can't be read
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.Parser#parse(java.lang.String)
 	 */
-	public String read(File file) throws IOException {
-		
-		List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-
-		StringBuilder content = new StringBuilder();
-		
-		for (String line : lines) {
-			
-			content.append(line);
-			content.append(NL);
-		}
-		
-		return content.toString();
-	}
-	
-	/**
-	 * @param clazz to use for resource loading
-	 * @param resource name to load
-	 * @return the content of the resource as a String
-	 */
-	public String read(Class<?> clazz, String resource) {
-
-		InputStream stream = clazz.getResourceAsStream(resource);
-		
-		Scanner scanner = new Scanner(stream);
-	 
-		StringBuilder content = new StringBuilder();
-		
-		while(scanner.hasNext()) {
-			
-			content.append(scanner.nextLine());
-			content.append(NL);
-		}
-		
-		scanner.close();
-		
-		return content.toString();
-	}
-
-	/**
-	 * @param expression to parse (e.g. (+ 1 2 3))
-	 * @return a list of parsed objects
-	 */
+	@Override
 	public LList parse(String expression) {
 
 		expression = format(expression);
@@ -198,45 +151,42 @@ public class Parser {
 		return list;
 	}
 
-	private LObject getType(String current) {
+	public LObject getType(Object token) {
 
 		try {
 
-			return new LNumber(current.toString());
+			return new LNumber(token.toString());
 		}
 		catch (NumberFormatException e) {
 
-			if (current.equals(TRUE)) {
+			if (token.equals(TRUE)) {
 
 				return LBoolean.TRUE;
 			}
-			else if (current.equals(FALSE)) {
+			else if (token.equals(FALSE)) {
 
 				return LBoolean.FALSE;
 			}
-			else if (current.equals(NULL)) {
+			else if (token.equals(NULL)) {
 
 				return LNull.NULL;
 			}
-			else if (current.startsWith(DOUBLE_QUOTE) && current.endsWith(DOUBLE_QUOTE)) {
-
-				return new LString(current);
+			else if (token.toString().startsWith(DOUBLE_QUOTE) && token.toString().endsWith(DOUBLE_QUOTE)) {
+ 
+				return new LString(token);
 			}
 			else {
 
-				return LSymbol.get(current);
+				return LSymbol.get(token);
 			}
 		}
 	}
-
-	/**
-	 * This method removes single and multi-line comments as well
-	 * as line breaks. It also inserts a space between every token,
-	 * e.g. between ")(" to ") (".
-	 * 
-	 * @param expression to format
-	 * @return a formated string without comments in one line
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.Parser#format(java.lang.String)
 	 */
+	@Override
 	public String format(String expression) {
 
 		expression = SINGLE_LINE_COMMENT.matcher(expression).replaceAll(EMPTY);
@@ -248,14 +198,11 @@ public class Parser {
 		return expression.trim();
 	}
 
-	/**
-	 * This method parses a string with more then one command.
-	 * Each command will be parsed separately. The returned list
-	 * will contained the parsed commands in the same order.
-	 * 
-	 * @param commands to parse
-	 * @return a list of parsed objects
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.Parser#parseAll(java.lang.String)
 	 */
+	@Override
 	public List<LObject> parseAll(String commands) {
 
 		List<LObject> objects = new ArrayList<>();
@@ -299,13 +246,11 @@ public class Parser {
 		return objects;
 	}
 	
-	/**
-	 * This method validated an expression due to its parenthesis. If
-	 * a parenthesis is wrong (missing, too much, wrong place) it will
-	 * throw a LException.
-	 * 
-	 * @param expression to validate
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.Parser#validate(java.lang.String)
 	 */
+	@Override
 	public void validate(final String expression) {
 
 		if (!expression.trim().startsWith(LEFT_PARENTHESIS) && !expression.trim().startsWith(QUOTED_LEFT_PARENTHESIS))

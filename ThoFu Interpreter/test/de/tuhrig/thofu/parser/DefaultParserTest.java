@@ -1,4 +1,4 @@
-package de.tuhrig.thofu;
+package de.tuhrig.thofu.parser;
 
 import java.util.List;
 
@@ -7,6 +7,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.tuhrig.thofu.interfaces.Parser;
+import de.tuhrig.thofu.parser.DefaultParser;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LList;
@@ -15,19 +17,26 @@ import de.tuhrig.thofu.types.LNumber;
 import de.tuhrig.thofu.types.LString;
 import de.tuhrig.thofu.types.LSymbol;
 
-public class ParserTest {
+public class DefaultParserTest {
 
 	private Parser parser;
 
 	@Before
 	public void reset() {
 
-		this.parser = new Parser();
+		this.parser = new DefaultParser();
 	}
 
 	@Test
 	public void parse() {
-
+	
+//		LList list = parser.parse("(+ 1 1)");
+//		
+//		System.out.println(list + "-" + list.getClass());
+//		
+//		for(int i = 0; i < list.size(); i++)
+//			System.out.println(list.get(i) + "-" + list.get(i).getClass());
+		
 		Assert.assertEquals("'()", parser.parse("'()").toString());
 		Assert.assertEquals("'(1)", parser.parse("'(1)").toString());
 		Assert.assertEquals("'(())", parser.parse("'(())").toString());

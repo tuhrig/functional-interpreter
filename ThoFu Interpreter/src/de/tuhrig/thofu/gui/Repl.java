@@ -23,10 +23,10 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Literal;
-import de.tuhrig.thofu.Parser;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 import de.tuhrig.thofu.interfaces.InterpreterListener;
+import de.tuhrig.thofu.interfaces.Parser;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LSymbol;
 
@@ -209,7 +209,7 @@ class Repl extends JPanel implements EnvironmentListener, InterpreterListener {
 
 							history.add(0, commands);
 		
-							Parser parser = new Parser();
+							Parser parser = interpreter.getParser();
 
 							// + nl, otherwise there will be errors
 							commands = parser.format(commands + "\n");

@@ -1,0 +1,7 @@
+C- und Smalltalk-Style Parser für Interpreter implementieren und als Strategy 
+wählen (lassen). Alles als Library kapseln und von GUI trennen. Der Parser 
+soll ein neues Interface bekommen. Die File Utilities müssen umziehen und 
+eine Syntax-Check method soll kommen die die Line Number zurück gibt wenn 
+ein Fehler ge
+
+Punkt vor strich...

@@ -34,7 +34,7 @@ import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
 import de.tuhrig.thofu.Interpreter;
-import de.tuhrig.thofu.Parser;
+import de.tuhrig.thofu.Util;
 import de.tuhrig.thofu.interfaces.IDebugger;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 
@@ -248,7 +248,7 @@ public class ThoFuUi extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				String content = new Parser().read(getClass(), "README.md");
+				String content = new Util().read(getClass(), "README.md");
 
 				new HtmlViewer(content);	
 			}

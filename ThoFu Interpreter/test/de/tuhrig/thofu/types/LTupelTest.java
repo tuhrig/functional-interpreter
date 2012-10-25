@@ -8,14 +8,7 @@ import org.junit.Test;
 
 import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Interpreter;
-import de.tuhrig.thofu.Parser;
-import de.tuhrig.thofu.types.LList;
-import de.tuhrig.thofu.types.LNull;
-import de.tuhrig.thofu.types.LNumber;
-import de.tuhrig.thofu.types.LObject;
-import de.tuhrig.thofu.types.LOperation;
-import de.tuhrig.thofu.types.LSymbol;
-import de.tuhrig.thofu.types.LTupel;
+import de.tuhrig.thofu.parser.DefaultParser;
 
 public class LTupelTest extends LObjectTest {
 
@@ -193,25 +186,25 @@ public class LTupelTest extends LObjectTest {
 
 		LObject o;
 
-		o = cons.run(environment, new Parser().parse("(1 2)"));
+		o = cons.run(environment, new DefaultParser().parse("(1 2)"));
 		Assert.assertEquals("'(1 . 2)", o.toString());
 		Assert.assertTrue(o instanceof LTupel);
 		Assert.assertTrue(((LTupel) o).getFirst() instanceof LNumber);
 		Assert.assertTrue(((LTupel) o).getRest() instanceof LNumber);
 
-		o = cons.run(environment, new Parser().parse("(1 null)"));
+		o = cons.run(environment, new DefaultParser().parse("(1 null)"));
 		Assert.assertEquals("'(1)", o.toString());
 		Assert.assertTrue(o instanceof LTupel);
 		Assert.assertTrue(((LTupel) o).getFirst() instanceof LNumber);
 		Assert.assertTrue(((LTupel) o).getRest() instanceof LNull);
 
-		o = cons.run(environment, new Parser().parse("(null 1)"));
+		o = cons.run(environment, new DefaultParser().parse("(null 1)"));
 		Assert.assertEquals("'(() . 1)", o.toString());
 		Assert.assertTrue(o instanceof LTupel);
 		Assert.assertTrue(((LTupel) o).getFirst() instanceof LNull);
 		Assert.assertTrue(((LTupel) o).getRest() instanceof LNumber);
 
-		o = cons.run(environment, new Parser().parse("((cons 1 2) 3)"));
+		o = cons.run(environment, new DefaultParser().parse("((cons 1 2) 3)"));
 		Assert.assertEquals("'((1 . 2) . 3)", o.toString());
 		Assert.assertTrue(o instanceof LTupel);
 		Assert.assertTrue(((LTupel) o).getFirst() instanceof LTupel);

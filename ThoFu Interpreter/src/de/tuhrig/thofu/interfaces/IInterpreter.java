@@ -8,6 +8,10 @@ public interface IInterpreter {
 	public String execute(String expression);
 	
 	public String execute(LObject object);
+	
+	public void setParser(Parser parser);
+	
+	public Parser getParser();
 
 	public Environment getEnvironment();
 

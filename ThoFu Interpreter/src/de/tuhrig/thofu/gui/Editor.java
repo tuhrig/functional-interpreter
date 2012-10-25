@@ -33,10 +33,11 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import de.tuhrig.thofu.Container;
 import de.tuhrig.thofu.Environment;
 import de.tuhrig.thofu.Literal;
-import de.tuhrig.thofu.Parser;
+import de.tuhrig.thofu.Util;
 import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 import de.tuhrig.thofu.interfaces.InterpreterListener;
+import de.tuhrig.thofu.interfaces.Parser;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LSymbol;
 
@@ -98,7 +99,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			
 			try {
 
-				String content = new Parser().read(file);
+				String content = new Util().read(file);
 				
 				area.setText(content);
 			}
@@ -235,7 +236,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 
 			String commands = ((FileTabb) tabbs.getComponentAt(i)).getText();
 	
-			Parser parser = new Parser();
+			Parser parser = interpreter.getParser();
 	
 			commands = parser.format(commands);
 

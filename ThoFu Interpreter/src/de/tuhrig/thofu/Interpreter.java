@@ -12,9 +12,11 @@ import de.tuhrig.thofu.interfaces.EnvironmentListener;
 import de.tuhrig.thofu.interfaces.HistoryListener;
 import de.tuhrig.thofu.interfaces.IInterpreter;
 import de.tuhrig.thofu.interfaces.IJava;
+import de.tuhrig.thofu.interfaces.Parser;
 import de.tuhrig.thofu.java.LJClass;
 import de.tuhrig.thofu.java.LJObject;
 import de.tuhrig.thofu.java.LJava;
+import de.tuhrig.thofu.parser.DefaultParser;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LLambda;
@@ -43,7 +45,7 @@ public class Interpreter implements IInterpreter, IJava {
 	
 	private final List<HistoryListener> historyListeners = new ArrayList<>();
 
-	private final Parser parser = new Parser();
+	private Parser parser = new DefaultParser();
 
 	private String print = "";
 
@@ -70,7 +72,7 @@ public class Interpreter implements IInterpreter, IJava {
 				
 				try {
 					
-					String content = parser.read(file);
+					String content = new Util().read(file);
 					
 					String commands = parser.format(content);
 
@@ -100,7 +102,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 				String rs = ((LList) tokens).get(0).toString();
 
-				String content = parser.read(getClass(), rs);
+				String content = new Util().read(getClass(), rs);
 				
 				String commands = parser.format(content.toString());
 
@@ -532,6 +534,9 @@ public class Interpreter implements IInterpreter, IJava {
 		logger.info("loading initiation file");
 
 		execute("(resource \"init.txt\")");
+		
+		// TODO just for the moment a simple implementation
+		//this.parser = new CFamilyParser();
 	}
 
 	/*
@@ -615,7 +620,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 		Date before = new Date();
 
-		LObject result = tokens.run(environment, ((LList) tokens).getRest());
+		LObject result = tokens.run(environment, tokens);
 		
 		Date after = new Date();
 
@@ -679,5 +684,21 @@ public class Interpreter implements IInterpreter, IJava {
 	private void print(LObject object) {
 
 		print += object;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.tuhrig.thofu.interfaces.IInterpreter#setParser(de.tuhrig.thofu.interfaces.Parser)
+	 */
+	@Override
+	public void setParser(Parser parser) {
+
+		this.parser = parser;
+	}
+
+	@Override
+	public Parser getParser() {
+
+		return parser;
 	}
 }
