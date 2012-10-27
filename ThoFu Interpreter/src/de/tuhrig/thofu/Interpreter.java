@@ -17,6 +17,7 @@ import de.tuhrig.thofu.java.LJClass;
 import de.tuhrig.thofu.java.LJObject;
 import de.tuhrig.thofu.java.LJava;
 import de.tuhrig.thofu.parser.DefaultParser;
+import de.tuhrig.thofu.parser.ProceduralParser;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LLambda;
@@ -47,7 +48,7 @@ public class Interpreter implements IInterpreter, IJava {
 
 	private Parser parser = new DefaultParser();
 
-	private String print = "";
+	private StringBuilder builder = new StringBuilder();
 
 	/**
 	 * Creates a new interpreter. Also, all built-in operations and
@@ -175,7 +176,7 @@ public class Interpreter implements IInterpreter, IJava {
 				LList list = (LList) tokens;
 
 				for (LObject object: list) {
-				
+	
 					result = object.run(environment, tokens);
 				}
 
@@ -420,7 +421,7 @@ public class Interpreter implements IInterpreter, IJava {
 				if(!(object instanceof LOperation))
 					object = object.run(environment, tokens);
 
-				print(object);
+				builder.append(object.toString());
 
 				return object;
 			}
@@ -536,7 +537,7 @@ public class Interpreter implements IInterpreter, IJava {
 		execute("(resource \"init.txt\")");
 		
 		// TODO just for the moment a simple implementation
-		//this.parser = new CFamilyParser();
+		this.parser = new ProceduralParser();
 	}
 
 	/*
@@ -546,8 +547,6 @@ public class Interpreter implements IInterpreter, IJava {
 	@Override
 	public String execute(String expression) {
 
-		print = "";
-
 		try {
 
 			parser.validate(expression);
@@ -555,13 +554,8 @@ public class Interpreter implements IInterpreter, IJava {
 			LList tokens = parser.parse(expression);
 
 			LObject result = execute(tokens, root);
-
-			if (print.length() == 0) {
-
-				return result.toString();
-			}
-
-			return print;
+			
+			return result.toString();
 		}
 		catch (LException e) {
 
@@ -584,18 +578,11 @@ public class Interpreter implements IInterpreter, IJava {
 	@Override
 	public String execute(LObject tokens) {
 
-		print = "";
-
 		try {
 
 			LObject result = execute(tokens, root);
 
-			if (print.length() == 0) {
-
-				return result.toString();
-			}
-
-			return print;
+			return result.toString();
 		}
 		catch (LException e) {
 
@@ -678,14 +665,6 @@ public class Interpreter implements IInterpreter, IJava {
 			listener.update(tokens, started, ended);
 	}
 
-	/**
-	 * @param object to add to the print string
-	 */
-	private void print(LObject object) {
-
-		print += object;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see de.tuhrig.thofu.interfaces.IInterpreter#setParser(de.tuhrig.thofu.interfaces.Parser)
@@ -700,5 +679,17 @@ public class Interpreter implements IInterpreter, IJava {
 	public Parser getParser() {
 
 		return parser;
+	}
+
+	@Override
+	public void setStringBuilder(StringBuilder builder) {
+
+		this.builder = builder;
+	}
+
+	@Override
+	public StringBuilder getStringBuilder() {
+
+		return builder;
 	}
 }

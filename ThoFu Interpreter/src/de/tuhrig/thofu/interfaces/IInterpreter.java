@@ -18,4 +18,8 @@ public interface IInterpreter {
 	public void addEnvironmentListener(EnvironmentListener listener);
 
 	public void addHistoryListener(HistoryListener history);
+	
+	public void setStringBuilder(StringBuilder builder);
+	
+	public StringBuilder getStringBuilder();
 }

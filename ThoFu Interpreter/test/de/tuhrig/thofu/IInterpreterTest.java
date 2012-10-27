@@ -20,6 +20,15 @@ public class IInterpreterTest {
 		interpreter = new Interpreter();
 	}
 
+	private String read(IInterpreter interpreter) {
+
+		String content = interpreter.getStringBuilder().toString();
+	
+		interpreter.setStringBuilder(new StringBuilder());
+		
+		return content;
+	}
+
 	/**
 	 * POSITIVE TESTS
 	 * 
@@ -59,7 +68,7 @@ public class IInterpreterTest {
 		Assert.assertEquals("<Lambda: a>", interpreter.execute("(define a (lambda () (print \"a\")))"));
 		Assert.assertEquals("<Lambda: b>", interpreter.execute("(define b (lambda () (print \"b\")))"));
 		Assert.assertEquals("<Operation: <Lambda: a><Lambda: b>>", interpreter.execute("(define c (+ a b))"));
-		Assert.assertEquals("ab", interpreter.execute("(c)"));
+		Assert.assertEquals("b", interpreter.execute("(c)"));
 	}
 	
 	@Test
@@ -214,6 +223,7 @@ public class IInterpreterTest {
 	public void varReading() {
 
 		Assert.assertEquals("3.141", interpreter.execute("(print pi)"));
+		Assert.assertEquals("3.141", read(interpreter));
 	}
 
 	@Test
@@ -440,9 +450,16 @@ public class IInterpreterTest {
 	public void print() {
 
 		Assert.assertEquals("aaa", interpreter.execute("(print \"aaa\")"));
+		Assert.assertEquals("aaa", read(interpreter));
+
 		Assert.assertEquals("2", interpreter.execute("(print (+ 1 1))"));
+		Assert.assertEquals("2", read(interpreter));
+		
 		Assert.assertEquals("3.141", interpreter.execute("(print pi)"));
+		Assert.assertEquals("3.141", read(interpreter));
+		
 		Assert.assertEquals("<Operation: +>", interpreter.execute("(print +)"));
+		Assert.assertEquals("<Operation: +>", read(interpreter));
 	}
 
 	@Test
@@ -508,8 +525,9 @@ public class IInterpreterTest {
 	public void begin() {
 
 		Assert.assertEquals("hallo", interpreter.execute("(begin (print \"hallo\"))"));
-		Assert.assertEquals("onetwo", interpreter.execute("(begin (print \"one\") (print \"two\"))"));
+		Assert.assertEquals("two", interpreter.execute("(begin (print \"one\") (print \"two\"))"));
 		Assert.assertEquals("2", interpreter.execute("(begin (define aaa 1) (+ aaa aaa))"));
+		Assert.assertEquals("3", interpreter.execute("(begin (print \"one\") (+ 1 2))"));
 	}
 
 	@Test
@@ -537,7 +555,7 @@ public class IInterpreterTest {
 
 		String command = "((lambda (a b) (print \"x\") (print \"y\")) 2 3)";
 
-		Assert.assertEquals("xy", interpreter.execute(command));
+		Assert.assertEquals("y", interpreter.execute(command));
 	}
 
 	@Test
@@ -546,12 +564,12 @@ public class IInterpreterTest {
 		String command = "(define foo (lambda (a b) (print \"x\") (print \"y\")))";
 
 		Assert.assertEquals("<Lambda: foo>", interpreter.execute(command));
-		Assert.assertEquals("xy", interpreter.execute("(foo 5 2)"));
+		Assert.assertEquals("y", interpreter.execute("(foo 5 2)"));
 
 		command = "(define (foo a b) (print \"x\") (print \"y\"))";
 
 		Assert.assertEquals("<Lambda: foo>", interpreter.execute(command));
-		Assert.assertEquals("xy", interpreter.execute("(foo 5 2)"));
+		Assert.assertEquals("y", interpreter.execute("(foo 5 2)"));
 	}
 
 	@Test
@@ -900,8 +918,8 @@ public class IInterpreterTest {
 
 		Assert.assertEquals("<Lambda: make-adder>", interpreter.execute(c1));
 		Assert.assertEquals("<Lambda: myAdder>", interpreter.execute(c2));
-		Assert.assertEquals("prpr30", interpreter.execute(c3));
-		Assert.assertEquals("prpr30", interpreter.execute(c4));
+		Assert.assertEquals("30", interpreter.execute(c3));
+		Assert.assertEquals("30", interpreter.execute(c4));
 	}
 
 	@Test
