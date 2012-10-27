@@ -71,6 +71,18 @@ public class ProceduralParser implements Parser {
 
 				return strip(list);
 			}
+			else if(token.toString().startsWith("for")) {
+
+				return forLoop(list, tokens);
+			}
+			else if(token.toString().startsWith("while")) {
+				
+				return whileLoop(list, tokens);
+			}
+			else if(token.toString().startsWith("do")) {
+				
+				return doLoop(list, tokens);
+			}
 			else if(token.toString().startsWith("++")) {
 				
 				return crementBefore(list, token.toString(), "++", "+");
@@ -135,6 +147,61 @@ public class ProceduralParser implements Parser {
 
 		// should never be reached!
 		throw new RuntimeException("No ; found at end of statement");
+	}
+
+	private LList forLoop(LList list, List<Object> tokens) {
+
+		tokens.remove(0);		// remove ( before (i; i <...
+		
+		List<Object> define = getSubListAndClear(tokens, 0, tokens.indexOf(";") + 1);
+		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(";") + 1);
+		List<Object> increment = getSubListAndClear(tokens, 0, tokens.indexOf(")"));
+		
+		tokens.remove(0);		// remove ) after (i; i <...
+		
+		increment.add(";");		// add a ; to the final increment instruction
+
+		list.add(type("for"));
+		list.add(parse(define));
+		list.add(parse(condition));
+		list.add(parse(increment));
+		list.add(parse(tokens));
+		
+		return list;
+	}
+	
+	private LList whileLoop(LList list, List<Object> tokens) {
+
+		tokens.remove(0);		// remove ( before (i; i <...
+
+		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(")"));
+		
+		tokens.remove(0);		// remove ) after (i; i <...
+		
+		condition.add(";");		// add a ; to the final increment instruction
+
+		list.add(type("while"));
+		list.add(parse(condition));
+		list.add(parse(tokens));
+		
+		return list;
+	}
+	
+	private LList doLoop(LList list, List<Object> tokens) {
+
+		tokens.remove(0);		// remove ( before (i; i <...
+
+		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(")"));
+		
+		tokens.remove(0);		// remove ) after (i; i <...
+		
+		condition.add(";");		// add a ; to the final increment instruction
+
+		list.add(type("do"));
+		list.add(parse(condition));
+		list.add(parse(tokens));
+		
+		return list;
 	}
 
 	private void parenthesis(LList list, List<Object> tokens) {

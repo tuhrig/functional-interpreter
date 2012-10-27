@@ -234,4 +234,25 @@ public class ProceduralParserTest {
 		Assert.assertEquals("1", execute("a = 1;"));
 		Assert.assertEquals("5", execute("b = 4 + a++;"));
 	}
+	
+	@Test
+	public void forLoop() {
+		
+		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, ((print, (i)))))", parser.parse("for(i = 0; i < 5; i++) { print(i); }").toString());
+		Assert.assertEquals("4", execute("for(i = 0; i < 5; i++) { print(i); }"));
+	}
+	
+	@Test
+	public void whileLoop() {
+		
+		Assert.assertEquals("0", execute("i = 0;"));
+		Assert.assertEquals("4", execute("while(i < 5) { i++; print(i); }"));
+	}
+	
+	@Test
+	public void doLoop() {
+		
+		Assert.assertEquals("0", execute("i = 0;"));
+		Assert.assertEquals("4", execute("do(i < 5) { i++; print(i); }"));
+	}
 }

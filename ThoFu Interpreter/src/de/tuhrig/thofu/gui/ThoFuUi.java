@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -19,6 +20,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -30,6 +32,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import org.apache.log4j.Logger;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
@@ -37,6 +40,8 @@ import de.tuhrig.thofu.Interpreter;
 import de.tuhrig.thofu.Util;
 import de.tuhrig.thofu.interfaces.IDebugger;
 import de.tuhrig.thofu.interfaces.IInterpreter;
+import de.tuhrig.thofu.parser.DefaultParser;
+import de.tuhrig.thofu.parser.ProceduralParser;
 
 /**
  * The GUI.
@@ -72,6 +77,8 @@ public class ThoFuUi extends JFrame {
 	private JMenuItem start;
 
 	private JMenuItem reset;
+
+	private IInterpreter interpreter;
 
 	ThoFuUi() {
 		
@@ -278,6 +285,52 @@ public class ThoFuUi extends JFrame {
 		file.add(new JSeparator());
 		file.add(exit);
 		
+		final JMenu syntax = new JMenu("Syntax");
+		SwingFactory.setIcon(syntax, "icons/Rename Document.png");
+
+		JRadioButtonMenuItem defaultSyntax = new JRadioButtonMenuItem("Default");
+		SwingFactory.setIcon(defaultSyntax, "icons/Purple Ball.png");
+		
+		JRadioButtonMenuItem proceduralSyntax = new JRadioButtonMenuItem("Procedural");
+		SwingFactory.setIcon(proceduralSyntax, "icons/Orange Ball.png");
+
+		ButtonGroup group = new ButtonGroup();
+		group.add(defaultSyntax);
+		group.add(proceduralSyntax);
+		
+		syntax.add(defaultSyntax);
+		syntax.add(proceduralSyntax);
+		
+		defaultSyntax.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				interpreter.setParser(new DefaultParser());
+				
+				repl.setSyntax(SyntaxConstants.SYNTAX_STYLE_LISP);
+				editor.setSyntax(SyntaxConstants.SYNTAX_STYLE_LISP);
+				
+				log.log("Default syntax");
+			}
+		});
+		
+		defaultSyntax.setSelected(true);
+		
+		proceduralSyntax.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			
+				interpreter.setParser(new ProceduralParser());
+			
+				repl.setSyntax(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+				editor.setSyntax(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+				
+				log.log("Procedural syntax");
+			}
+		});
+		
 		final JMenu edit = SwingFactory.createMenu("Edit", "icons/Menu.png");
 
 		edit.addMenuListener(new MenuListener() {
@@ -297,6 +350,8 @@ public class ThoFuUi extends JFrame {
 				
 				JMenu replMenu = SwingFactory.createMenu("Console", "icons/console.png", repl.getPopupMenu());
 				edit.add(replMenu);
+				
+				edit.add(syntax);
 			}
 			
 			@Override
@@ -305,6 +360,8 @@ public class ThoFuUi extends JFrame {
 			@Override
 			public void menuCanceled(MenuEvent arg0) {}
 		});
+		
+		
 
 		JMenu run = SwingFactory.createMenu("Run", "icons/Gear Alt.png");
 		run.add(start);
@@ -378,6 +435,8 @@ public class ThoFuUi extends JFrame {
 		interpreter.addEnvironmentListener(inspector);
 		interpreter.addEnvironmentListener(repl);
 		interpreter.addEnvironmentListener(editor);
+		
+		this.interpreter = interpreter;
 	}
 
 	void markGrubby() {

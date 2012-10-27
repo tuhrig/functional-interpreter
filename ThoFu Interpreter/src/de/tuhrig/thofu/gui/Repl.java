@@ -281,4 +281,9 @@ class Repl extends JPanel implements EnvironmentListener, InterpreterListener {
 
 		return textArea.getPopupMenu();
 	}
+
+	public void setSyntax(String syntaxStyleJavascript) {
+
+		textArea.setSyntaxEditingStyle(syntaxStyleJavascript);
+	}
 }

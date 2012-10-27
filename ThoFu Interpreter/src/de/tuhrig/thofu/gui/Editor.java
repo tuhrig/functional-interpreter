@@ -385,10 +385,28 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 			
 			return area.getPopupMenu();
 		}
+
+		public void setSyntax(String syntaxStyleJavascript) {
+
+			area.setSyntaxEditingStyle(syntaxStyleJavascript);
+		}
 	}
 
 	public boolean openFiles() {
 
 		return tabbs.getComponentCount() > 0;
+	}
+
+	public void setSyntax(String syntaxStyleJavascript) {
+
+		// TODO Auto-generated method stub
+	
+		
+		for(int i = 0; i < tabbs.getTabCount(); i++) {
+			
+			FileTabb tabb = (FileTabb) tabbs.getComponentAt(i);
+			
+			tabb.setSyntax(syntaxStyleJavascript);
+		}
 	}
 }

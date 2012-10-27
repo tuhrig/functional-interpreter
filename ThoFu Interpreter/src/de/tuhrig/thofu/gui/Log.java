@@ -20,9 +20,9 @@ class Log extends JPanel {
 
 	private static final EnhancedPatternLayout layout = new EnhancedPatternLayout("%d{ISO8601} %-5p [%t] %c: %m%n %throwable{n}");
 
+	private final JTextArea textArea = new JTextArea();
+	
 	public Log() {
-
-		final JTextArea textArea = new JTextArea();
 
 		textArea.setRows(10);
 		textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -54,5 +54,11 @@ class Log extends JPanel {
 		this.add(new JLabel("Log:"), BorderLayout.NORTH);
 		this.add(new JScrollPane(textArea), BorderLayout.CENTER);
 		this.add(new LogLevelSelector(), BorderLayout.SOUTH);
+	}
+	
+	public void log(String message) {
+		
+		textArea.append(message);
+		textArea.setCaretPosition(textArea.getDocument().getLength());
 	}
 }
