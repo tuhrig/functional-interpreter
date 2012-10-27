@@ -1004,5 +1004,31 @@ public class IInterpreterTest {
 		Assert.assertEquals("8", interpreter.execute("(PRINT_NAT (ADD_NAT _5 _3))"));
 		Assert.assertEquals("5", interpreter.execute("(PRINT_NAT (DIV_NAT _10 _2))"));
 	}
+	
+	/**
+	 * LOOPS
+	 */
 
+	@Test(timeout = 2000)
+	public void forLoop() {
+
+		Assert.assertEquals("4", interpreter.execute("(for (define i 0) (< i 5) (set! i (+ i 1)) (print i))"));
+		Assert.assertEquals("01234", interpreter.getStringBuilder().toString());
+	}
+	
+	@Test(timeout = 2000)
+	public void whileLoop() {
+
+		Assert.assertEquals("0", interpreter.execute("(define i 0)"));
+		Assert.assertEquals("5", interpreter.execute("(while (< i 5) (begin (print i) (set! i (+ i 1)) ))"));
+		Assert.assertEquals("01234", interpreter.getStringBuilder().toString());
+	}
+	
+	@Test(timeout = 2000)
+	public void doLoop() {
+
+		Assert.assertEquals("0", interpreter.execute("(define i 0)"));
+		Assert.assertEquals("5", interpreter.execute("(do (< i 5) (begin (print i) (set! i (+ i 1)) ))"));
+		Assert.assertEquals("01234", interpreter.getStringBuilder().toString());
+	}
 }

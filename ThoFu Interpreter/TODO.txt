@@ -12,3 +12,5 @@ print sucket --> out stream registrieren an den print übergiebt, default ist ret
 tests könne zusätzlich den aktuellen print buffer lesen, gui fragt ihn einfach immer ab und printet in rot
 
 begin ist nicht nötig bei lambda!!!!
+
+loops (while, for, do) als neue build-in operationen bauen... ist wohl am einfachsten

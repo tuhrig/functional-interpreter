@@ -89,7 +89,9 @@ public class Executer {
 	
 	                    	if(textArea != null) {
 	                    		
-	                    		textArea.append(value + "\n>> ");
+	                    		textArea.append(value + "\n" + "Out: "+ interpreter.getStringBuilder() + "\n>> ");
+	                    		
+	                    		interpreter.setStringBuilder(new StringBuilder());
 	                    	}
 	                    	
 	                    	ThoFuUi.gui.enableControls(true);

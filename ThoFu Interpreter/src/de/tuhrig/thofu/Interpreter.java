@@ -17,7 +17,6 @@ import de.tuhrig.thofu.java.LJClass;
 import de.tuhrig.thofu.java.LJObject;
 import de.tuhrig.thofu.java.LJava;
 import de.tuhrig.thofu.parser.DefaultParser;
-import de.tuhrig.thofu.parser.ProceduralParser;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LLambda;
@@ -464,6 +463,75 @@ public class Interpreter implements IInterpreter, IJava {
 				}
 			}
 		});
+		
+		// (for (define i 0) (< i 5) (set! i (+ i 1)) (print i))
+		root.put(LSymbol.get("for"), new LOperation("for") {
+
+			@Override
+			public LObject evaluate(Environment environment, LObject tokens) {
+
+				LList define = (LList) ((LList) tokens).get(0);
+				LList condition = (LList) ((LList) tokens).get(1);
+				LList increment = (LList) ((LList) tokens).get(2);
+				LList block = (LList) ((LList) tokens).get(3);
+
+				Environment innerEnvironment = new Environment(environment);
+
+				define.evaluate(innerEnvironment, tokens);
+				
+				LObject result = LNull.NULL;
+				
+				while(condition.evaluate(innerEnvironment, tokens) == LBoolean.TRUE) {
+					
+					result = block.evaluate(innerEnvironment, tokens);
+					
+					increment.evaluate(innerEnvironment, tokens);
+				}
+
+				return result;
+			}
+		});
+		
+		// (while (true) (print i))
+		root.put(LSymbol.get("while"), new LOperation("while") {
+
+			@Override
+			public LObject evaluate(Environment environment, LObject tokens) {
+
+				LList condition = (LList) ((LList) tokens).get(0);
+				LList block = (LList) ((LList) tokens).get(1);
+		
+				LObject result = LNull.NULL;
+				
+				while(condition.evaluate(environment, tokens) == LBoolean.TRUE) {
+					
+					result = block.evaluate(environment, tokens);
+				}
+
+				return result;
+			}
+		});
+		
+		// (do (true) (print i))
+		root.put(LSymbol.get("do"), new LOperation("do") {
+
+			@Override
+			public LObject evaluate(Environment environment, LObject tokens) {
+
+				LList condition = (LList) ((LList) tokens).get(0);
+				LList block = (LList) ((LList) tokens).get(1);
+		
+				LObject result = LNull.NULL;
+				
+				do {
+					
+					result = block.evaluate(environment, tokens);
+					
+				}while(condition.evaluate(environment, tokens) == LBoolean.TRUE);
+
+				return result;
+			}
+		});
 
 		/**
 		 * Java functions
@@ -536,8 +604,9 @@ public class Interpreter implements IInterpreter, IJava {
 
 		execute("(resource \"init.txt\")");
 		
-		// TODO just for the moment a simple implementation
-		this.parser = new ProceduralParser();
+		// TODO 
+		//just for the moment a simple implementation
+		//this.parser = new ProceduralParser();
 	}
 
 	/*
