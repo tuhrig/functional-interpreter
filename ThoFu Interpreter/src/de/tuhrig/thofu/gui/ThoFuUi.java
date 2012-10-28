@@ -50,11 +50,19 @@ import de.tuhrig.thofu.parser.ProceduralParser;
  */
 public class ThoFuUi extends JFrame {
 
+	static ThoFuUi gui;		// not private because of unit tests that set this value
+	
+	public static ThoFuUi instance() {
+		
+		if(gui == null)
+			gui = new ThoFuUi();
+		
+		return gui;
+	}
+	
 	private static final long serialVersionUID = 1L;
 
 	private static Logger logger = Logger.getLogger(ThoFuUi.class);
-
-	public static ThoFuUi gui;
 
 	private final Repl repl = new Repl();
 
@@ -80,9 +88,7 @@ public class ThoFuUi extends JFrame {
 
 	private IInterpreter interpreter;
 
-	ThoFuUi() {
-		
-		gui = this;
+	private ThoFuUi() {
 
 		// Create the components of the GUI
 		final FileBrowser browser = new FileBrowser();
@@ -500,14 +506,12 @@ public class ThoFuUi extends JFrame {
 
 		Locale.setDefault(Locale.ENGLISH);
 
-		new ThoFuUi();
-
 		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
 
-				gui.setVisible(true);
-				gui.repl.focus();
+				instance().setVisible(true);
+				instance().repl.focus();
 			}
 		});
 	}

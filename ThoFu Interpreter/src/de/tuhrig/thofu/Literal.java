@@ -30,6 +30,10 @@ public class Literal {
 
 	public static final String RIGHT_PARENTHESIS = ")";
 	
+	public static final String LEFT_PARENTHESIS_CURLY = "{";
+
+	public static final String RIGHT_PARENTHESIS_CURLY = "}";
+	
 	public static final String LEFT_PARENTHESIS_BLANKED = " ( ";
 	
 	public static final String RIGHT_PARENTHESIS_BLANKED = " ) ";

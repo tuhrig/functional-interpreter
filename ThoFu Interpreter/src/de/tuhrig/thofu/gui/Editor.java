@@ -54,8 +54,6 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 	private JTabbedPane tabbs = new JTabbedPane();
 	
 	private int i = 0;
-
-	private final char open = '(';
 	
 	Editor() {
 
@@ -72,23 +70,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 		
 		final RSyntaxTextArea area = SwingFactory.createSyntaxTextArea("editor", Literal.EMPTY);
 
-		area.addKeyListener(new KeyAdapter() {
-
-			@Override
-			public void keyTyped(KeyEvent event) {
-				
-				/**
-				 * Make a ) for every (
-				 */
-				if(event.getKeyChar() == open) {
-					
-					int current = area.getCaretPosition();
-					
-					area.append(Literal.RIGHT_PARENTHESIS);
-					area.setCaretPosition(current);
-				}
-			}
-		});
+		area.addKeyListener(new CodeAssistant(area));
 		
 		AutoCompletion autoCompletion = new AutoCompletion(provider);
 		autoCompletion.install(area);
@@ -299,7 +281,7 @@ class Editor extends JPanel implements EnvironmentListener, InterpreterListener 
 				@Override
 				public void keyPressed(KeyEvent event) {
 
-					ThoFuUi.gui.markGrubby();
+					ThoFuUi.instance().markGrubby();
 					FileTabb.this.markDirty();
 				}
 			});

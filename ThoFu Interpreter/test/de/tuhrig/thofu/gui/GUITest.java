@@ -24,7 +24,8 @@ public class GUITest {
 	@Before
 	public void setUp() {
 
-		gui = new FrameFixture(new ThoFuUi());
+		ThoFuUi.gui = null;
+		gui = new FrameFixture(ThoFuUi.instance());
 		gui.show();
 	}
 
@@ -123,7 +124,7 @@ public class GUITest {
 		endsWith(gui.textBox("repl").text(), "(- 5 abc)");
 		gui.textBox("repl").enterText(")");
 		gui.textBox("repl").pressAndReleaseKey(submit);	
-		endsWith(gui.textBox("repl").text(), "0\n>> ");
+		endsWith(gui.textBox("repl").text(), "0\nOut: \n>> ");
 	}
 
 	private void endsWith(String text, String string) {

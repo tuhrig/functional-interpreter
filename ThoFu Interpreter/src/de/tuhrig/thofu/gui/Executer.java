@@ -43,7 +43,7 @@ public class Executer {
 	public void evaluate(final JTextArea textArea, final List<LObject> objects, final IInterpreter interpreter) {
 
 		// start the "is running" animation
-		ThoFuUi.gui.start();
+		ThoFuUi.instance().start();
 		
 		Thread worker = new Thread() {
 			
@@ -51,7 +51,7 @@ public class Executer {
 
 			public void run() {
 
-				ThoFuUi.gui.enableControls(false);
+				ThoFuUi.instance().enableControls(false);
 				
             	Callable<String> callable = new Callable<String>() {
             		
@@ -94,10 +94,10 @@ public class Executer {
 	                    		interpreter.setStringBuilder(new StringBuilder());
 	                    	}
 	                    	
-	                    	ThoFuUi.gui.enableControls(true);
+	                    	ThoFuUi.instance().enableControls(true);
 	                    	
 	                    	// stop the "is running" animation
-							ThoFuUi.gui.stop();
+							ThoFuUi.instance().stop();
 	                    }
 	                });
                 }

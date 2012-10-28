@@ -45,8 +45,6 @@ class Repl extends JPanel implements EnvironmentListener, InterpreterListener {
 	private RSyntaxTextArea textArea;
 
 	private final String welcome = "ThoFu Interpreter\nPress CTRL + ENTER to submit a command\n>> ";
-
-	private final char open = '(';
 	
 	Repl() {
 
@@ -56,6 +54,8 @@ class Repl extends JPanel implements EnvironmentListener, InterpreterListener {
 		textArea = SwingFactory.createSyntaxTextArea("repl", welcome); 
 		
 		final RTextScrollPane scrollPane = new RTextScrollPane(textArea);
+		
+		textArea.addKeyListener(new CodeAssistant(textArea));
 		
 		// a key listener to process CTRL + Enter (= submit a command)
 		textArea.addKeyListener(new KeyAdapter() {
@@ -74,22 +74,6 @@ class Repl extends JPanel implements EnvironmentListener, InterpreterListener {
 					arrow = 0;
 					lastInserted = "";
 				}
-			}
-
-			@Override
-			public void keyTyped(KeyEvent event) {
-				
-				/**
-				 * Make a ) for every (
-				 */
-				if(event.getKeyChar() == open) {
-					
-					int current = textArea.getCaretPosition();
-					
-					textArea.append(")");
-					textArea.setCaretPosition(current);
-				}
-				
 			}
 			
 			@Override
