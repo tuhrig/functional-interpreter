@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.tuhrig.thofu.Interpreter;
+import de.tuhrig.thofu.types.LException;
 
 public class ProceduralParserTest {
 
@@ -119,13 +120,13 @@ public class ProceduralParserTest {
 	@Test
 	public void assignFunction() {
 		
-		Assert.assertEquals("(set!, a, (lambda, (), (begin, ((print, (1))))))", parser.parse("a = function() { print(1); }").toString());
+		Assert.assertEquals("(set!, a, (lambda, (), (begin, (print, (1)))))", parser.parse("a = function() { print(1); }").toString());
 		
 		Assert.assertEquals("<Lambda: a>", execute("var a = function() { print(1); }"));
 		Assert.assertEquals("1", execute("a;"));
 		Assert.assertEquals("1", execute("a();"));
 		
-		Assert.assertEquals("(set!, a, (lambda, (text), (begin, ((print, (text))))))", parser.parse("a = function(text) { print(text); }").toString());
+		Assert.assertEquals("(set!, a, (lambda, (text), (begin, (print, (text)))))", parser.parse("a = function(text) { print(text); }").toString());
 		
 		Assert.assertEquals("<Lambda: unnamed lambda>", execute("a = function(text) { print(text); }"));
 		Assert.assertEquals("hallo", execute("a(\"hallo\");"));
@@ -157,9 +158,9 @@ public class ProceduralParserTest {
 	@Test
 	public void methodWithSingleInstruction() {
 		
-		Assert.assertEquals("(lambda, (), (begin, ((+, 1, (1)))))", parser.parse("function() { 1 + 1; }").toString());
-		Assert.assertEquals("(lambda, (x), (begin, ((+, x, (1)))))", parser.parse("function(x) { x + 1; }").toString());
-		Assert.assertEquals("(lambda, (x, y), (begin, ((+, x, (y)))))", parser.parse("function(x, y) { x + y; }").toString());
+		Assert.assertEquals("(lambda, (), (begin, (+, 1, (1))))", parser.parse("function() { 1 + 1; }").toString());
+		Assert.assertEquals("(lambda, (x), (begin, (+, x, (1))))", parser.parse("function(x) { x + 1; }").toString());
+		Assert.assertEquals("(lambda, (x, y), (begin, (+, x, (y))))", parser.parse("function(x, y) { x + y; }").toString());
 	
 		// just to control if it is really really right ;)
 		// Assert.assertEquals("(lambda, (x), (let, ((+, x, 1))))", new Parser().parse("(lambda (x) (let ((+ x 1))))").toString());
@@ -168,32 +169,32 @@ public class ProceduralParserTest {
 	@Test
 	public void methodWithMultipleInstruction() {
 		
-		Assert.assertEquals("(lambda, (x), (begin, ((+, x, (1)), (+, x, (1)))))", parser.parse("function(x) { x + 1; x + 1; }").toString());
-		Assert.assertEquals("(lambda, (x), (begin, ((+, x, (1)), (+, x, (1)), (+, x, (1)))))", parser.parse("function(x) { x + 1; x + 1; x + 1;}").toString());
-		Assert.assertEquals("(lambda, (x), (begin, ((+, x, (1)), (+, x, (1)), (+, x, (1)), (+, x, (1)))))", parser.parse("function(x) { x + 1; x + 1; x + 1; x + 1;}").toString());
-		Assert.assertEquals("(lambda, (x), (begin, ((+, x, (1)), (+, x, (1)), (+, x, (1)), (+, x, (1)), (+, x, (1)))))", parser.parse("function(x) { x + 1; x + 1; x + 1; x + 1; x + 1;}").toString());
+		Assert.assertEquals("(lambda, (x), (begin, (+, x, (1)), (+, x, (1))))", parser.parse("function(x) { x + 1; x + 1; }").toString());
+		Assert.assertEquals("(lambda, (x), (begin, (+, x, (1)), (+, x, (1)), (+, x, (1))))", parser.parse("function(x) { x + 1; x + 1; x + 1;}").toString());
+		Assert.assertEquals("(lambda, (x), (begin, (+, x, (1)), (+, x, (1)), (+, x, (1)), (+, x, (1))))", parser.parse("function(x) { x + 1; x + 1; x + 1; x + 1;}").toString());
+		Assert.assertEquals("(lambda, (x), (begin, (+, x, (1)), (+, x, (1)), (+, x, (1)), (+, x, (1)), (+, x, (1))))", parser.parse("function(x) { x + 1; x + 1; x + 1; x + 1; x + 1;}").toString());
 	}
 	
 	@Test
 	public void methodAssignment() {
 	
-		Assert.assertEquals("(set!, a, (lambda, (x), (begin, ((+, x, (1))))))", parser.parse("a = function(x) { x + 1; }").toString());
+		Assert.assertEquals("(set!, a, (lambda, (x), (begin, (+, x, (1)))))", parser.parse("a = function(x) { x + 1; }").toString());
 	}
 	
 	@Test
 	public void ifWithoutElse() {
 		
-		Assert.assertEquals("(if, (a), (begin, ((print, (true)))), ())", parser.parse("if(a) { print(true); }").toString());
-		Assert.assertEquals("(if, (a), (begin, ((print, (1)), (print, (2)))), ())", parser.parse("if(a) { print(1); print(2); }").toString());
-		Assert.assertEquals("(if, (a), (begin, ((print, (1)), (print, (2)), (print, (3)))), ())", parser.parse("if(a) { print(1); print(2); print(3); }").toString());
+		Assert.assertEquals("(if, (a), (begin, (print, (true))), ())", parser.parse("if(a) { print(true); }").toString());
+		Assert.assertEquals("(if, (a), (begin, (print, (1)), (print, (2))), ())", parser.parse("if(a) { print(1); print(2); }").toString());
+		Assert.assertEquals("(if, (a), (begin, (print, (1)), (print, (2)), (print, (3))), ())", parser.parse("if(a) { print(1); print(2); print(3); }").toString());
 	}
 	
 	@Test
 	public void ifWitElse() {
 		
-		Assert.assertEquals("(if, (a), (begin, ((print, (true)))), (begin, ((print, (false)))))", parser.parse("if(a) { print(true); } else { print(false); }").toString());
-		Assert.assertEquals("(if, (>, 1, (5)), (begin, ((print, (true)))), (begin, ((print, (false)))))", parser.parse("if(1 > 5) { print(true); } else { print(false); }").toString());
-		Assert.assertEquals("(if, (<, 1, (5)), (begin, ((print, (true)))), (begin, ((print, (false)))))", parser.parse("if(1 < 5) { print(true); } else { print(false); }").toString());
+		Assert.assertEquals("(if, (a), (begin, (print, (true))), (begin, (print, (false))))", parser.parse("if(a) { print(true); } else { print(false); }").toString());
+		Assert.assertEquals("(if, (>, 1, (5)), (begin, (print, (true))), (begin, (print, (false))))", parser.parse("if(1 > 5) { print(true); } else { print(false); }").toString());
+		Assert.assertEquals("(if, (<, 1, (5)), (begin, (print, (true))), (begin, (print, (false))))", parser.parse("if(1 < 5) { print(true); } else { print(false); }").toString());
 	}
 	
 	@Test
@@ -250,7 +251,7 @@ public class ProceduralParserTest {
 	@Test
 	public void forLoop() {
 		
-		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, ((print, (i)))))", parser.parse("for(var i = 0; i < 5; i++) { print(i); }").toString());
+		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, (print, (i))))", parser.parse("for(var i = 0; i < 5; i++) { print(i); }").toString());
 		Assert.assertEquals("4", execute("for(var i = 0; i < 5; i++) { print(i); }"));
 	}
 	
@@ -258,13 +259,30 @@ public class ProceduralParserTest {
 	public void whileLoop() {
 		
 		Assert.assertEquals("0", execute("var i = 0;"));
-		Assert.assertEquals("4", execute("while(i < 5) { i++; print(i); }"));
+		Assert.assertEquals("5", execute("while(i < 5) { i++; print(i); }"));
 	}
 	
 	@Test
 	public void doLoop() {
 		
 		Assert.assertEquals("0", execute("var i = 0;"));
-		Assert.assertEquals("4", execute("do(i < 5) { i++; print(i); }"));
+		Assert.assertEquals("5", execute("do(i < 5) { i++; print(i); }"));
+	}
+	
+	@Test
+	public void validation() {
+		
+		try {
+			
+			parser.validate("var a = 3");
+		}
+		catch(LException e) {
+			
+			Assert.assertEquals("Missing termination character", e.getMessage());
+			
+			return;
+		}
+		
+		Assert.fail();
 	}
 }

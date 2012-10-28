@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import de.tuhrig.thofu.interfaces.Parser;
 import de.tuhrig.thofu.types.LBoolean;
+import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LList;
 import de.tuhrig.thofu.types.LNull;
 import de.tuhrig.thofu.types.LNumber;
@@ -40,7 +41,7 @@ public class ProceduralParser implements Parser {
 	public LList parse(String expression) {
 
 		expression = format(expression);
-		
+
 		List<Object> tokens = new ArrayList<>();
 
 		Matcher matcher = SPLIT.matcher(expression);
@@ -117,11 +118,11 @@ public class ProceduralParser implements Parser {
 			}
 			else if(token.equals("function")) {
 
-				return function(list, tokens);
+				return function(tokens);
 			}
 			else if(token.equals("{")) {		// create new let
 			
-				return block(list, tokens);
+				return block(tokens);
 			}			
 			else if(token.equals("}")) {		// close let
 
@@ -300,7 +301,7 @@ public class ProceduralParser implements Parser {
 		}
 	}
 
-	private LList block(LList list, List<Object> tokens) {
+	private LList block(List<Object> tokens) {
 
 		List<Object> functionTokens = getSubListAndClear(tokens, 0, tokens.indexOf("}"));
 		
@@ -318,20 +319,17 @@ public class ProceduralParser implements Parser {
 				current = new ArrayList<Object>();
 			}
 		}
-		
-		LList inner = new LList();
-		
-		for(List<Object> instruction: instructions)
-			inner.add(parse(instruction));
 
 		LList let = new LList();
 		
 		let.add(type("begin"));				// let and begin!!!!! TODO
-		let.add(inner);						// TODO is begin needed?
-		
-		list.add(let);
 
-		return strip(list);
+		for(List<Object> instruction: instructions) {
+
+			let.add(parse(instruction));
+		}
+
+		return let;
 	}
 
 	private LList binary(LList list, List<Object> tokens, Object token) {
@@ -345,7 +343,7 @@ public class ProceduralParser implements Parser {
 		return list;
 	}
 
-	private LList function(LList list, List<Object> tokens) {
+	private LList function(List<Object> tokens) {
 
 		int position = getParenthesisBalance(tokens, 0, "(", ")");
 		
@@ -365,20 +363,14 @@ public class ProceduralParser implements Parser {
 			}
 		}
 
-		LList inner = parse(tokens);
-
-		LList body = new LList();
-		body.add(inner.get(0));		// body
-		body.add(inner.get(1));		// body
-
+		LList body = parse(tokens);
+		
 		LList lambda = new LList();
 		lambda.add(type("lambda"));
 		lambda.add(paras);
 		lambda.add(body);
-		
-		list.add(lambda);
 
-		return strip(list);
+		return lambda;
 	}
 
 	private LList ifBlock(LList list, List<Object> tokens, Object token) {
@@ -641,6 +633,8 @@ public class ProceduralParser implements Parser {
 		
 		list.add(parse(commands));
 		
+		commands.split(";");
+		
 		return list; 
 	}
 
@@ -651,6 +645,7 @@ public class ProceduralParser implements Parser {
 	@Override
 	public void validate(String expression) {
 
-		// TODO Auto-generated method stub
+		if(!(expression.endsWith(";") || expression.endsWith("}")))
+			throw new LException("Missing termination character");
 	}
 }
