@@ -80,42 +80,54 @@ public class ProceduralParserTest {
 	@Test
 	public void defineNumber() {
 		
-		Assert.assertEquals("(define, a, (1))", parser.parse("a = 1;").toString());
-		Assert.assertEquals("(define, a, (+, 1, (2)))", parser.parse("a = (1 + 2);").toString());
-		Assert.assertEquals("(define, a, (+, 1, (2)))", parser.parse("a = 1 + 2;").toString());
+		Assert.assertEquals("(define, a, '(null))", parser.parse("var a;").toString());
+		Assert.assertEquals("(define, a, (1))", parser.parse("var a = 1;").toString());
+		Assert.assertEquals("(define, a, (+, 1, (2)))", parser.parse("var a = (1 + 2);").toString());
+		Assert.assertEquals("(define, a, (+, 1, (2)))", parser.parse("var a = 1 + 2;").toString());
 	}
 	
 	@Test
-	public void defineString() {
+	public void assignNumber() {
 		
-		Assert.assertEquals("(define, a, (test))", parser.parse("a = \"test\";").toString());
+		Assert.assertEquals("(set!, a, (1))", parser.parse("a = 1;").toString());
+		Assert.assertEquals("(set!, a, (+, 1, (2)))", parser.parse("a = (1 + 2);").toString());
+		Assert.assertEquals("(set!, a, (+, 1, (2)))", parser.parse("a = 1 + 2;").toString());
+	}
+	
+	@Test
+	public void assignString() {
 		
+		Assert.assertEquals("(set!, a, (test))", parser.parse("a = \"test\";").toString());
+	
+		execute("var a;");
 		Assert.assertEquals("test", execute("a = \"test\";"));
 		Assert.assertEquals("test", execute("print(a);"));
 	}
 	
 	@Test
-	public void defineSymbol() {
+	public void assignSymbol() {
 		
-		Assert.assertEquals("(define, a, (b))", parser.parse("a = b;").toString());
+		Assert.assertEquals("(set!, a, (b))", parser.parse("a = b;").toString());
 		
+		execute("var a;");
+		execute("var b;");
 		Assert.assertEquals("1", execute("a = 1;"));
 		Assert.assertEquals("1", execute("b = a;"));
 		Assert.assertEquals("1", execute("print(b);"));
 	}
 	
 	@Test
-	public void defineFunction() {
+	public void assignFunction() {
 		
-		Assert.assertEquals("(define, a, (lambda, (), (begin, ((print, (1))))))", parser.parse("a = function() { print(1); }").toString());
+		Assert.assertEquals("(set!, a, (lambda, (), (begin, ((print, (1))))))", parser.parse("a = function() { print(1); }").toString());
 		
-		Assert.assertEquals("<Lambda: a>", execute("a = function() { print(1); }"));
+		Assert.assertEquals("<Lambda: a>", execute("var a = function() { print(1); }"));
 		Assert.assertEquals("1", execute("a;"));
 		Assert.assertEquals("1", execute("a();"));
 		
-		Assert.assertEquals("(define, a, (lambda, (text), (begin, ((print, (text))))))", parser.parse("a = function(text) { print(text); }").toString());
+		Assert.assertEquals("(set!, a, (lambda, (text), (begin, ((print, (text))))))", parser.parse("a = function(text) { print(text); }").toString());
 		
-		Assert.assertEquals("<Lambda: a>", execute("a = function(text) { print(text); }"));
+		Assert.assertEquals("<Lambda: unnamed lambda>", execute("a = function(text) { print(text); }"));
 		Assert.assertEquals("hallo", execute("a(\"hallo\");"));
 	}
 	
@@ -165,7 +177,7 @@ public class ProceduralParserTest {
 	@Test
 	public void methodAssignment() {
 	
-		Assert.assertEquals("(define, a, (lambda, (x), (begin, ((+, x, (1))))))", parser.parse("a = function(x) { x + 1; }").toString());
+		Assert.assertEquals("(set!, a, (lambda, (x), (begin, ((+, x, (1))))))", parser.parse("a = function(x) { x + 1; }").toString());
 	}
 	
 	@Test
@@ -187,10 +199,10 @@ public class ProceduralParserTest {
 	@Test
 	public void plusPlusAfter() {
 	
-		Assert.assertEquals("(define, a, (1))", parser.parse("a = 1;").toString());
+		Assert.assertEquals("(set!, a, (1))", parser.parse("a = 1;").toString());
 		Assert.assertEquals("((lambda, (), (begin, (define, tmp, a), (set!, a, (+, a, 1)), (tmp))))", parser.parse("a++;").toString());
 	
-		Assert.assertEquals("1", execute("a = 1;"));
+		Assert.assertEquals("1", execute("var a = 1;"));
 		Assert.assertEquals("1", execute("a++;"));
 		Assert.assertEquals("2", execute("a;"));
 	}
@@ -198,10 +210,10 @@ public class ProceduralParserTest {
 	@Test
 	public void plusPlusBefore() {
 	
-		Assert.assertEquals("(define, a, (1))", parser.parse("a = 1;").toString());
+		Assert.assertEquals("(set!, a, (1))", parser.parse("a = 1;").toString());
 		Assert.assertEquals("((lambda, (), (begin, (set!, a, (+, a, 1)), (a))))", parser.parse("++a;").toString());
 	
-		Assert.assertEquals("1", execute("a = 1;"));
+		Assert.assertEquals("1", execute("var a = 1;"));
 		Assert.assertEquals("2", execute("++a;"));
 		Assert.assertEquals("2", execute("a;"));
 	}
@@ -209,10 +221,10 @@ public class ProceduralParserTest {
 	@Test
 	public void minusMinusAfter() {
 	
-		Assert.assertEquals("(define, a, (1))", parser.parse("a = 1;").toString());
+		Assert.assertEquals("(set!, a, (1))", parser.parse("a = 1;").toString());
 		Assert.assertEquals("((lambda, (), (begin, (define, tmp, a), (set!, a, (-, a, 1)), (tmp))))", parser.parse("a--;").toString());
 	
-		Assert.assertEquals("1", execute("a = 1;"));
+		Assert.assertEquals("1", execute("var a = 1;"));
 		Assert.assertEquals("1", execute("a--;"));
 		Assert.assertEquals("0", execute("a;"));
 	}
@@ -220,10 +232,10 @@ public class ProceduralParserTest {
 	@Test
 	public void minusMinusBefore() {
 	
-		Assert.assertEquals("(define, a, (1))", parser.parse("a = 1;").toString());
+		Assert.assertEquals("(set!, a, (1))", parser.parse("a = 1;").toString());
 		Assert.assertEquals("((lambda, (), (begin, (set!, a, (-, a, 1)), (a))))", parser.parse("--a;").toString());
 	
-		Assert.assertEquals("1", execute("a = 1;"));
+		Assert.assertEquals("1", execute("var a = 1;"));
 		Assert.assertEquals("0", execute("--a;"));
 		Assert.assertEquals("0", execute("a;"));
 	}
@@ -231,28 +243,28 @@ public class ProceduralParserTest {
 	@Test
 	public void plusPlusMinusMinus() {
 		
-		Assert.assertEquals("1", execute("a = 1;"));
-		Assert.assertEquals("5", execute("b = 4 + a++;"));
+		Assert.assertEquals("1", execute("var a = 1;"));
+		Assert.assertEquals("5", execute("var b = 4 + a++;"));
 	}
 	
 	@Test
 	public void forLoop() {
 		
-		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, ((print, (i)))))", parser.parse("for(i = 0; i < 5; i++) { print(i); }").toString());
-		Assert.assertEquals("4", execute("for(i = 0; i < 5; i++) { print(i); }"));
+		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, ((print, (i)))))", parser.parse("for(var i = 0; i < 5; i++) { print(i); }").toString());
+		Assert.assertEquals("4", execute("for(var i = 0; i < 5; i++) { print(i); }"));
 	}
 	
 	@Test
 	public void whileLoop() {
 		
-		Assert.assertEquals("0", execute("i = 0;"));
+		Assert.assertEquals("0", execute("var i = 0;"));
 		Assert.assertEquals("4", execute("while(i < 5) { i++; print(i); }"));
 	}
 	
 	@Test
 	public void doLoop() {
 		
-		Assert.assertEquals("0", execute("i = 0;"));
+		Assert.assertEquals("0", execute("var i = 0;"));
 		Assert.assertEquals("4", execute("do(i < 5) { i++; print(i); }"));
 	}
 }

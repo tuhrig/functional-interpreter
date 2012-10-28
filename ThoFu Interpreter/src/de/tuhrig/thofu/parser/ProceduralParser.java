@@ -71,17 +71,25 @@ public class ProceduralParser implements Parser {
 
 				return strip(list);
 			}
-			else if(token.toString().startsWith("for")) {
+			else if(token.equals("var")) {
+				
+				return defination(tokens);
+			}
+			else if(token.equals("=")) {
+				 
+				return assignment(list, tokens);
+			}
+			else if(token.equals("for")) {
 
-				return forLoop(list, tokens);
+				return forLoop(tokens);
 			}
-			else if(token.toString().startsWith("while")) {
+			else if(token.equals("while")) {
 				
-				return whileLoop(list, tokens);
+				return whileLoop(tokens);
 			}
-			else if(token.toString().startsWith("do")) {
+			else if(token.equals("do")) {
 				
-				return doLoop(list, tokens);
+				return doLoop(tokens);
 			}
 			else if(token.toString().startsWith("++")) {
 				
@@ -119,10 +127,6 @@ public class ProceduralParser implements Parser {
 
 				return strip(list);
 			}
-			else if(token.equals("=")) {
-				
-				return define(list, tokens);
-			}
 			else if(isBinaryOperator(token)) {		// any look up for binary operators? 
 													// maybe dynamically editable?
 				return binary(list, tokens, token);
@@ -149,7 +153,33 @@ public class ProceduralParser implements Parser {
 		throw new RuntimeException("No ; found at end of statement");
 	}
 
-	private LList forLoop(LList list, List<Object> tokens) {
+	private LList defination(List<Object> tokens) {
+
+		Object name = tokens.remove(0);
+					  tokens.remove(0);		// =
+
+		LList defination = new LList();
+		
+		defination.add(type("define"));
+		defination.add(type(name));
+		
+		if(tokens.size() > 0)
+			defination.add(parse(tokens));
+		else
+			defination.add(type("null"));
+		
+		return defination;
+	}
+
+	private LList assignment(LList list, List<Object> tokens) {
+
+		list.add(0, type("set!"));
+		list.add(parse(tokens));
+		
+		return list;
+	}
+	
+	private LList forLoop(List<Object> tokens) {
 
 		tokens.remove(0);		// remove ( before (i; i <...
 		
@@ -161,16 +191,18 @@ public class ProceduralParser implements Parser {
 		
 		increment.add(";");		// add a ; to the final increment instruction
 
-		list.add(type("for"));
-		list.add(parse(define));
-		list.add(parse(condition));
-		list.add(parse(increment));
-		list.add(parse(tokens));
+		LList loop = new LList();
 		
-		return list;
+		loop.add(type("for"));
+		loop.add(parse(define));
+		loop.add(parse(condition));
+		loop.add(parse(increment));
+		loop.add(parse(tokens));
+		
+		return loop;
 	}
 	
-	private LList whileLoop(LList list, List<Object> tokens) {
+	private LList whileLoop(List<Object> tokens) {
 
 		tokens.remove(0);		// remove ( before (i; i <...
 
@@ -180,14 +212,16 @@ public class ProceduralParser implements Parser {
 		
 		condition.add(";");		// add a ; to the final increment instruction
 
-		list.add(type("while"));
-		list.add(parse(condition));
-		list.add(parse(tokens));
+		LList loop = new LList();
 		
-		return list;
+		loop.add(type("while"));
+		loop.add(parse(condition));
+		loop.add(parse(tokens));
+		
+		return loop;
 	}
 	
-	private LList doLoop(LList list, List<Object> tokens) {
+	private LList doLoop(List<Object> tokens) {
 
 		tokens.remove(0);		// remove ( before (i; i <...
 
@@ -197,11 +231,13 @@ public class ProceduralParser implements Parser {
 		
 		condition.add(";");		// add a ; to the final increment instruction
 
-		list.add(type("do"));
-		list.add(parse(condition));
-		list.add(parse(tokens));
+		LList loop = new LList();
 		
-		return list;
+		loop.add(type("do"));
+		loop.add(parse(condition));
+		loop.add(parse(tokens));
+		
+		return loop;
 	}
 
 	private void parenthesis(LList list, List<Object> tokens) {
@@ -305,14 +341,6 @@ public class ProceduralParser implements Parser {
 		List<Object> rest = getSubListAndClear(tokens, 0, tokens.size());
 		
 		list.add(parse(rest));
-		
-		return list;
-	}
-
-	private LList define(LList list, List<Object> tokens) {
-
-		list.add(0, type("define"));
-		list.add(parse(tokens));
 		
 		return list;
 	}
