@@ -134,7 +134,7 @@ public class ThoFuUi extends JFrame {
 
 		// some size settings
 		browser.setPreferredSize(new Dimension(100, 100));
-		log.setPreferredSize(new Dimension(100, 100));
+		log.setPreferredSize(new Dimension(100, 200));
 		tools.setPreferredSize(new Dimension(100, 100));		
 		
 		// menu
