@@ -42,25 +42,18 @@ public class ProceduralParser implements Parser {
 
 		expression = format(expression);
 
-		List<Object> tokens = new ArrayList<>();
-
-		Matcher matcher = SPLIT.matcher(expression);
-		
-		while (matcher.find()) {
-			
-			tokens.add(matcher.group());
-		}
+		List<Object> tokens = toTokens(expression);
 
 		LList result = parse(tokens);
 		
-		System.out.println("result: " + result);
+		//System.out.println("result: " + result);
 		
 		return result;
 	}
 	
 	private LList parse(List<Object> tokens) {
 
-		System.out.println("parse " + tokens);
+		//System.out.println("parse " + tokens);
 		
 		LList list = new LList();
 		
@@ -363,12 +356,22 @@ public class ProceduralParser implements Parser {
 			}
 		}
 
-		LList body = parse(tokens);
-		
 		LList lambda = new LList();
 		lambda.add(type("lambda"));
 		lambda.add(paras);
-		lambda.add(body);
+		
+		LList begin = new LList(type("begin"));
+		
+		getSubListAndClear(tokens, 0, tokens.indexOf("{"));
+		
+		tokens = tokens.subList(1, tokens.size() - 1);
+		
+		for(List<Object> list: split(tokens)) {
+
+			begin.add(parse(list));
+		}
+		
+		lambda.add(begin);
 
 		return lambda;
 	}
@@ -626,9 +629,7 @@ public class ProceduralParser implements Parser {
 	 */
 	@Override
 	public List<LObject> parseAll(String commands) {
-		
-		// TODO just for the moment a simple implementation
-		
+	
 		List<LObject> list = new ArrayList<>();
 		
 		list.add(parse(commands));
@@ -636,6 +637,86 @@ public class ProceduralParser implements Parser {
 		commands.split(";");
 		
 		return list; 
+	}
+	
+	/**
+	 * Reduces the list for the first block and return this block
+	 * 
+	 * @return block of which the list was reduced
+	 */
+	public List<Object> reduce(List<Object> list) {
+
+		boolean block = false;
+		
+		boolean parenthesis = false;
+		
+		int balanceP = 0;
+		
+		int balanceB = 0;
+		
+		for(int i = 0; i < list.size(); i++) {
+			
+			if(list.get(i).equals(")")) {
+				
+				balanceP--;
+			}
+			
+			if(list.get(i).equals("(")) {
+				
+				balanceP++;
+			}
+			
+			if(balanceP > 0) {
+				
+				parenthesis = true;
+			}
+			else {
+				
+				parenthesis = false;
+			}
+			
+			if(!parenthesis && !block && list.get(i).equals(";")) {
+
+				return getSubListAndClear(list, 0, i + 1);
+			}
+			
+			if(block && balanceB == 0) {
+				
+				return getSubListAndClear(list, 0, i);
+			}
+			
+			if(list.get(i).equals("{")) {
+				
+				block = true;
+				
+				balanceB++;
+			}
+			
+			if(list.get(i).equals("}")) {
+	
+				balanceB--;
+			}
+		}
+		
+		return getSubListAndClear(list, 0, list.size());
+	}
+
+	
+	/**
+	 * Splits a list into sublist which each is a single block.
+	 * 
+	 * @return list of sublist which each is a single block
+	 */
+	List<List<Object>> split(List<Object> list) {
+		
+		List<List<Object>> result = new ArrayList<List<Object>>();
+		
+		while(list.size() > 0) {
+			
+			result.add(reduce(list));
+		}
+		
+		return result;
 	}
 
 	/*
@@ -647,5 +728,19 @@ public class ProceduralParser implements Parser {
 
 		if(!(expression.endsWith(";") || expression.endsWith("}")))
 			throw new LException("Missing termination character");
+	}
+
+	public List<Object> toTokens(String string) {
+
+		List<Object> tokens = new ArrayList<>();
+
+		Matcher matcher = SPLIT.matcher(string);
+		
+		while (matcher.find()) {
+			
+			tokens.add(matcher.group());
+		}
+		
+		return tokens;
 	}
 }

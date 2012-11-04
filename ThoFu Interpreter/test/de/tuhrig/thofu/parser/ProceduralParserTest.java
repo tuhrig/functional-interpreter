@@ -1,5 +1,7 @@
 package de.tuhrig.thofu.parser;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -26,6 +28,18 @@ public class ProceduralParserTest {
 
 		return interpreter.execute(parser.parse(string));
 	}
+	
+	private String print(String string) {
+
+		execute(string);
+		
+		String content = interpreter.getStringBuilder().toString();
+		
+		interpreter.setStringBuilder(new StringBuilder());
+		
+		return content;
+	}
+
 	
 	@Test
 	public void twoOperantCalculation() {
@@ -132,6 +146,27 @@ public class ProceduralParserTest {
 		Assert.assertEquals("hallo", execute("a(\"hallo\");"));
 	}
 	
+	@Test
+	public void complexFunction() {
+		
+		String command = 
+			"var a = function(){ " + 
+			
+				"print(9); " + 
+				"print(2); " + 
+	
+				"var b = 1; " + 
+	
+				"for(var a = 0; a < 5; a++) { " + 
+					
+				"	print(3); " + 
+				"} " + 
+			"}";
+		
+		Assert.assertEquals("<Lambda: a>", execute(command));
+		Assert.assertEquals("9233333", print("a();"));
+	}
+
 	@Test
 	public void methodCallSimple() {
 		
@@ -284,5 +319,33 @@ public class ProceduralParserTest {
 		}
 		
 		Assert.fail();
+	}
+	
+	/**
+	 * HELPER
+	 */
+	
+	@Test
+	public void reduce() {
+		
+		List<Object> tokens = null;
+		
+		tokens = parser.toTokens(parser.format("var i = 0;"));
+		Assert.assertEquals("[var, i, =, 0, ;]", parser.reduce(tokens).toString());
+		
+		tokens = parser.toTokens(parser.format("var i = 0; var r = 1;"));
+		Assert.assertEquals("[var, i, =, 0, ;]", parser.reduce(tokens).toString());
+		
+		tokens = parser.toTokens(parser.format("function m(){ test; }"));
+		Assert.assertEquals("[function, m, (, ), {, test, ;, }]", parser.reduce(tokens).toString());
+		
+		tokens = parser.toTokens(parser.format("var t = 5; function m(){ test; }"));
+		Assert.assertEquals("[var, t, =, 5, ;]", parser.reduce(tokens).toString());
+		
+		tokens = parser.toTokens(parser.format("function m(){ test; } var t = 5;"));
+		Assert.assertEquals("[function, m, (, ), {, test, ;, }]", parser.reduce(tokens).toString());
+		
+		tokens = parser.toTokens(parser.format("function m(){ test; { test; } } var t = 5;"));
+		Assert.assertEquals("[function, m, (, ), {, test, ;, {, test, ;, }, }]", parser.reduce(tokens).toString());
 	}
 }
