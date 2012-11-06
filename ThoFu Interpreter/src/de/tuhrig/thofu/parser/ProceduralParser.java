@@ -5,7 +5,6 @@ import static de.tuhrig.thofu.Literal.DOUBLE_QUOTE;
 import static de.tuhrig.thofu.Literal.FALSE;
 import static de.tuhrig.thofu.Literal.LEFT_PARENTHESIS;
 import static de.tuhrig.thofu.Literal.LEFT_PARENTHESIS_BLANKED;
-import static de.tuhrig.thofu.Literal.NL;
 import static de.tuhrig.thofu.Literal.NULL;
 import static de.tuhrig.thofu.Literal.RIGHT_PARENTHESIS;
 import static de.tuhrig.thofu.Literal.RIGHT_PARENTHESIS_BLANKED;
@@ -31,7 +30,7 @@ import de.tuhrig.thofu.types.LSymbol;
  */
 public class ProceduralParser implements Parser {
 	
-	private static final Pattern SPLIT = Pattern.compile("[^\\s\"]+|\"([^\"]*)\"");
+	private static final Pattern SPLIT = Pattern.compile("\n|[^\\s\"]+|\"([^\"]*)\"");
 
 	/*
 	 * (non-Javadoc)
@@ -39,8 +38,6 @@ public class ProceduralParser implements Parser {
 	 */
 	@Override
 	public LList parse(String expression) {
-
-		expression = format(expression);
 
 		List<Object> tokens = toTokens(expression);
 
@@ -177,13 +174,13 @@ public class ProceduralParser implements Parser {
 
 		tokens.remove(0);		// remove ( before (i; i <...
 		
-		List<Object> define = getSubListAndClear(tokens, 0, tokens.indexOf(";") + 1);
-		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(";") + 1);
-		List<Object> increment = getSubListAndClear(tokens, 0, tokens.indexOf(")"));
+		List<Object> define = getSubListAndClear(tokens, 0, tokens.indexOf(new Token(";")) + 1);
+		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(new Token(";")) + 1);
+		List<Object> increment = getSubListAndClear(tokens, 0, tokens.indexOf(new Token(")")));
 		
 		tokens.remove(0);		// remove ) after (i; i <...
 		
-		increment.add(";");		// add a ; to the final increment instruction
+		increment.add(new Token(";"));		// add a ; to the final increment instruction
 
 		LList loop = new LList();
 		
@@ -200,7 +197,7 @@ public class ProceduralParser implements Parser {
 
 		tokens.remove(0);		// remove ( before (i; i <...
 
-		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(")"));
+		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(new Token(")")));
 		
 		tokens.remove(0);		// remove ) after (i; i <...
 		
@@ -219,7 +216,7 @@ public class ProceduralParser implements Parser {
 
 		tokens.remove(0);		// remove ( before (i; i <...
 
-		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(")"));
+		List<Object> condition = getSubListAndClear(tokens, 0, tokens.indexOf(new Token(")")));
 		
 		tokens.remove(0);		// remove ) after (i; i <...
 		
@@ -296,7 +293,7 @@ public class ProceduralParser implements Parser {
 
 	private LList block(List<Object> tokens) {
 
-		List<Object> functionTokens = getSubListAndClear(tokens, 0, tokens.indexOf("}"));
+		List<Object> functionTokens = getSubListAndClear(tokens, 0, tokens.indexOf(new Token("}")));
 		
 		List<List<Object>> instructions = new ArrayList<List<Object>>();
 		
@@ -362,7 +359,7 @@ public class ProceduralParser implements Parser {
 		
 		LList begin = new LList(type("begin"));
 		
-		getSubListAndClear(tokens, 0, tokens.indexOf("{"));
+		getSubListAndClear(tokens, 0, tokens.indexOf(new Token("{")));
 		
 		tokens = tokens.subList(1, tokens.size() - 1);
 		
@@ -616,7 +613,6 @@ public class ProceduralParser implements Parser {
 		expression = expression.replace(").", BLANK + ")" + BLANK + "." + BLANK);
 		expression = expression.replace(",", BLANK + "," + BLANK);
 		expression = expression.replace(";", BLANK + ";" + BLANK);
-		expression = expression.replace(NL, BLANK);
 		expression = expression.replace(LEFT_PARENTHESIS, LEFT_PARENTHESIS_BLANKED);
 		expression = expression.replace(RIGHT_PARENTHESIS, RIGHT_PARENTHESIS_BLANKED);
 
@@ -630,12 +626,13 @@ public class ProceduralParser implements Parser {
 	@Override
 	public List<LObject> parseAll(String commands) {
 	
+		List<Object> tokens = toTokens(commands);
+		
 		List<LObject> list = new ArrayList<>();
 		
-		list.add(parse(commands));
-		
-		commands.split(";");
-		
+		for(List<Object> tmp: split(tokens))
+			list.add(parse(tmp));
+
 		return list; 
 	}
 	
@@ -707,7 +704,7 @@ public class ProceduralParser implements Parser {
 	 * 
 	 * @return list of sublist which each is a single block
 	 */
-	List<List<Object>> split(List<Object> list) {
+	public List<List<Object>> split(List<Object> list) {
 		
 		List<List<Object>> result = new ArrayList<List<Object>>();
 		
@@ -732,15 +729,37 @@ public class ProceduralParser implements Parser {
 
 	public List<Object> toTokens(String string) {
 
+		string = format(string);
+		
 		List<Object> tokens = new ArrayList<>();
 
 		Matcher matcher = SPLIT.matcher(string);
-		
+
+		int line = 1;
+		int position = 0;
+
 		while (matcher.find()) {
 			
-			tokens.add(matcher.group());
+			position++;
+			
+			String group = matcher.group();
+			
+			if(group.equals("\n")){
+
+				line++;
+				position = 0;
+				continue;
+			}
+			
+			Token token = new Token();
+			
+			token.setWord(group);
+			token.setLine(line);
+			token.setPosition(position);
+			
+			tokens.add(token);
 		}
-		
+
 		return tokens;
 	}
 }

@@ -40,6 +40,19 @@ public class ProceduralParserTest {
 		return content;
 	}
 
+	@Test
+	public void toTokens() {
+		
+		List<Object> tokens = parser.toTokens("var x = \n1;");
+		
+		Assert.assertEquals("<var, 1, 1>", ((Token) tokens.get(0)).information());
+		Assert.assertEquals("<1, 2, 1>", ((Token) tokens.get(3)).information());
+		
+		tokens = parser.toTokens("var x = \n\n1;");
+		
+		Assert.assertEquals("<var, 1, 1>", ((Token) tokens.get(0)).information());
+		Assert.assertEquals("<1, 3, 1>", ((Token) tokens.get(3)).information());
+	}
 	
 	@Test
 	public void twoOperantCalculation() {
