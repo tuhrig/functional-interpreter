@@ -156,7 +156,7 @@ public class ProceduralParser implements Parser {
 	private LList list(List<Object> tokens) {
 
 		LTupel list = new LTupel();
-		
+
 		int balance = getParenthesisBalance(tokens, 1, "[", "]");
 
 		List<Object> sub = getSubListAndClear(tokens, 0, balance);

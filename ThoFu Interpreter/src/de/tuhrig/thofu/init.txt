@@ -75,7 +75,7 @@
 		false
 		)))
 		
-(define length (lambda (L) (if (eq? L null) 0 (+ (length   (rest L)) 1))))
+(define length (lambda (L) (.size L)))
 
 (define (append2 l1 l2) (if (eq? l1 null) l2 (cons (first l1) (append2 (rest l1) l2))))
 
