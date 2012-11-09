@@ -318,6 +318,13 @@ public class ProceduralParserTest {
 	}
 	
 	@Test
+	public void list() {
+		
+		Assert.assertEquals("'()", execute("[];"));
+		Assert.assertEquals("'(1 2 3)", parser.parse("[1, 2 3];").toString());
+	}
+	
+	@Test
 	public void validation() {
 		
 		try {

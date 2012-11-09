@@ -43,4 +43,8 @@ public class Literal {
 	public static final String LEFT_BRAKET = "[";
 
 	public static final String RIGHT_BRAKET = "]";
+	
+	public static final String LEFT_BRAKET_BLANKED = " [ ";
+
+	public static final String RIGHT_BRAKET_BLANKED = " ] ";
 }

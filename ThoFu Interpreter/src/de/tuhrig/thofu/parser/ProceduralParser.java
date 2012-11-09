@@ -3,9 +3,13 @@ package de.tuhrig.thofu.parser;
 import static de.tuhrig.thofu.Literal.BLANK;
 import static de.tuhrig.thofu.Literal.DOUBLE_QUOTE;
 import static de.tuhrig.thofu.Literal.FALSE;
+import static de.tuhrig.thofu.Literal.LEFT_BRAKET;
+import static de.tuhrig.thofu.Literal.LEFT_BRAKET_BLANKED;
 import static de.tuhrig.thofu.Literal.LEFT_PARENTHESIS;
 import static de.tuhrig.thofu.Literal.LEFT_PARENTHESIS_BLANKED;
 import static de.tuhrig.thofu.Literal.NULL;
+import static de.tuhrig.thofu.Literal.RIGHT_BRAKET;
+import static de.tuhrig.thofu.Literal.RIGHT_BRAKET_BLANKED;
 import static de.tuhrig.thofu.Literal.RIGHT_PARENTHESIS;
 import static de.tuhrig.thofu.Literal.RIGHT_PARENTHESIS_BLANKED;
 import static de.tuhrig.thofu.Literal.TRUE;
@@ -24,6 +28,7 @@ import de.tuhrig.thofu.types.LNumber;
 import de.tuhrig.thofu.types.LObject;
 import de.tuhrig.thofu.types.LString;
 import de.tuhrig.thofu.types.LSymbol;
+import de.tuhrig.thofu.types.LTupel;
 
 /**
  * @author Thomas Uhrig (tuhrig.de)
@@ -61,6 +66,10 @@ public class ProceduralParser implements Parser {
 			if(token.equals(";")) {
 
 				return strip(list);
+			}
+			else if(token.equals("[")) {
+				
+				return list(tokens);
 			}
 			else if(token.equals("var")) {
 				
@@ -142,6 +151,35 @@ public class ProceduralParser implements Parser {
 
 		// should never be reached!
 		throw new RuntimeException("No ; found at end of statement");
+	}
+
+	private LList list(List<Object> tokens) {
+
+		LTupel list = new LTupel();
+		
+		int balance = getParenthesisBalance(tokens, 1, "[", "]");
+
+		List<Object> sub = getSubListAndClear(tokens, 0, balance);
+		
+		tokens.remove(0);
+
+		for(Object obj : sub) {
+			
+			if(!obj.toString().equals(",")) {
+
+				List<Object> tmp = new ArrayList<>();
+				tmp.add(obj);
+				tmp.add(";");
+				
+				LList element = parse(tmp);
+				
+				list.add(element.get(0));
+			}
+		}
+		
+		tokens.add(0, list);
+
+		return list;
 	}
 
 	private LList defination(List<Object> tokens) {
@@ -615,6 +653,9 @@ public class ProceduralParser implements Parser {
 		expression = expression.replace(";", BLANK + ";" + BLANK);
 		expression = expression.replace(LEFT_PARENTHESIS, LEFT_PARENTHESIS_BLANKED);
 		expression = expression.replace(RIGHT_PARENTHESIS, RIGHT_PARENTHESIS_BLANKED);
+		
+		expression = expression.replace(LEFT_BRAKET, LEFT_BRAKET_BLANKED);
+		expression = expression.replace(RIGHT_BRAKET, RIGHT_BRAKET_BLANKED);
 
 		return expression.trim();
 	}
