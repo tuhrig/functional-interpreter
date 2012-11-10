@@ -48,7 +48,7 @@ public class ProceduralParser implements Parser {
 
 		LList result = parse(tokens);
 		
-		//System.out.println("result: " + result);
+		System.out.println("result: " + result);
 		
 		return result;
 	}
@@ -58,7 +58,7 @@ public class ProceduralParser implements Parser {
 		//System.out.println("parse " + tokens);
 		
 		LList list = new LList();
-		
+
 		while(tokens.size() > 0) {
 			
 			Object token = tokens.remove(0);
@@ -133,10 +133,31 @@ public class ProceduralParser implements Parser {
 			}
 			else if(token.equals("(")) {
 
-				parenthesis(list, tokens);
+				List<LList> instructions = parenthesis(tokens);
+				
+				for(LList tmp : instructions) {
+					
+					if(tmp.size() == 1)
+						list.add(tmp.get(0));
+					else
+						list.add(tmp);
+				}
+				
+				// TODO
+				System.out.println(instructions);
+				
+				System.out.println(list);
+			}
+			else if(token.equals("new")) {	
+
+				return constructor(list, tokens, token);
+			}
+			else if(token.toString().contains(".") && !token.toString().startsWith("\"")) {	
+
+				return method(list, tokens, token);
 			}
 			else {
-				
+
 				list.add(type(token));
 			}
 			
@@ -151,6 +172,62 @@ public class ProceduralParser implements Parser {
 
 		// should never be reached!
 		throw new RuntimeException("No ; found at end of statement");
+	}
+
+	private LList constructor(LList list, List<Object> tokens, Object token) {
+
+//		System.out.println(list);
+//		System.out.println(tokens);
+//		System.out.println(token);
+		
+		Object object = tokens.remove(0);
+
+		list.add(type(object + "."));
+
+		LList parameters = parse(tokens);
+		
+		if(parameters.size() == 1) {
+			
+			list.add(parameters.get(0));
+		}
+		else {
+			
+			for(int i = 0; i < parameters.size(); i++)
+				list.add(parameters.get(i));
+		}
+		
+		
+		System.out.println(list);
+			
+		return list;
+	}
+
+	private LList method(LList list, List<Object> tokens, Object token) {
+
+//		System.out.println(list);
+//		System.out.println(tokens);
+//		System.out.println(token);
+
+		LList parameters = parse(tokens);
+		
+		//System.out.println(parameters);
+		
+		String[] parts = token.toString().split("\\.");
+
+		list.add(type("." + parts[1]));
+		list.add(type(parts[0]));
+		
+		if(parameters.size() == 1) {
+			
+			list.add(parameters.get(0));
+		}
+		else {
+			
+			for(int i = 0; i < parameters.size(); i++)
+				list.add(parameters.get(i));
+		}
+
+		return list;
 	}
 
 	private LList list(List<Object> tokens) {
@@ -269,8 +346,10 @@ public class ProceduralParser implements Parser {
 		return loop;
 	}
 
-	private void parenthesis(LList list, List<Object> tokens) {
+	private List<LList> parenthesis(List<Object> tokens) {
 
+		List<LList> list = new ArrayList<LList>();
+		
 		int position = getParenthesisBalance(tokens, 1, "(", ")");
 
 		List<Object> parameterTokens = getSubListAndClear(tokens, 0, position);
@@ -315,6 +394,8 @@ public class ProceduralParser implements Parser {
 			}
 			else {
 
+				
+				
 				current.add(tmp);
 			}
 		}
@@ -327,6 +408,8 @@ public class ProceduralParser implements Parser {
 			instruction.add(";");
 			list.add(parse(instruction));
 		}
+		
+		return list;
 	}
 
 	private LList block(List<Object> tokens) {
@@ -620,7 +703,7 @@ public class ProceduralParser implements Parser {
 				return LNull.NULL;
 			}
 			else if (token.toString().startsWith(DOUBLE_QUOTE) && token.toString().endsWith(DOUBLE_QUOTE)) {
- 
+
 				return new LString(token);
 			}
 			else {
@@ -674,6 +757,8 @@ public class ProceduralParser implements Parser {
 		for(List<Object> tmp: split(tokens))
 			list.add(parse(tmp));
 
+		System.out.println("result all " + list);
+		
 		return list; 
 	}
 	

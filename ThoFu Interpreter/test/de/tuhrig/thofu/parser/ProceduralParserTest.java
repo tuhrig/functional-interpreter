@@ -147,13 +147,13 @@ public class ProceduralParserTest {
 	@Test
 	public void assignFunction() {
 		
-		Assert.assertEquals("(set!, a, (lambda, (), (begin, (print, (1)))))", parser.parse("a = function() { print(1); }").toString());
+		Assert.assertEquals("(set!, a, (lambda, (), (begin, (print, 1))))", parser.parse("a = function() { print(1); }").toString());
 		
 		Assert.assertEquals("<Lambda: a>", execute("var a = function() { print(1); }"));
 		Assert.assertEquals("1", execute("a;"));
 		Assert.assertEquals("1", execute("a();"));
 		
-		Assert.assertEquals("(set!, a, (lambda, (text), (begin, (print, (text)))))", parser.parse("a = function(text) { print(text); }").toString());
+		Assert.assertEquals("(set!, a, (lambda, (text), (begin, (print, text))))", parser.parse("a = function(text) { print(text); }").toString());
 		
 		Assert.assertEquals("<Lambda: unnamed lambda>", execute("a = function(text) { print(text); }"));
 		Assert.assertEquals("hallo", execute("a(\"hallo\");"));
@@ -183,24 +183,25 @@ public class ProceduralParserTest {
 	@Test
 	public void methodCallSimple() {
 		
-		Assert.assertEquals("(add, (1), (2))", parser.parse("add(1, 2);").toString());
-		Assert.assertEquals("(print, (1))", parser.parse("print(1);").toString());
+		Assert.assertEquals("(add, 1, 2)", parser.parse("add(1, 2);").toString());
+		Assert.assertEquals("(print, 1)", parser.parse("print(1);").toString());
+		Assert.assertEquals("(print, (+, 1, (2)))", parser.parse("print((1 + 2));").toString());
 	}
 	
 	@Test
 	public void methodCallInMethodCall() {
 		
-		Assert.assertEquals("(add, (add, (1), (1)), (2))", parser.parse("add(add(1, 1), 2);").toString());
-		Assert.assertEquals("(add, (2), (add, (1), (1)))", parser.parse("add(2, add(1, 1));").toString());
-		Assert.assertEquals("(add, (add, (2), (2)), (add, (1), (1)))", parser.parse("add(add(2, 2), add(1, 1));").toString());
+		Assert.assertEquals("(add, (add, 1, 1), 2)", parser.parse("add(add(1, 1), 2);").toString());
+		Assert.assertEquals("(add, 2, (add, 1, 1))", parser.parse("add(2, add(1, 1));").toString());
+		Assert.assertEquals("(add, (add, 2, 2), (add, 1, 1))", parser.parse("add(add(2, 2), add(1, 1));").toString());
 	}
 	
 	@Test
 	public void methodCallChain() {
 		
 		Assert.assertEquals("(print, (get))", parser.parse("get().print();").toString());
-		Assert.assertEquals("(print, (add, (1), (2)))", parser.parse("add(1, 2).print();").toString());
-		Assert.assertEquals("(print, (add, (1), (2)), (x))", parser.parse("add(1, 2).print(x);").toString());
+		Assert.assertEquals("(print, (add, 1, 2))", parser.parse("add(1, 2).print();").toString());
+		Assert.assertEquals("(print, (add, 1, 2), x)", parser.parse("add(1, 2).print(x);").toString());
 	}
 	
 	@Test
@@ -232,17 +233,17 @@ public class ProceduralParserTest {
 	@Test
 	public void ifWithoutElse() {
 		
-		Assert.assertEquals("(if, (a), (begin, (print, (true))), ())", parser.parse("if(a) { print(true); }").toString());
-		Assert.assertEquals("(if, (a), (begin, (print, (1)), (print, (2))), ())", parser.parse("if(a) { print(1); print(2); }").toString());
-		Assert.assertEquals("(if, (a), (begin, (print, (1)), (print, (2)), (print, (3))), ())", parser.parse("if(a) { print(1); print(2); print(3); }").toString());
+		Assert.assertEquals("(if, (a), (begin, (print, true)), ())", parser.parse("if(a) { print(true); }").toString());
+		Assert.assertEquals("(if, (a), (begin, (print, 1), (print, 2)), ())", parser.parse("if(a) { print(1); print(2); }").toString());
+		Assert.assertEquals("(if, (a), (begin, (print, 1), (print, 2), (print, 3)), ())", parser.parse("if(a) { print(1); print(2); print(3); }").toString());
 	}
 	
 	@Test
 	public void ifWitElse() {
 		
-		Assert.assertEquals("(if, (a), (begin, (print, (true))), (begin, (print, (false))))", parser.parse("if(a) { print(true); } else { print(false); }").toString());
-		Assert.assertEquals("(if, (>, 1, (5)), (begin, (print, (true))), (begin, (print, (false))))", parser.parse("if(1 > 5) { print(true); } else { print(false); }").toString());
-		Assert.assertEquals("(if, (<, 1, (5)), (begin, (print, (true))), (begin, (print, (false))))", parser.parse("if(1 < 5) { print(true); } else { print(false); }").toString());
+		Assert.assertEquals("(if, (a), (begin, (print, true)), (begin, (print, false)))", parser.parse("if(a) { print(true); } else { print(false); }").toString());
+		Assert.assertEquals("(if, (>, 1, (5)), (begin, (print, true)), (begin, (print, false)))", parser.parse("if(1 > 5) { print(true); } else { print(false); }").toString());
+		Assert.assertEquals("(if, (<, 1, (5)), (begin, (print, true)), (begin, (print, false)))", parser.parse("if(1 < 5) { print(true); } else { print(false); }").toString());
 	}
 	
 	@Test
@@ -299,7 +300,7 @@ public class ProceduralParserTest {
 	@Test
 	public void forLoop() {
 		
-		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, (print, (i))))", parser.parse("for(var i = 0; i < 5; i++) { print(i); }").toString());
+		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, (print, i)))", parser.parse("for(var i = 0; i < 5; i++) { print(i); }").toString());
 		Assert.assertEquals("4", execute("for(var i = 0; i < 5; i++) { print(i); }"));
 	}
 	
@@ -322,6 +323,22 @@ public class ProceduralParserTest {
 		
 		Assert.assertEquals("'()", execute("[];"));
 		Assert.assertEquals("'(1 2 3)", parser.parse("[1, 2 3];").toString());
+	}
+	
+	@Test
+	public void javaMethod() {
+		
+		Assert.assertEquals("(.toString, a)", parser.parse("a.toString();").toString());
+		Assert.assertEquals("(.toString, a, b)", parser.parse("a.toString(b);").toString());
+		Assert.assertEquals("(.toString, a, b, c)", parser.parse("a.toString(b, c);").toString());
+	}
+	
+	@Test
+	public void javaConstructor() {
+		
+		Assert.assertEquals("(Object.)", parser.parse("new Object();").toString());
+		Assert.assertEquals("(String., a)", parser.parse("new String(\"a\");").toString());
+		Assert.assertEquals("(Integer., a, b)", parser.parse("new Integer(a, b);").toString());
 	}
 	
 	@Test

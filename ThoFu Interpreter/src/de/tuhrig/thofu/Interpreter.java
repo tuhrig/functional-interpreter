@@ -549,11 +549,17 @@ public class Interpreter implements IInterpreter, IJava {
 				
 					String tmp = object.toString();
 					
+					System.out.println("import " + tmp);
+					
 					if(tmp.endsWith("*")) {
+						
+						System.out.println("package");
 						
 						LJava.importPackage(tmp.substring(0, tmp.length()-2));
 					}
 					else {
+						
+						System.out.println("class");
 						
 						LJava.importClass(tmp);
 					}
