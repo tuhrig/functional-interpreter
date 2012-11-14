@@ -1,7 +1,10 @@
 package de.tuhrig.thofu.gui;
 
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -28,7 +31,7 @@ class SwingFactory {
 	
 	public static RSyntaxTextArea createSyntaxTextArea(String name, String text) {
 
-		RSyntaxTextArea area = new RSyntaxTextArea();
+		final RSyntaxTextArea area = new RSyntaxTextArea();
 
 		area.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LISP);
 		
@@ -66,6 +69,28 @@ class SwingFactory {
 					SwingFactory.setIcon(item, "icons/redo.png");
 			}
 		}
+		
+		// mouse listener to resize font
+		area.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				
+				Font font = area.getFont();
+				float size = font.getSize();
+				
+				if(e.getWheelRotation() < 0) {
+					
+					size = font.getSize() + 1f;
+				}
+				else if (e.getWheelRotation() > 0){
+
+					size = font.getSize() - 1f;
+				}
+				
+				area.setFont(font.deriveFont(size));
+			}
+		});
 		
 		return area;
 	}

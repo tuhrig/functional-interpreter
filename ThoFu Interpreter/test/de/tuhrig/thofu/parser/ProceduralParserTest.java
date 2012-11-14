@@ -289,7 +289,7 @@ public class ProceduralParserTest {
 		Assert.assertEquals("0", execute("--a;"));
 		Assert.assertEquals("0", execute("a;"));
 	}
-	
+
 	@Test
 	public void plusPlusMinusMinus() {
 		
@@ -298,9 +298,20 @@ public class ProceduralParserTest {
 	}
 	
 	@Test
+	public void block() {
+		
+		Assert.assertEquals("(begin, (x))", parser.parse("{ x; }").toString());
+		Assert.assertEquals("(begin, (x), (y))", parser.parse("{ x; y; }").toString());
+		Assert.assertEquals("(begin, (x), (y), (z))", parser.parse("{ x; y; z; }").toString());
+	}
+	
+	@Test
 	public void forLoop() {
 		
-		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, (print, i)))", parser.parse("for(var i = 0; i < 5; i++) { print(i); }").toString());
+		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, (x)))", parser.parse("for(var i = 0; i < 5; i++) { x; }").toString());
+		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, (x), (y)))", parser.parse("for(var i = 0; i < 5; i++) { x; y; }").toString());
+		Assert.assertEquals("(for, (define, i, (0)), (<, i, (5)), ((lambda, (), (begin, (define, tmp, i), (set!, i, (+, i, 1)), (tmp)))), (begin, (x), (y), (z)))", parser.parse("for(var i = 0; i < 5; i++) { x; y; z; }").toString());
+		
 		Assert.assertEquals("4", execute("for(var i = 0; i < 5; i++) { print(i); }"));
 	}
 	
@@ -339,6 +350,23 @@ public class ProceduralParserTest {
 		Assert.assertEquals("(Object.)", parser.parse("new Object();").toString());
 		Assert.assertEquals("(String., a)", parser.parse("new String(\"a\");").toString());
 		Assert.assertEquals("(Integer., a, b)", parser.parse("new Integer(a, b);").toString());
+	}
+	
+	@Test
+	public void javaInstanceField() {
+		
+		Assert.assertEquals("(.PI$, a)", parser.parse("a.PI;").toString());
+	}
+	
+	@Test
+	public void javaClassField() {
+		
+		// class for object -> if there is a class, we use it
+		// Object Object = new Object();
+		//
+		// Object.getClass();
+		
+		Assert.assertEquals("(java.lang.Object.PI$)", parser.parse("java.lang.Object.PI;").toString());
 	}
 	
 	@Test

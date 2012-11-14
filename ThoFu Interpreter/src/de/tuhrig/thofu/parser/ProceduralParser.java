@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tuhrig.thofu.interfaces.Parser;
+import de.tuhrig.thofu.java.LJava;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LList;
@@ -48,7 +49,7 @@ public class ProceduralParser implements Parser {
 
 		LList result = parse(tokens);
 		
-		System.out.println("result: " + result);
+		//System.out.println("result: " + result);
 		
 		return result;
 	}
@@ -62,6 +63,10 @@ public class ProceduralParser implements Parser {
 		while(tokens.size() > 0) {
 			
 			Object token = tokens.remove(0);
+			
+			/*
+			 * THOFU LANGUAGE
+			 */
 			
 			if(token.equals(";")) {
 
@@ -142,20 +147,35 @@ public class ProceduralParser implements Parser {
 					else
 						list.add(tmp);
 				}
-				
-				// TODO
-				System.out.println(instructions);
-				
-				System.out.println(list);
 			}
+			
+			/*
+			 * JAVA API
+			 */
+			
 			else if(token.equals("new")) {	
 
 				return constructor(list, tokens, token);
 			}
 			else if(token.toString().contains(".") && !token.toString().startsWith("\"")) {	
 
-				return method(list, tokens, token);
+				// look ahead
+				Object next = tokens.get(0);
+				
+				if(next.toString().equals("(")) {
+					
+					return method(list, tokens, token);
+				}
+				else {
+				
+					return field(list, tokens, token);
+				}
 			}
+			
+			/*
+			 * REST 
+			 */
+			
 			else {
 
 				list.add(type(token));
@@ -172,6 +192,32 @@ public class ProceduralParser implements Parser {
 
 		// should never be reached!
 		throw new RuntimeException("No ; found at end of statement");
+	}
+
+	private LList field(LList list, List<Object> tokens, Object token) {
+
+		int lastDot = token.toString().lastIndexOf(".");
+
+		String first = token.toString().substring(0, lastDot);
+		String last = token.toString().substring(lastDot, token.toString().length());
+
+		try {
+			
+			// check class before object
+			
+			LJava.getClass(first);
+			
+			list.add(type(first + last + "$"));
+		}
+		catch(LException e) {
+			
+			// no class found, so take a object
+		
+			list.add(type(last + "$"));
+			list.add(type(first));
+		}
+		
+		return list;
 	}
 
 	private LList constructor(LList list, List<Object> tokens, Object token) {
@@ -195,9 +241,6 @@ public class ProceduralParser implements Parser {
 			for(int i = 0; i < parameters.size(); i++)
 				list.add(parameters.get(i));
 		}
-		
-		
-		System.out.println(list);
 			
 		return list;
 	}
@@ -287,6 +330,8 @@ public class ProceduralParser implements Parser {
 	
 	private LList forLoop(List<Object> tokens) {
 
+		System.out.println("tokens in for " + tokens);
+		
 		tokens.remove(0);		// remove ( before (i; i <...
 		
 		List<Object> define = getSubListAndClear(tokens, 0, tokens.indexOf(new Token(";")) + 1);
@@ -303,7 +348,23 @@ public class ProceduralParser implements Parser {
 		loop.add(parse(define));
 		loop.add(parse(condition));
 		loop.add(parse(increment));
-		loop.add(parse(tokens));
+		
+		
+		LList begin = new LList(type("begin"));
+		
+		getSubListAndClear(tokens, 0, tokens.indexOf(new Token("{")));
+		
+		tokens = tokens.subList(1, tokens.size() - 1);
+		
+		for(List<Object> list: split(tokens)) {
+
+			begin.add(parse(list));
+		}
+		
+		loop.add(begin);
+		
+		
+		//loop.add(parse(tokens));
 		
 		return loop;
 	}
@@ -456,6 +517,8 @@ public class ProceduralParser implements Parser {
 
 	private LList function(List<Object> tokens) {
 
+		System.out.println("tokens in function " + tokens);
+		
 		int position = getParenthesisBalance(tokens, 0, "(", ")");
 		
 		List<Object> parameterTokens = getSubListAndClear(tokens, 1, position);
@@ -496,6 +559,8 @@ public class ProceduralParser implements Parser {
 
 	private LList ifBlock(LList list, List<Object> tokens, Object token) {
 
+		System.out.println(tokens);
+		
 		// --------------------------------
 		// Add the key-word
 		// --------------------------------
@@ -517,6 +582,9 @@ public class ProceduralParser implements Parser {
 		// --------------------------------
 		// Parse the if expression
 		// --------------------------------
+		
+		System.out.println(tokens);
+		
 		position = getParenthesisBalance(tokens, 0, "{", "}");
 		
 		List<Object> ifExpression = getSubListAndClear(tokens, 0, position + 1);
