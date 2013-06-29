@@ -34,7 +34,7 @@ It consists of two different parts: (1) a common LISP interpreter and (2) an API
 	eq?				equals*								(eq? 3 1)
 	nq?				not-equals*							(nq? 3 1)
 
-	if				if-clause							(if (true) (print "true) (print "false"))
+	if				if-clause							(if (true) (print "true") (print "false"))
 
 	define			defines a new variable				(define a 3)
 	set! 			redefines an excisting variable		(set! a 3)
