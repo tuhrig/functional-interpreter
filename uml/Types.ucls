@@ -1,0 +1,145 @@
+<class-diagram version="1.0.9" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="false" associations="false" dependencies="false" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LObject" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LObject.java" binary="false">    
+    <position height="-1" width="-1" x="752" y="222"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LBoolean" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LBoolean.java" binary="false">    
+    <position height="-1" width="-1" x="47" y="418"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LList" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LList.java" binary="false">    
+    <position height="-1" width="-1" x="346" y="697"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="4" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LException" 
+    project="ThoFu Interpreter" file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LException.java" binary="false">    
+    <position height="-1" width="-1" x="172" y="162"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LOperation" 
+    project="ThoFu Interpreter" file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LOperation.java" binary="false">    
+    <position height="-1" width="-1" x="884" y="527"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="6" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LTupel" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LTupel.java" binary="false">    
+    <position height="-1" width="-1" x="29" y="923"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LNull" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LNull.java" binary="false">    
+    <position height="-1" width="-1" x="454" y="127"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="8" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LLambda" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LLambda.java" binary="false">    
+    <position height="-1" width="-1" x="887" y="857"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="9" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LNumber" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LNumber.java" binary="false">    
+    <position height="-1" width="-1" x="649" y="640"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="10" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LSymbol" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LSymbol.java" binary="false">    
+    <position height="-1" width="-1" x="1337" y="346"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="11" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LQuoted" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LQuoted.java" binary="false">    
+    <position height="-1" width="-1" x="1101" y="510"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="de.tuhrig.thofu.types.LString" project="ThoFu Interpreter" 
+    file="/ThoFu Interpreter/src/de/tuhrig/thofu/types/LString.java" binary="false">    
+    <position height="-1" width="-1" x="1061" y="124"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <generalization id="13">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="14">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="15">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="16">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="17">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="18">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="19">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="20">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="21">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="5"/>  
+  </generalization>  
+  <generalization id="22">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="false" multiplicity="false"/>
+</class-diagram>
