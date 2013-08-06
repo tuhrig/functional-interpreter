@@ -47,7 +47,7 @@ public class Util {
 	public String read(Class<?> clazz, String resource) {
 
 		InputStream stream = clazz.getResourceAsStream(resource);
-		
+
 		Scanner scanner = new Scanner(stream);
 	 
 		StringBuilder content = new StringBuilder();
