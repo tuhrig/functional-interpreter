@@ -1,1 +1,0 @@
-from http://sekkyumu.deviantart.com/art/Developpers-Icons-63052312
