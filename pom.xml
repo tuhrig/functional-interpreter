@@ -83,4 +83,11 @@
 	</dependency>            
   </dependencies>
   <description>ThoFu is an interpreter for a LISP-like language written in Java. It was made 2012 as a student project. More: www.tuhrig.de</description>
+  <organization>
+  	<name>HdM Stuttgart</name>
+  	<url>www.tuhrig.de</url>
+  </organization>
+  <scm>
+  	<developerConnection>Thomas Uhrig</developerConnection>
+  </scm>
 </project>
