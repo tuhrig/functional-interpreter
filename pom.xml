@@ -80,7 +80,22 @@
 		<groupId>org.easytesting</groupId>
 		<artifactId>fest-assert</artifactId>
 		<version>1.4</version>
-	</dependency>            
+	</dependency>
+	<dependency>
+		<groupId>com.fifesoft</groupId>
+		<artifactId>rsyntaxtextarea</artifactId>
+		<version>1.4.1</version>
+	</dependency>  
+	<dependency>
+		<groupId>com.fifesoft</groupId>
+		<artifactId>autocomplete</artifactId>
+		<version>2.5.0</version>
+	</dependency>
+    <dependency>
+	<groupId>org.swinglabs</groupId>
+		<artifactId>swingx</artifactId>
+		<version>1.6.1</version>
+	</dependency>
   </dependencies>
   <description>ThoFu is an interpreter for a LISP-like language written in Java. It was made 2012 as a student project. More: www.tuhrig.de</description>
   <organization>
