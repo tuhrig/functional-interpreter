@@ -2,11 +2,8 @@ package de.tuhrig.thofu.java;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
-
-import de.tuhrig.thofu.java.LJava;
 
 public class LJavaTest {
 

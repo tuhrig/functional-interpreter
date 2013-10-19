@@ -1,10 +1,7 @@
 package de.tuhrig.thofu.types;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
-
-import de.tuhrig.thofu.types.LBoolean;
 
 public class LBooleanTest extends LObjectTest {
 

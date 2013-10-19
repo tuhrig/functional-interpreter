@@ -2,11 +2,7 @@ package de.tuhrig.thofu.types;
 
 import java.math.BigDecimal;
 
-import de.tuhrig.thofu.types.LNumber;
-import de.tuhrig.thofu.types.LObject;
-
-import junit.framework.Assert;
-
+import org.junit.Assert;
 public class LNumberTest extends LObjectTest {
 
 	@Override

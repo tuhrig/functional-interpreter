@@ -2,13 +2,11 @@ package de.tuhrig.thofu.parser;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import de.tuhrig.thofu.interfaces.Parser;
-import de.tuhrig.thofu.parser.DefaultParser;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
 import de.tuhrig.thofu.types.LList;
