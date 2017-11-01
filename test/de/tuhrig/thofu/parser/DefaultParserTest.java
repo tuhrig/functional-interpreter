@@ -1,11 +1,5 @@
 package de.tuhrig.thofu.parser;
 
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import de.tuhrig.thofu.interfaces.Parser;
 import de.tuhrig.thofu.types.LBoolean;
 import de.tuhrig.thofu.types.LException;
@@ -14,6 +8,11 @@ import de.tuhrig.thofu.types.LNull;
 import de.tuhrig.thofu.types.LNumber;
 import de.tuhrig.thofu.types.LString;
 import de.tuhrig.thofu.types.LSymbol;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.List;
 
 public class DefaultParserTest {
 

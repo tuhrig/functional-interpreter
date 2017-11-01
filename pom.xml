@@ -96,6 +96,12 @@
 		<artifactId>swingx</artifactId>
 		<version>1.6.1</version>
 	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.12</version>
+		<scope>test</scope>
+	</dependency>
   </dependencies>
   <description>ThoFu is an interpreter for a LISP-like language written in Java. It was made 2012 as a student project. More: www.tuhrig.de</description>
   <organization>
